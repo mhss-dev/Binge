@@ -4,3 +4,31 @@ header {
     background-size: cover;
     background-position: center;
 }
+
+/* Appliquer la police "Poppins" au titre */
+header h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 4rem;
+    margin: 0;
+    color: #ffffff;
+    animation: fadeInUp 1s ease-out;
+  }
+  
+  /* Appliquer la police "Roboto" aux paragraphes */
+  header p {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.5rem;
+    color: #f8f9fa;
+    animation: fadeInUp 1s ease-out 0.5s;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
