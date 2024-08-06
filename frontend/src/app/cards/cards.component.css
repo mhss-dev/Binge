@@ -1,12 +1,12 @@
-/* styles.css ou styles du composant Angular */
 .card {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
+    animation: fadeInUp 1s ease-out 0.5s;
   }
   
   .card-img-top {
-    height: 600px; /* Fixe la hauteur de l'image pour que toutes les cartes aient la même taille d'image */
+    height: 50vh;
     object-fit: cover;
   }
   
@@ -14,23 +14,23 @@
     display: flex;
     flex-direction: column;
     flex: 1;
-    padding: 1rem; /* Ajoute du padding pour que le texte ne colle pas aux bords */
+    padding: 1rem; 
   }
   
   .card-title {
-    font-size: 1.25rem; /* Taille uniforme pour les titres */
+    font-size: 1.25rem;
     font-weight: bold;
-    margin-bottom: 1rem; /* Espacement en bas du titre */
+    margin-bottom: 1rem; 
   }
   
   .card-text {
-    font-size: 0.875rem; /* Taille uniforme pour le texte */
-    overflow: hidden; /* Cache le texte qui dépasse */
-    text-overflow: ellipsis; /* Ajoute des points de suspension si le texte est trop long */
+    font-size: 0.875rem;
+    overflow: hidden; 
+    text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 4; /* Limite le texte à un nombre de lignes */
+    -webkit-line-clamp: 4; 
     -webkit-box-orient: vertical;
-    margin-bottom: 1rem; /* Espacement en bas du texte */
+    margin-bottom: 1rem;
   }
   
   .card:hover {
@@ -42,4 +42,15 @@
     background-color: #007bff;
     border-color: #007bff;
   }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
   
