@@ -18,6 +18,9 @@ header h1 {
     color: #f8f9fa;
     animation: fadeInUp 1s ease-out 0.5s;
   }
+  .input-group{
+    width:50%
+  }
   
   @keyframes fadeInUp {
     from {

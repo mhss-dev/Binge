@@ -7,18 +7,15 @@
       <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
         <li><a href="#" class="nav-link px-2 text-white">Accueil</a></li>
         <li><a href="#" class="nav-link px-2 text-white">Au cinéma</a></li>
-        <li><a href="#" class="nav-link px-2 text-white">Films</a></li>
+        <li><a routerLink="/films" class="nav-link px-2 text-white">Films</a></li>
         <li><a href="#" class="nav-link px-2 text-white">Tendances</a></li>
       </ul>
   
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Recherche..." aria-label="Recherche">
-        <button class="btn btn-outline-light" type="submit"></button>
-      </form>
-  
-      <!-- <div class="col-md-3 text-end">
+      <div class="col-md-3 text-end">
         <button type="button" class="btn btn-dark me-2">Connexion</button>
         <button type="button" class="btn btn-dark">Inscription</button>
-      </div> -->
+      </div>
     </nav>
+    <router-outlet></router-outlet>
+    
   </div>

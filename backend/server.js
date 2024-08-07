@@ -27,6 +27,24 @@ app.get('/api/nowplaying', async (req, res) => {
   }
 });
 
+app.get('/api/search', async(req, res) => {
+    try {
+        const query = req.query.query;
+        if (!query) {
+          return res.status(400).json({ error: 'Il faut au moins une requête' });
+        }
+        const response = await axios.get('https://api.themoviedb.org/3/search/movie', {
+            params: {
+                api_key: TMDB_API_KEY,
+                query: query,
+            }
+        })
+        res.json(response.data);
+    } catch {
+        res.status(500).json({error: error.message})
+    }
+});
+
 app.listen(3000, () => {
   console.log('Démarrage sur le port 3000');
 });
