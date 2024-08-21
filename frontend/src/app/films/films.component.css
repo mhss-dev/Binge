@@ -1,0 +1,127 @@
+
+h1 {
+  padding-top: 10rem;
+}
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+
+.card {
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease-in-out;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  height: 100%;
+}
+
+
+.card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+
+.card-text {
+  font-size: 0.875rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  margin-bottom: 1rem;
+}
+
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+
+.card-body .btn {
+  margin-right: 20px;
+}
+
+
+.card-container {
+  align-items: stretch;
+}
+
+
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  font-size: 18px;
+  color: #aaa;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.search-input {
+  width: 200px;
+  padding: 10px 10px 10px 40px; 
+  transition: width 0.5s ease-in-out;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+}
+
+.search-input:focus {
+  width: 300px;
+  outline: none;
+}
+
+.search-icon:hover {
+  color: #333;
+}
+
+
+.back-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 5px;
+  background-color: #505050;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.back-to-top:hover {
+  background-color: rgb(102, 100, 100);
+}
+
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

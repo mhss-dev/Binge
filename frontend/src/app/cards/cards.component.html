@@ -1,0 +1,26 @@
+<div class="container text-white">
+    <div class="text-center mb-5 pb-5" id="aucinema">
+      <h1 class="display-5 font-weight-bold">Actuellement au cinéma</h1>
+      <p class="lead text-secondary">Du {{ minDate | date:'dd/MM/yyyy' }} au {{ maxDate | date:'dd/MM/yyyy' }}</p>
+    </div>
+  
+    <div>
+      <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  
+      <div class="row">
+        <div *ngFor="let movie of movies" class="col-md-4 mb-4">
+          <div class="card border-light bg-dark text-white shadow-sm">
+            <a [routerLink]="['/film', movie.id]" class="d-block">
+              <img [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" 
+                   class="img-fluid rounded" >
+            </a>
+            <div class="card-body">
+              <h5 class="card-title text-center">{{ movie.title }}</h5>
+              <p class="card-text">{{ movie.overview || "Aucune description n'a été fournie par l'API."}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    </div>

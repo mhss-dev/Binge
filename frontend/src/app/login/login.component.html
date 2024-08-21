@@ -1,0 +1,26 @@
+<div class="d-flex flex-column min-vh-100">
+    <div class="d-flex flex-column justify-content-center flex-grow-1">
+      <div class="container">
+        <div class="login-container mx-auto">
+          <div class="text-center mb-4">
+            <h2>Connexion</h2>
+            <div *ngIf="loginMessage" class="alert {{ alertType }}" role="alert">
+              {{ loginMessage }}
+            </div>
+          </div>
+          <form (ngSubmit)="onLogin()">
+            <div class="form-group">
+              <label for="username">Nom de compte :</label>
+              <input type="text" id="username" class="form-control" [(ngModel)]="username" name="username" required>
+            </div>
+            <div class="form-group">
+              <label for="password">Mot de passe :</label>
+              <input type="password" id="password" class="form-control" [(ngModel)]="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 mt-3">Se connecter</button>
+            <a class="d-flex justify-content-center mt-3 align-content-center" href="/register">Pas encore inscrit ?</a>
+          </form>
+        </div>
+      </div>
+    </div>
+    </div>

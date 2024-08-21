@@ -1,0 +1,25 @@
+.movie-page {
+  background-color: #141414;
+  height: 100vh;
+}
+
+.movie-banner {
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  color: white;
+}
+
+.movie-banner .overlay {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), #141414);
+}
+
+.movie-banner .content {
+  padding-top: 6rem;
+}
+
+.movie-description {
+  max-width: 800px;
+}
+
+
