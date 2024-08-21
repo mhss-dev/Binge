@@ -49,6 +49,17 @@ h1 {
   margin-right: 20px;
 }
 
+/* Make sure all images are the same size */
+.card img {
+  width: 100%; /* Fill the width of the card */
+  height: 30rem; /* Fixed height for all images */
+  object-fit: fill; /* Crop the image if necessary to fit */
+}
+
+/* Optional: Add margin and padding to the card body to avoid content overlap */
+.card-body {
+  padding: 1rem;
+}
 
 .back-to-top {
   position: fixed;

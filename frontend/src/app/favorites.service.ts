@@ -22,7 +22,7 @@ export class FavoritesService {
   }
   
   removeFavorite(movieId: number): Observable<any> {
-      return this.http.delete<any>(`${this.apiUrl}/favorites/${movieId}/delete`, { withCredentials: true }).pipe(
+      return this.http.delete<any>(`${this.apiUrl}/${movieId}/delete`, { withCredentials: true }).pipe(
       tap(response => {
         if (response.message) {
           console.log(response.message);
