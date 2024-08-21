@@ -18,7 +18,6 @@ export class DetailsService {
     params = params.append('append_to_response', 'credits');
 
     const urlWithParams = `${url}&${params.toString()}`;
-    console.log(urlWithParams);
     
     return this.http.get<any>(url, { params });
   }
