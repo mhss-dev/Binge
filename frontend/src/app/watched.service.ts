@@ -7,7 +7,7 @@ import { catchError, Observable, tap, throwError } from 'rxjs';
 })
 export class WatchedService {
 
-  private apiUrl = 'http://localhost:3000/api/watched';
+  private apiUrl = 'https://backend-binge.onrender.com/api/watched';
 
   constructor(private http: HttpClient) { }
 

@@ -6,28 +6,27 @@
       <p class="lead">{{ movie?.tagline }}</p>
       <div class="d-flex align-items-center mt-3">
         <span class="badge bg-success me-3 fs-6">{{ movie?.vote_average| number: '1.0-0'}}/10</span>
-        <span *ngFor="let genre of movie?.genres" class="badge text-bg-secondary me-2 fs-6">{{ genre.name }}</span>
+        <span *ngFor="let genre of movie?.genres" class="badge text-bg-dark me-2 fs-6">{{ genre.name }}</span>
       </div>
-      <p class="text-secondary mt-4">{{ movie?.release_date | date:'dd/MM/yyyy' }} • {{ movie?.runtime}} minutes</p>
+      <p class="text-secondary mt-4">{{ movie?.release_date | date:'yyyy' }} • {{ movie?.runtime}} minutes</p>
       <div class="mt-4">
         <button class="btn me-2" 
-        [ngClass]="isWatched ? 'btn-light' : 'btn-outline-light'" 
+        [ngClass]="isWatched ? 'btn-outline-light' : 'btn-light'" 
         (click)="toggleWatched()">
         <i class="fa-solid fa-play me-2"></i>{{ isWatched ? 'Retirer des films vus' : 'Ajouter aux films vus' }}
       </button>
       
       <button class="btn me-2" 
-        [ngClass]="isWatchlist ? 'btn-light' : 'btn-outline-light'" 
+        [ngClass]="isWatchlist ? 'btn-outline-light' : 'btn-light'" 
         (click)="toggleWatchlist()">
         <i class="fa-regular fa-clock me-2"></i>{{ isWatchlist ? 'Retirer de la watchlist' : 'Ajouter à la watchlist' }}
       </button>
       
       <button class="btn me-2" 
-        [ngClass]="isFavorite ? 'btn-light' : 'btn-outline-light'" 
+        [ngClass]="isFavorite ? 'btn-outline-light' : 'btn-light'" 
         (click)="toggleFavorite()">
-        <i class="fa-regular fa-heart me-2"></i>{{ isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris' }}
+        <i class="fa-solid {{ isFavorite ? 'fa-heart-crack' : 'fa-solid fa-heart' }} me-2"></i>{{ isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris' }}
       </button>
-      
       
         <div *ngIf="!isLoggedIn" class="text-danger mt-3">
           Vous devez être connecté pour effectuer ces actions.
@@ -39,7 +38,5 @@
       <p>Box Office : {{ movie?.revenue | currency}}</p>
     </div>
   </div>
-  
-
   
 </div>

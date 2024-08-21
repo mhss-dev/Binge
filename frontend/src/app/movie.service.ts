@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class MovieService {
-  private apiUrl = 'http://localhost:3000/api/nowplaying';
+  private apiUrl = 'https://backend-binge.onrender.com/api/nowplaying';
 
   constructor(private http: HttpClient) { }
 
