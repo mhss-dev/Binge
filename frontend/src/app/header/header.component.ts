@@ -33,7 +33,7 @@ export class HeaderComponent {
   loadMovies() {
     this.movieService.getNowPlayingMovies().subscribe({
       next: (data) => {        
-        this.movie = data.results[this.getRandomBackdrop(0, 20)];
+        this.movie = data.results[this.getRandomBackdrop(0, 10)];
         this.loading = false;
       },
       error: (error) => {
