@@ -43,7 +43,6 @@ export class NavbarComponent {
           this.nickname = response.nickname;
         },
         error: (error: any) => {
-          console.error("Erreur lors de la récupération du profil :", error);
           this.nickname = '';
         }
       });
