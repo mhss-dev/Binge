@@ -9,7 +9,7 @@ export class DiscoverService {
 
   
 
-  private apiUrl = 'https://backend-binge.onrender.com/api';
+  private apiUrl = 'http://localhost:5000/api';
 
   constructor(private http: HttpClient) { }
 

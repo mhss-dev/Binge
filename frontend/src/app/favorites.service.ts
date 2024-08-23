@@ -7,7 +7,7 @@ import { catchError, Observable, tap, throwError } from 'rxjs';
 })
 export class FavoritesService {
 
-  private apiUrl = 'https://backend-binge.onrender.com/api/favorites';
+  private apiUrl = 'http://localhost:5000/api/favorites';
 
   constructor(private http: HttpClient) { }
 

@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class DetailsService {
-  private apiUrl = 'https://backend-binge.onrender.com/api/films';
+  private apiUrl = 'http://localhost:5000/api/films';
 
   constructor(private http: HttpClient) { }
 
@@ -15,10 +15,7 @@ export class DetailsService {
     const url = `${this.apiUrl}/${id}`;
     let params = new HttpParams();
 
-    params = params.append('append_to_response', 'credits');
-
-    const urlWithParams = `${url}&${params.toString()}`;
-    
+    params = params.append('append_to_response', 'credits');    
     return this.http.get<any>(url, { params });
   }
 }
