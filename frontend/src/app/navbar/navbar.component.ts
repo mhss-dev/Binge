@@ -14,7 +14,7 @@ import { AuthService } from '../auth.service';
 export class NavbarComponent {
   navbarClass: string = 'navbar-default';
   isLoggedIn = false;
-  nickname = null;
+  nickname: string | null = null;
 
 
   constructor(private authService: AuthService, private router: Router) {}
@@ -37,14 +37,19 @@ export class NavbarComponent {
   }
   
   getNickname(): void {
-    this.authService.getProfil().subscribe({
-      next: (response: any) => {
-        this.nickname = response.nickname;
-      },
-      error: (error: any) => {
-        console.error("Erreur lors de la récupération du profil :", error);
-      }
-    });
+    if (this.authService.isLoggedIn$) {
+      this.authService.getProfil().subscribe({
+        next: (response: any) => {
+          this.nickname = response.nickname;
+        },
+        error: (error: any) => {
+          console.error("Erreur lors de la récupération du profil :", error);
+          this.nickname = '';
+        }
+      });
+    } else {
+      this.nickname = '';
+    }
   }
 
   
