@@ -147,6 +147,6 @@ app.use('/api/watchlist', watchlistRoutes);
 app.use('/api/watched', watchedRoutes);
 
 
-app.listen(3000, () => {
+app.listen(5000, () => {
   console.log("Démarrage sur le port 3000");
 });
