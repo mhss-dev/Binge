@@ -1,13 +1,14 @@
-// src/app/movie.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MovieService {
-  private apiUrl = 'https://backend-binge.onrender.com/api/nowplaying';
+  
+  private apiUrl = `${environment.apiUrl}/nowplaying`;
 
   constructor(private http: HttpClient) { }
 

@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://backend-binge.onrender.com/api';
+  private apiUrl = environment.apiUrl;
 
   private isLoggedInSubject = new BehaviorSubject<boolean>(false);
   isLoggedIn$ = this.isLoggedInSubject.asObservable();
@@ -29,7 +30,7 @@ export class AuthService {
         tap(() => this.setLoggedIn(true)),
         catchError(() => {
           this.setLoggedIn(false);
-          return throwError(() => new Error('Login failed'));
+          return throwError(() => new Error('Connexion échouée'));
         })
       );
   }
@@ -40,7 +41,7 @@ export class AuthService {
         tap(() => this.setLoggedIn(false)),
         catchError(error => {
           console.error('Logout error:', error);
-          return throwError(() => new Error('Logout failed'));
+          return throwError(() => new Error('Déconnexion échouée'));
         })
       );
   }
