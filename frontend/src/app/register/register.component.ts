@@ -23,7 +23,10 @@ export class RegisterComponent {
   onRegister(): void {
     this.authService.register(this.username, this.password, this.nickname).subscribe({
       next: (response) => {
-        if (response.status === 200) {
+        if (response.status === 409) {
+          this.registerMessage = "Ce nom de compte ou pseudo existe déjà";
+          this.alertType = 'alert-danger';
+        } else if (response.status === 200) {
           this.registerMessage = "Inscription avec succès. Bienvenue " + this.nickname;
           this.alertType = 'alert-success';
           setTimeout(() => this.router.navigate(['/profil']), 3000)

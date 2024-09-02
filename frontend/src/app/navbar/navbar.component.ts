@@ -31,7 +31,7 @@ export class NavbarComponent {
         }
       },
       error: (error: any) => {
-        console.error("Erreur lors de la récupération du status de connexion :", error);
+        console.error("Erreur lors de la  récupération du status de connexion :", error);
       }
     });
   }

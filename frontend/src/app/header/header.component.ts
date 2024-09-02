@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MovieService } from '../movie.service';
 import { CommonModule } from '@angular/common';
 import { interval, Subscription } from 'rxjs';
+import { DiscoverService } from 'app/discover.service';
 
 @Component({
   selector: 'app-header',
@@ -19,7 +20,7 @@ export class HeaderComponent {
   private subscription: Subscription = new Subscription();
   private readonly BACKDROP_UPDATE_INTERVAL = 5000;
 
-  constructor(private movieService: MovieService) {}
+  constructor(private movieService: DiscoverService) {}
 
   ngOnInit(): void {
     this.loadMovies();
@@ -31,7 +32,7 @@ export class HeaderComponent {
   }
 
   loadMovies() {
-    this.movieService.getNowPlayingMovies().subscribe({
+    this.movieService.getFilms().subscribe({
       next: (data) => {        
         this.movie = data.results[this.getRandomBackdrop(0, 20)];
         this.loading = false;

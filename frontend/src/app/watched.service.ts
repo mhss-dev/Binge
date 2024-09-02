@@ -9,9 +9,10 @@ import { environment } from '../environments/environment';
 export class WatchedService {
 
   private apiUrl = `${environment.apiUrl}/watched`;
-
+  
+  
   constructor(private http: HttpClient) { }
-
+  
   addWatched(movieId: number): Observable<any> {  
     return this.http.post<any>(`${this.apiUrl}/${movieId}/add`, {}, { withCredentials: true }).pipe(
       tap(response => {
