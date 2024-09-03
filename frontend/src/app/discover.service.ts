@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams  } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ export class DiscoverService {
 
   
 
-  private apiUrl = 'https://backend-binge.onrender.com/api';
+  private apiUrl = `https://backend-binge.onrender.com/api`;
 
   constructor(private http: HttpClient) { }
 
@@ -26,7 +27,8 @@ export class DiscoverService {
     
 
     const url = `${this.apiUrl}/films`;
-    
+    console.log(url);
+     
     return this.http.get<any>(url, { params });
   }
 

@@ -8,7 +8,7 @@ import { environment } from '../environments/environment';
 })
 export class FavoritesService {
 
-  private apiUrl = `${environment.apiUrl}/favorites`;
+  private apiUrl = `https://backend-binge.onrender.com/api/favorites`;
 
   constructor(private http: HttpClient) { }
 

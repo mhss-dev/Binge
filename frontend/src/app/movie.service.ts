@@ -8,11 +8,11 @@ import { environment } from '../environments/environment';
 })
 export class MovieService {
   
-  private apiUrl = `${environment.apiUrl}/nowplaying`;
+  private apiUrl = `https://backend-binge.onrender.com/api/nowplaying`;
 
   constructor(private http: HttpClient) { }
 
-  getNowPlayingMovies(): Observable<any> {
+  getNowPlayingMovies(): Observable<any> {    
     return this.http.get<any>(this.apiUrl);
   }
 

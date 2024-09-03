@@ -8,7 +8,7 @@ import { environment } from '../environments/environment';
   providedIn: 'root'
 })
 export class DetailsService {
-  private apiUrl = `${environment.apiUrl}/films`;
+  private apiUrl = `https://backend-binge.onrender.com/api/films`;
 
   constructor(private http: HttpClient) { }
 

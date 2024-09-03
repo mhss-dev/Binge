@@ -8,7 +8,7 @@ import { environment } from '../environments/environment';
 })
 export class WatchedService {
 
-  private apiUrl = `${environment.apiUrl}/watched`;
+  private apiUrl = `https://backend-binge.onrender.com/api/watched`;
   
   
   constructor(private http: HttpClient) { }
