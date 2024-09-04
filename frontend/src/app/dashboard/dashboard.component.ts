@@ -132,11 +132,13 @@ export class DashboardComponent {
       next: (response) => {
         console.log('Pseudo mis à jour :', response);
         this.nickname = this.newNickname;
-
+        
         this.errorMessage = null;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.errorMessage = err;
+        this.cdr.detectChanges();
       }
   })
 }
