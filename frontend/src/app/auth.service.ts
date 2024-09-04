@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
@@ -50,10 +50,15 @@ export class AuthService {
     return this.http.get<any>(`${this.apiUrl}/auth/profil`, { withCredentials: true });
   }
 
+  changeNickname(newNickname: string): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/auth/profil/update`, { newNickname }, { withCredentials: true })
+  }
+
   register(username: string, password: string, nickname: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/register`, { username, password, nickname }, { observe: 'response' });
   }
   private setLoggedIn(status: boolean): void {
     this.isLoggedInSubject.next(status);
   }
+
 }

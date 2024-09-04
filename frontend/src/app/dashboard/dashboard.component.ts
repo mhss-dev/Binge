@@ -31,6 +31,9 @@ export class DashboardComponent {
   currentWatchlistPage = 1;
   currentWatchedPage = 1;
 
+  newNickname: string = '';
+  errorMessage: string | null = null;
+
   constructor(
     private router: Router, 
     private authService: AuthService, 
@@ -123,6 +126,22 @@ export class DashboardComponent {
 
     });
   }
+
+    updateNickname() {
+    this.authService.changeNickname(this.newNickname).subscribe({
+      next: (response) => {
+        console.log('Pseudo mis à jour :', response);
+        this.nickname = this.newNickname;
+
+        this.errorMessage = null;
+      },
+      error: (err) => {
+        this.errorMessage = err;
+      }
+  })
+}
+
+
 
 
   @HostListener('window:scroll', ['$event'])
