@@ -8,7 +8,7 @@ import { environment } from '../environments/environment';
 })
 export class MovieService {
   
-  private apiUrl = `https://backend-binge.onrender.com/api/nowplaying`;
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
 

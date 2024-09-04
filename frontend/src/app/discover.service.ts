@@ -26,9 +26,7 @@ export class DiscoverService {
     }
     
 
-    const url = `${this.apiUrl}/films`;
-    console.log(url);
-     
+    const url = `${this.apiUrl}/films`;     
     return this.http.get<any>(url, { params });
   }
 
