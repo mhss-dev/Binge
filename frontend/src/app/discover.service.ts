@@ -10,7 +10,7 @@ export class DiscoverService {
 
   
 
-  private apiUrl = `https://backend-binge.onrender.com/api`;
+  private apiUrl = `${environment.apiUrl}`;
 
   constructor(private http: HttpClient) { }
 

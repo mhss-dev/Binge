@@ -8,7 +8,7 @@ import { environment } from '../environments/environment';
 })
 export class MovieService {
   
-  private apiUrl = environment.apiUrl;
+  private apiUrl = `${environment.apiUrl}/nowplaying`;
 
   constructor(private http: HttpClient) { }
 

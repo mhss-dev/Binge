@@ -8,51 +8,17 @@
 
   <div>
     <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-
-    <div id="movieCarousel" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-inner">
-        <div
-          *ngFor="let movie of movies; let i = index"
-          [ngClass]="{ 'carousel-item': true, active: i === 0 }"
-        >
-          <div class="d-block w-100">
+  
+  
+        <div class="row">
+          <div *ngFor="let movie of movies" class="col-md-4 mb-4">
             <div class="card border-light bg-dark text-white shadow-sm">
               <a [routerLink]="['/film', movie.id]" class="d-block">
-                <img
-                  [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path"
-                  class="img-fluid rounded"
-                />
+                <img [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" 
+                     class="img-fluid rounded" >
               </a>
               <div class="card-body">
                 <h5 class="card-title text-center">{{ movie.title }}</h5>
-                <p class="card-text">
-                  {{ movie.overview || "Aucune description n'a été fournie par l'API." }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Controls -->
-      <button
-        class="carousel-control-prev"
-        type="button"
-        data-bs-target="#movieCarousel"
-        data-bs-slide="prev"
-      >
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button
-        class="carousel-control-next"
-        type="button"
-        data-bs-target="#movieCarousel"
-        data-bs-slide="next"
-      >
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
-    </div>
+                <p class="card-text">{{ movie.overview || "Aucune description n'a été fournie par l'API."}}</p>
   </div>
 </div>
