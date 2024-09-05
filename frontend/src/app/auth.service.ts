@@ -52,7 +52,7 @@ export class AuthService {
 
   changeNickname(newNickname: string): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/auth/profil/update`, { newNickname }, { withCredentials: true })
-  }
+  } 
 
   register(username: string, password: string, nickname: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/register`, { username, password, nickname }, { observe: 'response' });

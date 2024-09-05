@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { DiscoverService } from '../discover.service';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink, Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { DetailsService } from '../details.service';
 import { FavoritesService } from '../favorites.service';
@@ -29,12 +29,10 @@ export class DetailsComponent {
   isLoggedIn = false;
 
 
-  constructor(private authService: AuthService, private route: ActivatedRoute, private watched : WatchedService, private watchlist: WatchlistService, private detailsService: DetailsService, private favoritesService: FavoritesService, private cdr: ChangeDetectorRef) { }
+  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute, private watched : WatchedService, private watchlist: WatchlistService, private detailsService: DetailsService, private favoritesService: FavoritesService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-
-    
   
     if (id) {
       this.detailsService.getMovieByID(Number(id)).subscribe({
@@ -52,37 +50,55 @@ export class DetailsComponent {
     } else {
       console.error("L'ID du film n'a pas été trouvé?");
     }
-
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        window.scrollTo(0, 0);
+      }
+    });
     this.authService.isLoggedIn$.subscribe(status => {
       this.isLoggedIn = status;
     });
+
+
   }
   
 
-toggleFavorite(): void {
-  if (this.isFavorite) {
-    this.removeFromFavorites();
-  } else {
-    this.addToFavorites();
+  toggleFavorite(): void {
+    if (this.isLoggedIn) {
+      if (this.isFavorite) {
+        this.removeFromFavorites();
+      } else {
+        this.addToFavorites();
+      }
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
-}
-toggleWatchlist(): void {
-  if (this.isWatchlist) {
-    this.removeFromWatchlist();
-    
-  } else {
-    this.addWatchlist();
-  }
-}
 
-toggleWatched(): void {
-  if (this.isWatched) {
-    this.removeWatched();
-    
-  } else {
-    this.addWatched();
+  toggleWatchlist(): void {
+    if (this.isLoggedIn) {
+      if (this.isWatchlist) {
+        this.removeFromWatchlist();
+      } else {
+        this.addWatchlist();
+      }
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
-}
+
+  toggleWatched(): void {
+    if (this.isLoggedIn) {
+      if (this.isWatched) {
+        this.removeWatched();
+      } else {
+        this.addWatched();
+      }
+    } else {
+      this.router.navigate(['/login']);
+    }
+  }
+
 
 
 addToFavorites(): void {

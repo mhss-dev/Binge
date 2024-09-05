@@ -1,131 +1,134 @@
 <div class="container mt-5 dashboard-container text-white">
-    <div class="text-center mb-4 pb-5">
-      <div class="d-flex flex-column align-items-center">
-        <img src="https://avatars.githubusercontent.com/u/93445134" class="avatar rounded-circle mb-2" />
-        <h1 class="mt-3">{{ nickname }}</h1>
-      </div>
-      <div class="d-flex justify-content-center align-content-center gap-3">
-        <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#changeNicknameModal">
-          <i class="fa-solid fa-pen"></i> Changez de pseudo
-        </button>
-        <button (click)="onLogout()" class="btn btn-danger mt-3">
-          <i class="fa-solid fa-sign-out-alt"></i> Déconnexion
-        </button>
-      </div>
+  <!-- User Profile Section -->
+  <div class="text-center mb-4 pb-5">
+    <div class="d-flex flex-column align-items-center">
+      <img src="https://avatars.githubusercontent.com/u/93445134" class="avatar rounded-circle mb-2" />
+      <h1 class="mt-3">{{ nickname }}</h1>
     </div>
-  
-    <ul class="nav nav-tabs mt-5" id="myTab" role="tablist">
-      <li class="nav-item" role="presentation">
-        <a class="nav-link active" id="favorites-tab" data-bs-toggle="tab" href="#favorites" role="tab" aria-controls="favorites" aria-selected="false">Favoris ({{ favorites.length }})</a>
-      </li>
-      <li class="nav-item" role="presentation">
-        <a class="nav-link" id="watchlist-tab" data-bs-toggle="tab" href="#watchlist" role="tab" aria-controls="watchlist" aria-selected="false">Watchlist ({{ watchlist.length }})</a>
-      </li>
-      <li class="nav-item" role="presentation">
-        <a class="nav-link" id="watched-tab" data-bs-toggle="tab" href="#watched" role="tab" aria-controls="watched" aria-selected="false">Films vus ({{ watched.length }})</a>
-      </li>
-    </ul>
-  
-    <div class="tab-content mt-3">
-  
-      <div class="tab-pane fade show active" id="favorites" role="tabpanel" aria-labelledby="favorites-tab">
-        <div class="movie-list">
-          <div *ngFor="let movie of paginatedFavorites()" class="movie-card">
-            <a [routerLink]="['/film', movie.id]" class="d-block">
-              <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
-            </a>
-            <div class="movie-info">
-              <h5 class="movie-title">{{ movie.title }}</h5>
-            </div>
-          </div>
-          <div *ngIf="favorites.length === 0" class="text-center mt-3">
-            <p>Vous n'avez pas de favoris, ajoutez des films <a href="https://binge-mhss.netlify.app/films">ici</a>.</p>
-          </div>
-        </div>
-        <nav *ngIf="favorites.length > moviesPerPage" aria-label="Favorites pagination">
-          <ul class="pagination justify-content-center">
-            <li class="page-item" [class.disabled]="currentFavoritesPage === 1">
-              <a class="page-link" (click)="previousFavoritesPage()">Précédent</a>
-            </li>
-            <li class="page-item" [class.active]="currentFavoritesPage === pageNumber" *ngFor="let pageNumber of totalFavoritesPages">
-              <a class="page-link" (click)="goToFavoritesPage(pageNumber)">{{ pageNumber }}</a>
-            </li>
-            <li class="page-item" [class.disabled]="currentFavoritesPage === totalFavoritesPages.length">
-              <a class="page-link" (click)="nextFavoritesPage()">Suivant</a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-  
-      <div class="tab-pane fade" id="watchlist" role="tabpanel" aria-labelledby="watchlist-tab">
-        <div class="movie-list">
-          <div *ngFor="let movie of paginatedWatchlist()" class="movie-card">
-            <a [routerLink]="['/film', movie.id]" class="d-block">
-              <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
-            </a>
-            <div class="movie-info">
-              <h5 class="movie-title">{{ movie.title }}</h5>
-            </div>
-          </div>
-          <div *ngIf="watchlist.length === 0" class="text-center mt-3">
-            <p>Votre watchlist est vide. Ajoutez des films <a href="https://binge-mhss.netlify.app/films">ici</a>.</p>
+    <div class="d-flex flex-column flex-md-row justify-content-center align-content-center gap-3">
+      <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#changeNicknameModal">
+        <i class="fa-solid fa-pen"></i> Changez de pseudo
+      </button>
+      <button (click)="onLogout()" class="btn btn-danger mt-3">
+        <i class="fa-solid fa-sign-out-alt"></i> Déconnexion
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabs Navigation -->
+  <ul class="nav nav-tabs mt-5" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <a class="nav-link active" id="favorites-tab" data-bs-toggle="tab" href="#favorites" role="tab" aria-controls="favorites" aria-selected="false">Favoris ({{ favorites.length }})</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link" id="watchlist-tab" data-bs-toggle="tab" href="#watchlist" role="tab" aria-controls="watchlist" aria-selected="false">Watchlist ({{ watchlist.length }})</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link" id="watched-tab" data-bs-toggle="tab" href="#watched" role="tab" aria-controls="watched" aria-selected="false">Films vus ({{ watched.length }})</a>
+    </li>
+  </ul>
+
+  <!-- Tab Content -->
+  <div class="tab-content mt-3">
+    <!-- Favorites Tab -->
+    <div class="tab-pane fade show active" id="favorites" role="tabpanel" aria-labelledby="favorites-tab">
+      <div class="movie-list">
+        <div *ngFor="let movie of paginatedFavorites()" class="movie-card">
+          <a [routerLink]="['/film', movie.id]" class="d-block">
+            <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
+          </a>
+          <div class="movie-info">
+            <h5 class="movie-title">{{ movie.title }}</h5>
           </div>
         </div>
-        <nav *ngIf="watchlist.length > moviesPerPage" aria-label="Watchlist pagination">
-          <ul class="pagination justify-content-center">
-            <li class="page-item" [class.disabled]="currentWatchlistPage === 1">
-              <a class="page-link" (click)="previousWatchlistPage()">Précédent</a>
-            </li>
-            <li class="page-item" [class.active]="currentWatchlistPage === pageNumber" *ngFor="let pageNumber of totalWatchlistPages">
-              <a class="page-link" (click)="goToWatchlistPage(pageNumber)">{{ pageNumber }}</a>
-            </li>
-            <li class="page-item" [class.disabled]="currentWatchlistPage === totalWatchlistPages.length">
-              <a class="page-link" (click)="nextWatchlistPage()">Suivant</a>
-            </li>
-          </ul>
-        </nav>
+        <div *ngIf="favorites.length === 0" class="text-center mt-3">
+          <p>Vous n'avez pas de favoris, ajoutez des films <a href="https://binge-mhss.netlify.app/films">ici</a>.</p>
+        </div>
       </div>
-  
-      <div class="tab-pane fade" id="watched" role="tabpanel" aria-labelledby="watched-tab">
-        <div class="movie-list">
-          <div *ngFor="let movie of paginatedWatched()" class="movie-card">
-            <a [routerLink]="['/film', movie.id]" class="d-block">
-              <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
-            </a>
-            <div class="movie-info">
-              <h5 class="movie-title">{{ movie.title }}</h5>
-            </div>
-          </div>
-          <div *ngIf="watched.length === 0" class="text-center mt-3">
-            <p>Vous avez vu aucun film ? Impossible. Ajoutez des films <a href="https://binge-mhss.netlify.app/films">ici</a>.</p>
+      <nav *ngIf="favorites.length > moviesPerPage" aria-label="Favorites pagination">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" [class.disabled]="currentFavoritesPage === 1">
+            <a class="page-link" (click)="previousFavoritesPage()">Précédent</a>
+          </li>
+          <li class="page-item" [class.active]="currentFavoritesPage === pageNumber" *ngFor="let pageNumber of totalFavoritesPages">
+            <a class="page-link" (click)="goToFavoritesPage(pageNumber)">{{ pageNumber }}</a>
+          </li>
+          <li class="page-item" [class.disabled]="currentFavoritesPage === totalFavoritesPages.length">
+            <a class="page-link" (click)="nextFavoritesPage()">Suivant</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Watchlist Tab -->
+    <div class="tab-pane fade" id="watchlist" role="tabpanel" aria-labelledby="watchlist-tab">
+      <div class="movie-list">
+        <div *ngFor="let movie of paginatedWatchlist()" class="movie-card">
+          <a [routerLink]="['/film', movie.id]" class="d-block">
+            <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
+          </a>
+          <div class="movie-info">
+            <h5 class="movie-title">{{ movie.title }}</h5>
           </div>
         </div>
-        <nav *ngIf="watched.length > moviesPerPage" aria-label="Watched pagination">
-          <ul class="pagination justify-content-center">
-            <li class="page-item" [class.disabled]="currentWatchedPage === 1">
-              <a class="page-link" (click)="previousWatchedPage()">Précédent</a>
-            </li>
-            <li class="page-item" [class.active]="currentWatchedPage === pageNumber" *ngFor="let pageNumber of totalWatchedPages">
-              <a class="page-link" (click)="goToWatchedPage(pageNumber)">{{ pageNumber }}</a>
-            </li>
-            <li class="page-item" [class.disabled]="currentWatchedPage === totalWatchedPages.length">
-              <a class="page-link" (click)="nextWatchedPage()">Suivant</a>
-            </li>
-          </ul>
-        </nav>
+        <div *ngIf="watchlist.length === 0" class="text-center mt-3">
+          <p>Votre watchlist est vide. Ajoutez des films <a href="https://binge-mhss.netlify.app/films">ici</a>.</p>
+        </div>
       </div>
-  
+      <nav *ngIf="watchlist.length > moviesPerPage" aria-label="Watchlist pagination">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" [class.disabled]="currentWatchlistPage === 1">
+            <a class="page-link" (click)="previousWatchlistPage()">Précédent</a>
+          </li>
+          <li class="page-item" [class.active]="currentWatchlistPage === pageNumber" *ngFor="let pageNumber of totalWatchlistPages">
+            <a class="page-link" (click)="goToWatchlistPage(pageNumber)">{{ pageNumber }}</a>
+          </li>
+          <li class="page-item" [class.disabled]="currentWatchlistPage === totalWatchlistPages.length">
+            <a class="page-link" (click)="nextWatchlistPage()">Suivant</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Watched Tab -->
+    <div class="tab-pane fade" id="watched" role="tabpanel" aria-labelledby="watched-tab">
+      <div class="movie-list">
+        <div *ngFor="let movie of paginatedWatched()" class="movie-card">
+          <a [routerLink]="['/film', movie.id]" class="d-block">
+            <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
+          </a>
+          <div class="movie-info">
+            <h5 class="movie-title">{{ movie.title }}</h5>
+          </div>
+        </div>
+        <div *ngIf="watched.length === 0" class="text-center mt-3">
+          <p>Vous avez vu aucun film ? Impossible. Ajoutez des films <a href="https://binge-mhss.netlify.app/films">ici</a>.</p>
+        </div>
+      </div>
+      <nav *ngIf="watched.length > moviesPerPage" aria-label="Watched pagination">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" [class.disabled]="currentWatchedPage === 1">
+            <a class="page-link" (click)="previousWatchedPage()">Précédent</a>
+          </li>
+          <li class="page-item" [class.active]="currentWatchedPage === pageNumber" *ngFor="let pageNumber of totalWatchedPages">
+            <a class="page-link" (click)="goToWatchedPage(pageNumber)">{{ pageNumber }}</a>
+          </li>
+          <li class="page-item" [class.disabled]="currentWatchedPage === totalWatchedPages.length">
+            <a class="page-link" (click)="nextWatchedPage()">Suivant</a>
+          </li>
+        </ul>
+      </nav>
     </div>
   </div>
 
   <div class="modal fade" id="changeNicknameModal" tabindex="-1" aria-labelledby="changeNicknameModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header text-dark">
           <h5 class="modal-title" id="changeNicknameModalLabel">Mise à jour du profil</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body text-dark">
           <div class="mb-3">
             <label for="nicknameInput" class="form-label">Nouveau pseudo</label>
             <input type="text" class="form-control" id="nicknameInput" [(ngModel)]="newNickname" />
@@ -134,9 +137,9 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-          <button type="button" class="btn btn-primary"  data-bs-dismiss="modal" (click)="updateNickname()">Sauvegarder</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="updateNickname()">Sauvegarder</button>
         </div>
       </div>
     </div>
   </div>
-  
+</div>

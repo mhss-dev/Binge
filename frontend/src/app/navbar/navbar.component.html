@@ -1,28 +1,60 @@
 <div class="container-fluid p-0">
-  <nav [ngClass]="navbarClass" class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3">
-  
-      <a href="/" class="fs-3 ms-4 text-white d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-        Binge
-      </a>
-  
-      <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="/" class="nav-link px-2 text-white"><i class="fa-solid fa-house"></i> Accueil</a></li>
-        <li><a routerLink="/films" class="nav-link px-2 text-white"><i class="fa-solid fa-film"></i> Découverte</a></li>
-        <li><a (click)="scrollTo('#aucinema')" class="nav-link px-2 text-white"><i class="fa-solid fa-video"></i> Au cinéma</a></li>
+  <nav [ngClass]="navbarClass" class="navbar navbar-expand-md py-3">
+    <a href="/" class="fs-3 ms-3 text-white d-flex align-items-center text-dark text-decoration-none">
+      Binge
+    </a>
+
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto d-flex flex-wrap justify-content-center">
+        <li class="nav-item">
+          <a href="/" class="nav-link px-2 text-white">
+            <i class="fa-solid fa-house"></i> Accueil
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/films" class="nav-link px-2 text-white">
+            <i class="fa-solid fa-film"></i> Découverte
+          </a>
+        </li>
+        <li class="nav-item">
+          <a (click)="scrollTo('#aucinema')" class="nav-link px-2 text-white">
+            <i class="fa-solid fa-video"></i> Au cinéma
+          </a>
+        </li>
       </ul>
-  
-      <div class="col-md-4 text-end me-2 p-0">
-  <ng-container *ngIf="!isLoggedIn; else loggedInTemplate">
-    <a routerLink="/login" class="btn btn-dark m-2"><i class="fa-solid fa-sign-in-alt"></i> Connexion</a>
-    <a routerLink="/register" class="btn btn-dark"><i class="fa-solid fa-user-plus"></i> Inscription</a>
-  </ng-container>
 
-  <ng-template #loggedInTemplate>
-    <a routerLink="/profil" class="btn btn-dark m-2"><i class="fa-solid fa-user"></i> {{ nickname }}</a>
-    <a (click)="logout()" class="btn btn-dark"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</a>
-  </ng-template>
-</div>
+      <div class="d-flex ms-auto">
+        <ng-container *ngIf="!isLoggedIn; else loggedInTemplate">
+          <a routerLink="/login" class="btn btn-dark m-2">
+            <i class="fa-solid fa-sign-in-alt"></i> Connexion
+          </a>
+          <a routerLink="/register" class="btn btn-dark">
+            <i class="fa-solid fa-user-plus"></i> Inscription
+          </a>
+        </ng-container>
 
+        <ng-template #loggedInTemplate>
+          <a routerLink="/profil" class="btn btn-dark m-2">
+            <i class="fa-solid fa-user"></i> {{ nickname }}
+          </a>
+          <a (click)="logout()" class="btn btn-dark">
+            <i class="fa-solid fa-right-from-bracket"></i> Déconnexion
+          </a>
+        </ng-template>
+      </div>
+    </div>
   </nav>
   <router-outlet></router-outlet>
 </div>

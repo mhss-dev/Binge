@@ -1,9 +1,10 @@
-<header class="header position-relative text-center d-flex justify-content-center align-items-center" [style.backgroundImage]="'url(https://image.tmdb.org/t/p/original/' + movie.backdrop_path + ')'">
+<header class="header position-relative text-center d-flex justify-content-center align-items-center"
+        [ngStyle]="{'background-image': 'url(https://image.tmdb.org/t/p/original/' + movie.backdrop_path + ')'}">
   <div class="overlay position-absolute w-100 h-100"></div>
-  <div class="container font-weight-bold text-white position-relative z-index-2">
-    <h1 class="display-1 pb-5">Binge</h1>
-    <p>Gardez un œil sur les films que vous avez vus.</p>
-    <p>Enregistrez ceux que vous souhaitez voir, partagez vos découvertes avec vos amis.</p>
-    <p class="text-small text-secondary mt-5 fs-6 movie-name gap-5">{{ movie.title }} ({{ movie.release_date | date: 'yyy' }})</p>
+  <div class="container-fluid position-relative z-index-2 px-5 py-5">
+    <h1 class="display-3 display-md-1 pb-3 pb-md-5">Binge</h1>
+    <p class="lead mb-4">Gardez un œil sur les films que vous avez vus.</p>
+    <p class="mb-4">Enregistrez ceux que vous souhaitez voir, partagez vos découvertes avec vos amis.</p>
+    <p class="text-small text-secondary mt-4 fs-5 movie-name">{{ movie.title }} ({{ movie.release_date | date: 'yyyy' }})</p>
   </div>
 </header>

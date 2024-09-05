@@ -2,3 +2,11 @@ a:hover {
     color: rgb(102, 100, 100);
     text-decoration: underline;
 }
+
+
+/* Hide footer on extra-small screens (portrait phones, less than 576px) */
+@media (max-width: 576px) {
+    .footer {
+      display: none;
+    }
+  }

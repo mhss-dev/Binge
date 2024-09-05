@@ -36,6 +36,7 @@ export class FilmsComponent {
   isWatchlist: boolean = false; 
   isWatched: boolean = false; 
   isLoggedIn = false;
+  nickname: string | null = null;
 
   constructor(private discoverService: DiscoverService,
     private route: ActivatedRoute,
@@ -53,8 +54,13 @@ export class FilmsComponent {
     this.loadFilms(1);
 
     this.authService.isLoggedIn$.subscribe(status => {
-      this.isLoggedIn = status;
-    });
+      this.isLoggedIn = status; 
+      if (this.isLoggedIn) {
+          this.getNickname();
+      } else {
+        return;
+      }
+    })
   }
   loadFilms(page: number): void {
     if (this.isLoading || !this.hasMore) return;
@@ -79,7 +85,20 @@ export class FilmsComponent {
       }
     });
   }
-
+  getNickname(): void {
+    if (this.authService.isLoggedIn$) {
+      this.authService.getProfil().subscribe({
+        next: (response: any) => {
+          this.nickname = response.nickname;
+        },
+        error: (error: any) => {
+          this.nickname = '';
+        }
+      });
+    } else {
+      this.nickname = '';
+    }
+  }
   searchFilms(query: string): void {
     if (!query) return;
 
