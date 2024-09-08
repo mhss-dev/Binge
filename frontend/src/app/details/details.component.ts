@@ -30,7 +30,6 @@ export class DetailsComponent {
   chunkedActors: any[][] = [];
   logoUrl: string | undefined;
 
-
   constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute, private watched : WatchedService, private watchlist: WatchlistService, private detailsService: DetailsService, private favoritesService: FavoritesService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
@@ -49,6 +48,8 @@ export class DetailsComponent {
             next: (logoData) => {
               if (logoData && logoData.logos && logoData.logos.length > 0) {
                 this.logoUrl = 'https://image.tmdb.org/t/p/w185' + logoData.logos[0].file_path;
+                console.log(logoData);
+                
               } else {
                 this.logoUrl = undefined;
               }
@@ -59,6 +60,7 @@ export class DetailsComponent {
         
           });
         },
+        
         error: (error) => {
           this.error = 'Erreur lors de la récupération des détails du film';
           console.error(error);
@@ -77,6 +79,10 @@ export class DetailsComponent {
     });
 
 
+  }
+
+  getReal() {
+    return this.movie?.credits?.crew?.filter((crewMember: any) => crewMember.job === 'Director') || [];
   }
   
   chunkActors(): void {

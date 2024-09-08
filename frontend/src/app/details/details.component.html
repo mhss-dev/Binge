@@ -5,7 +5,7 @@
     <div class="overlay position-absolute w-100 h-100 bg-dark opacity-75"></div>
     <div class="content container position-relative d-flex flex-column justify-content-end">
       <div *ngIf="logoUrl; else noLogo">
-        <img [src]="logoUrl" />
+        <a href="{{movie?.homepage}}" target="_blank"><img [src]="logoUrl" class="logo"/></a>
       </div>
       <ng-template #noLogo>
         <h1 class="display-4 display-md-2">{{ movie?.title }}</h1>
@@ -17,7 +17,12 @@
       </div>
 
       <p class="text-secondary mt-4">
-        {{ movie?.release_date | date: 'yyyy' }} • {{ movie?.runtime }} minutes
+        {{ movie?.release_date | date: 'yyyy' }} • {{ movie?.runtime }} minutes •
+
+        <span *ngFor="let director of getReal()">
+          {{ director.name }}
+        </span>
+        
       </p>
 
       <div class="mt-4 d-flex flex-wrap">
@@ -62,8 +67,8 @@
                         </ng-template>
 
                         <div class="card-body p-2 text-center">
-                          <h6 class="card-title mb-1">{{ actor.name }}</h6>
-                          <p class="card-text small">{{ actor.character }}</p>
+                          <h6 class="card-title mb-1">{{ actor.name || 'Inconnu' }}</h6>
+                          <p class="card-text small">{{ actor.character || 'Inconnu' }}</p>
                         </div>
                       </div>
                     </div>

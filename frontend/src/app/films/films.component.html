@@ -18,9 +18,10 @@
         <div *ngFor="let film of films" class="col-md-4 mb-4 text-center">
           <div class="card border-light bg-dark text-white">
             <a [routerLink]="['/film', film.id]" class="d-block">
-                <img [src]="'https://image.tmdb.org/t/p/w500/' + film.poster_path" 
-                     class="img-fluid rounded">
-              </a>
+              <img 
+                [src]="film.poster_path ? 'https://image.tmdb.org/t/p/w500/' + film.poster_path : 'https://via.placeholder.com/500x750?text=No+Image+Available'" 
+                class="img-fluid rounded">
+            </a>            
             <div class="card-body">
               <h5 class="card-title">{{ film.title }}</h5>
               <p class="card-text text-small">{{ film.release_date | date:'dd/MM/yyyy' }}</p>

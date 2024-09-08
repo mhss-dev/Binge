@@ -21,7 +21,10 @@
 .movie-description {
   max-width: 800px;
 }
-
+.logo{
+  height: 130px;
+  width: auto;
+}
 .cast-card {
   flex: 0 0 auto;
   width: 100px; 

@@ -24,4 +24,9 @@ export class DetailsService {
     const url = `${this.apiUrl}/logo/${id}`;
     return this.http.get<any>(url);
   }
+
+  getSimilarByID(id: number): Observable<any> {
+    const url = `${this.apiUrl}/similar/${id}`;
+    return this.http.get<any>(url);
+  }
 }
