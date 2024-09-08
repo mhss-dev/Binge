@@ -60,6 +60,7 @@ app.get("/api/nowplaying", async (req, res) => {
   }
 });
 
+
 app.get("/api/films", async (req, res) => {
   try {
     const page = parseInt(req.query.page);
@@ -106,6 +107,29 @@ app.get("/api/films/:id", async (req, res) => {
           api_key: TMDB_API_KEY,
           append_to_response: "credits",
           language: "fr-FR",
+        },
+      }
+    );
+    res.json(response.data);
+  } catch (error) {
+    console.error(
+      `Erreur lors de l'appel à l'API TMDb pour le film ${movieId} :`,
+      error
+    );
+    res.status(500).send("Erreur lors de la récupération des détails du film");
+  }
+});
+
+app.get("/api/logo/:id", async (req, res) => {
+  const movieId = req.params.id;
+
+  try {
+    const response = await axios.get(
+      `https://api.themoviedb.org/3/movie/${movieId}/images`,
+      {
+        params: {
+          api_key: TMDB_API_KEY,
+          language: "fr",
         },
       }
     );

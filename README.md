@@ -23,4 +23,4 @@ Binge est une application web permettant de gérer une liste de favoris et de su
 - **Base de données :**
   - MySQL : Base de données pour stocker les données de l'utilisateur.
 
-# Binge
+##

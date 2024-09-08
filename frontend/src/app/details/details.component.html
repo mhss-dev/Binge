@@ -1,14 +1,16 @@
 <div class="movie-page text-white" id="#details">
-  <div
-    class="movie-banner position-relative"
+  <div class="movie-banner position-relative"
     [style.backgroundImage]="'url(https://image.tmdb.org/t/p/original/' + movie?.backdrop_path + ')'"
-    style="background-size: cover; background-position: center; background-repeat: no-repeat;"
-  >
+    style="background-size: cover; background-position: center; background-repeat: no-repeat;">
     <div class="overlay position-absolute w-100 h-100 bg-dark opacity-75"></div>
     <div class="content container position-relative d-flex flex-column justify-content-end">
-      <h1 class="display-4 display-md-2">{{ movie?.title }}</h1>
-      <p class="lead">{{ movie?.tagline }}</p>
-
+      <div *ngIf="logoUrl; else noLogo">
+        <img [src]="logoUrl" />
+      </div>
+      <ng-template #noLogo>
+        <h1 class="display-4 display-md-2">{{ movie?.title }}</h1>
+      </ng-template>
+      <p class="lead mt-1">{{ movie?.tagline }}</p>
       <div class="d-flex flex-wrap align-items-center mt-3">
         <span class="badge bg-success me-3 fs-6">{{ movie?.vote_average | number: '1.0-0'}}/10</span>
         <span *ngFor="let genre of movie?.genres" class="badge text-bg-dark me-2 fs-6">{{ genre.name }}</span>
@@ -19,38 +21,64 @@
       </p>
 
       <div class="mt-4 d-flex flex-wrap">
-        <button
-          class="btn me-2 mb-2"
-          [ngClass]="isWatched ? 'btn-outline-light' : 'btn-light'"
-          (click)="toggleWatched()"
-        >
+        <button class="btn me-2 mb-2" [ngClass]="isWatched ? 'btn-outline-light' : 'btn-light'"
+          (click)="toggleWatched()">
           <i class="fa-solid fa-play me-2"></i>{{ isWatched ? 'Retirer des films vus' : 'Ajouter aux films vus' }}
         </button>
 
-        <button
-          class="btn me-2 mb-2"
-          [ngClass]="isWatchlist ? 'btn-outline-light' : 'btn-light'"
-          (click)="toggleWatchlist()"
-        >
-          <i class="fa-regular fa-clock me-2"></i>{{ isWatchlist ? 'Retirer de la watchlist' : 'Ajouter à la watchlist' }}
+        <button class="btn me-2 mb-2" [ngClass]="isWatchlist ? 'btn-outline-light' : 'btn-light'"
+          (click)="toggleWatchlist()">
+          <i class="fa-regular fa-clock me-2"></i>{{ isWatchlist ? 'Retirer de la watchlist' : 'Ajouter à la watchlist'
+          }}
         </button>
 
-        <button
-          class="btn me-2 mb-2"
-          [ngClass]="isFavorite ? 'btn-outline-light' : 'btn-light'"
-          (click)="toggleFavorite()"
-        >
-          <i class="fa-solid {{ isFavorite ? 'fa-heart-crack' : 'fa-heart' }} me-2"></i>{{ isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris' }}
-        </button>
+        <button class="btn me-2 mb-2" [ngClass]="isFavorite ? 'btn-outline-light' : 'btn-light'" (click)="toggleFavorite()">
+          <i class="fa-solid" [ngClass]="isFavorite ? 'fa-heart-crack' : 'fa-heart'"></i> {{ isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris' }}
+        </button>        
       </div>
 
       <div *ngIf="!isLoggedIn" class="text-danger mt-3">
         Vous devez être connecté pour effectuer ces actions.
       </div>
 
-      <p class="mt-4 movie-description">{{ movie?.overview || "Aucune description n'a été fournie par l'API." }}</p>
+      <p class="mt-2 movie-description">{{ movie?.overview || "Aucune description n'a été fournie par l'API." }}</p>
       <p class="mt-2">Budget : {{ movie?.budget | currency }}</p>
       <p>Box Office : {{ movie?.revenue | currency }}</p>
+
+      <div class="container-fluid p-0 text-white mt-5">
+        <div id="castCarousel" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            <ng-container *ngFor="let chunk of chunkedActors; let i = index">
+              <div class="carousel-item" [class.active]="i === 0">
+                <div class="d-flex justify-content-start">
+                  <ng-container *ngFor="let actor of chunk">
+                    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                      <div class="card bg-transparent text-white border-0 h-100 cast-card">
+                        <img *ngIf="actor.profile_path; else noImage" class="card-img-top rounded"
+                          [src]="'https://image.tmdb.org/t/p/w185' + actor.profile_path" />
+                        <ng-template #noImage>
+                          <img class="card-img-top rounded"
+                            src="https://m.media-amazon.com/images/G/01/imdbpro/help/outline._CB1537462849_.png" />
+                        </ng-template>
+
+                        <div class="card-body p-2 text-center">
+                          <h6 class="card-title mb-1">{{ actor.name }}</h6>
+                          <p class="card-text small">{{ actor.character }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
+
+
+
+
 </div>

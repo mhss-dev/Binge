@@ -22,7 +22,7 @@ export class DiscoverService {
     params = params.set('page', validPage.toString());
 
     if (adult) {
-      params = params.set('include_adult', 'true');
+      params = params.set('include_adult', 'false');
     }
     
 

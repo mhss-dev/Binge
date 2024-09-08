@@ -27,20 +27,37 @@ export class DetailsComponent {
   watchlistCount = 0;
   favoriteCount = 0;
   isLoggedIn = false;
+  chunkedActors: any[][] = [];
+  logoUrl: string | undefined;
 
 
   constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute, private watched : WatchedService, private watchlist: WatchlistService, private detailsService: DetailsService, private favoritesService: FavoritesService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-  
     if (id) {
       this.detailsService.getMovieByID(Number(id)).subscribe({
         next: (data) => {
           this.movie = data;
+          this.chunkActors();
+
           this.checkIfFavorite();
           this.checkIfWatchlist();
           this.checkIfWatched();
+
+          this.detailsService.getLogoByID(Number(id)).subscribe({
+            next: (logoData) => {
+              if (logoData && logoData.logos && logoData.logos.length > 0) {
+                this.logoUrl = 'https://image.tmdb.org/t/p/w185' + logoData.logos[0].file_path;
+              } else {
+                this.logoUrl = undefined;
+              }
+            },
+            error: (error) => {
+              console.error('Erreur sur le fetch du logo', error);
+            }
+        
+          });
         },
         error: (error) => {
           this.error = 'Erreur lors de la récupération des détails du film';
@@ -62,6 +79,15 @@ export class DetailsComponent {
 
   }
   
+  chunkActors(): void {
+    const actors = this.movie?.credits?.cast || [];
+    const chunkSize = 6;
+    this.chunkedActors = [];
+
+    for (let i = 0; i < actors.length; i += chunkSize) {
+      this.chunkedActors.push(actors.slice(i, i + chunkSize));
+    }
+  }
 
   toggleFavorite(): void {
     if (this.isLoggedIn) {
@@ -152,7 +178,6 @@ checkIfWatchlist(): void {
     }
   });
 }
-
 
 addWatchlist(): void {
   this.watchlist.addWatchlist(this.movie.id).subscribe({

@@ -8,12 +8,12 @@ import { environment } from '../environments/environment';
   providedIn: 'root'
 })
 export class DetailsService {
-  private apiUrl = `${environment.apiUrl}/films`;
+  private apiUrl = `${environment.apiUrl}`;
 
   constructor(private http: HttpClient) { }
 
   getMovieByID(id: number): Observable<any> {
-    const url = `${this.apiUrl}/${id}`;
+    const url = `${this.apiUrl}/films/${id}`;
     let params = new HttpParams();
 
     params = params.append('append_to_response', 'credits');    
@@ -21,10 +21,7 @@ export class DetailsService {
   }
 
   getLogoByID(id: number): Observable<any> {
-    const url = `${this.apiUrl}/${id}/images`;
-    let params = new HttpParams();
-
-    params = params.append('append_to_response', 'credits');    
-    return this.http.get<any>(url, { params });
+    const url = `${this.apiUrl}/logo/${id}`;
+    return this.http.get<any>(url);
   }
 }

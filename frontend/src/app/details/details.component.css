@@ -15,9 +15,33 @@
 }
 
 .movie-banner .content {
-  padding-top: 10rem;
+  padding-top: 2.7rem;
 }
 
 .movie-description {
   max-width: 800px;
+}
+
+.cast-card {
+  flex: 0 0 auto;
+  width: 100px; 
+}
+
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
+}
+
+
+
+@media (min-width: 768px) {
+  .cast-card {
+    width: 180px;
+  }
+}
+
+@media (min-width: 992px) {
+  .cast-card {
+    width: 200px;
+  }
 }
