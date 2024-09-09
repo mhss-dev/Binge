@@ -17,7 +17,7 @@
       </div>
 
       <p class="text-secondary mt-4">
-        {{ movie?.release_date | date: 'yyyy' }} • {{ movie?.runtime }} minutes •
+        {{ movie?.release_date | date: 'yyy' }} • {{ movie?.runtime }} minutes •
 
         <span *ngFor="let director of getReal()">
           {{ director.name }}
@@ -47,8 +47,10 @@
       </div>
 
       <p class="mt-2 movie-description">{{ movie?.overview || "Aucune description disponible :(" }}</p>
-      <p class="mt-2">Budget : {{ movie?.budget | currency }}</p>
-      <p>Box Office : {{ movie?.revenue | currency }}</p>
+
+      <p class="mt-2">{{ movie?.budget > 0 ? 'Budget : ' + (movie?.budget | currency: '€') : '' }}</p>
+<p>{{ movie?.revenue > 0 ? 'Box Office : ' + (movie?.revenue | currency: '€') : '' }}</p>
+
 
       <div class="container-fluid p-0 text-white mt-5">
         <div id="castCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -77,8 +79,6 @@
               </div>
             </ng-container>
           </div>
-        </div>
-      </div>
 
     </div>
   </div>

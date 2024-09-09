@@ -96,6 +96,28 @@ app.get("/api/films", async (req, res) => {
   }
 });
 
+app.get("/api/filter", async (req, res) => {
+  try {
+
+    const response = await axios.get(
+      "https://api.themoviedb.org/3/genre/movie/list",
+      {
+        params: {
+          api_key: TMDB_API_KEY,
+          language: "fr",
+          page: 1,
+        },
+      }
+    );
+
+    res.json(response.data);
+
+  } catch (error) {
+    console.error("Erreur lors de l'appel à l'API TMDb :", error);
+    res.status(500).send("Erreur lors de la récupération du filtre");
+  }
+});
+
 app.get("/api/films/:id", async (req, res) => {
   const movieId = req.params.id;
 

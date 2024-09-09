@@ -30,6 +30,7 @@ export class DiscoverService {
     return this.http.get<any>(url, { params });
   }
 
+
   searchFilms(query: string): Observable<any> {
     if (!query) {
       throw new Error('Search query hello?');

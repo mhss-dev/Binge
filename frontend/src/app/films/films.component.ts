@@ -38,6 +38,8 @@ export class FilmsComponent {
   isLoggedIn = false;
   nickname: string | null = null;
 
+  
+
   constructor(private discoverService: DiscoverService,
     private route: ActivatedRoute,
     private favoritesService: FavoritesService,
@@ -87,6 +89,8 @@ export class FilmsComponent {
       }
     });
   }
+
+  
   getNickname(): void {
     if (this.authService.isLoggedIn$) {
       this.authService.getProfil().subscribe({
