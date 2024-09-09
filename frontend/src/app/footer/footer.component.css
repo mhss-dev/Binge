@@ -3,8 +3,11 @@ a:hover {
     text-decoration: underline;
 }
 
+footer {
+  background-color: #14181C !important;
+}
 
-/* Hide footer on extra-small screens (portrait phones, less than 576px) */
+
 @media (max-width: 576px) {
     .footer {
       display: none;

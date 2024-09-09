@@ -134,7 +134,7 @@ export class DashboardComponent {
         this.nickname = this.newNickname;
         
         this.errorMessage = null;
-        this.cdr.detectChanges();
+        this.cdr.detectChanges()
       },
       error: (err) => {
         this.errorMessage = err;

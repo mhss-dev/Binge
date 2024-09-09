@@ -29,61 +29,96 @@ export class DetailsComponent {
   isLoggedIn = false;
   chunkedActors: any[][] = [];
   logoUrl: string | undefined;
+  similarMovies: any[] = []; 
 
   constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute, private watched : WatchedService, private watchlist: WatchlistService, private detailsService: DetailsService, private favoritesService: FavoritesService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.detailsService.getMovieByID(Number(id)).subscribe({
-        next: (data) => {
-          this.movie = data;
-          this.chunkActors();
-
-          this.checkIfFavorite();
-          this.checkIfWatchlist();
-          this.checkIfWatched();
-
-          this.detailsService.getLogoByID(Number(id)).subscribe({
-            next: (logoData) => {
-              if (logoData && logoData.logos && logoData.logos.length > 0) {
-                this.logoUrl = 'https://image.tmdb.org/t/p/w185' + logoData.logos[0].file_path;
-                console.log(logoData);
-                
-              } else {
-                this.logoUrl = undefined;
-              }
-            },
-            error: (error) => {
-              console.error('Erreur sur le fetch du logo', error);
-            }
-        
-          });
-        },
-        
-        error: (error) => {
-          this.error = 'Erreur lors de la récupération des détails du film';
-          console.error(error);
-        }
-      });
-    } else {
-      console.error("L'ID du film n'a pas été trouvé?");
-    }
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        window.scrollTo(0, 0);
+    this.route.params.subscribe(params => {
+      const id = params['id'];
+      if (id) {
+        const movieId = Number(id);
+        this.loadMovieDetails(movieId);
+        this.loadSimilarMovies(movieId);
+      } else {
+        console.error("L'ID du film n'a pas été trouvé?");
       }
     });
-    this.authService.isLoggedIn$.subscribe(status => {
-      this.isLoggedIn = status;
-    });
-
-
   }
+  
+  
+  private loadMovieDetails(id: number): void {
+    this.detailsService.getMovieByID(id).subscribe({
+      next: (data) => {
+        this.movie = data;
+        this.chunkActors();
+        this.checkIfFavorite();
+        this.checkIfWatchlist();
+        this.checkIfWatched();
+        this.loadMovieLogo(id);
+      },
+      error: (error) => {
+        this.error = 'Erreur lors de la récupération des détails du film';
+        console.error(error);
+      }
+    });
+  }
+  
+  private loadMovieLogo(id: number): void {
+    this.detailsService.getLogoByID(id).subscribe({
+      next: (logoData) => {
+        if (logoData?.logos?.length > 0) {
+          this.logoUrl = 'https://image.tmdb.org/t/p/w185' + logoData.logos[0].file_path;
+          console.log(logoData);
+        } else {
+          this.logoUrl = undefined;
+        }
+      },
+      error: (error) => {
+        console.error('Erreur sur le fetch du logo', error);
+      }
+    });
+  }
+  
+  private loadSimilarMovies(id: number): void {
+    this.detailsService.getSimilarByID(id).subscribe({
+      next: (similarData) => {
+        this.similarMovies = similarData.results.sort((a :any, b: any) => {
+          const dateA = new Date(a.release_date).getTime();
+          const dateB = new Date(b.release_date).getTime();
+          return dateB - dateA;
+        });
+
+        this.chunkedSimilarMovies = this.chunkArray(this.similarMovies, 6); 
+
+
+      },
+      error: (error) => {
+        console.error('Erreur lors de la récupération des films similaires', error);
+      }
+    });
+  }
+
+  chunkedSimilarMovies: any[][] = [];
+
+private chunkArray(arr: any[], chunkSize: number): any[][] {
+  let result = [];
+  for (let i = 0; i < arr.length; i += chunkSize) {
+    result.push(arr.slice(i, i + chunkSize));
+  }
+  return result;
+}
+
+private sort(arr :any []) {
+
+
+}
+  
 
   getReal() {
     return this.movie?.credits?.crew?.filter((crewMember: any) => crewMember.job === 'Director') || [];
   }
+
   
   chunkActors(): void {
     const actors = this.movie?.credits?.cast || [];

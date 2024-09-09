@@ -1,10 +1,10 @@
-/* General styles for the dashboard container */
+
 .dashboard-container {
   padding: 60px;
   padding-bottom: 20rem;
 }
 
-/* Tab navigation styles */
+
 .nav-tabs .nav-link {
   border-radius: 0;
   font-weight: bold;
@@ -19,7 +19,7 @@
   border-bottom: 2px solid #007bff;
 }
 
-/* Movie list styles */
+
 .movie-list {
   display: flex;
   flex-wrap: wrap;
@@ -27,7 +27,7 @@
   margin-top: 20px;
 }
 
-/* Movie card styles */
+
 .movie-card {
   display: flex;
   flex-direction: column;
@@ -45,20 +45,20 @@
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Movie poster styles */
+
 .movie-poster {
   width: 100%;
   height: 225px;
   object-fit: cover;
 }
 
-/* Movie info styles */
+
 .movie-info {
   padding: 10px;
   text-align: center;
 }
 
-/* Movie title styles */
+
 .movie-title {
   font-size: 16px;
   font-weight: bold;
@@ -66,7 +66,7 @@
   margin-bottom: 5px;
 }
 
-/* Movie overview styles */
+
 .movie-overview {
   font-size: 14px;
   color: #666;
@@ -76,7 +76,7 @@
   white-space: nowrap;
 }
 
-/* Button styles */
+
 .btn-danger {
   background-color: #dc3545;
   border: none;
@@ -91,19 +91,19 @@
   background-color: #c82333;
 }
 
-/* Avatar styles */
+
 .avatar {
   width: 150px;
   height: 150px;
   border: 3px solid #fff;
 }
 
-/* Pagination styles */
+
 .pagination {
   margin-top: 5rem;
 }
 
-/* Responsive styles */
+
 @media (max-width: 768px) {
   .dashboard-container {
     padding: 30px;

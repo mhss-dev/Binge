@@ -4,12 +4,7 @@
     style="background-size: cover; background-position: center; background-repeat: no-repeat;">
     <div class="overlay position-absolute w-100 h-100 bg-dark opacity-75"></div>
     <div class="content container position-relative d-flex flex-column justify-content-end">
-      <div *ngIf="logoUrl; else noLogo">
-        <a href="{{movie?.homepage}}" target="_blank"><img [src]="logoUrl" class="logo"/></a>
-      </div>
-      <ng-template #noLogo>
-        <h1 class="display-4 display-md-2">{{ movie?.title }}</h1>
-      </ng-template>
+    <h1 class="display-4 display-md-2">{{ movie?.title }}</h1>
       <p class="lead mt-1">{{ movie?.tagline }}</p>
       <div class="d-flex flex-wrap align-items-center mt-3">
         <span class="badge bg-success me-3 fs-6">{{ movie?.vote_average | number: '1.0-0'}}/10</span>
@@ -39,10 +34,12 @@
 
         <button class="btn me-2 mb-2" [ngClass]="isFavorite ? 'btn-outline-light' : 'btn-light'" (click)="toggleFavorite()">
           <i class="fa-solid" [ngClass]="isFavorite ? 'fa-heart-crack' : 'fa-heart'"></i> {{ isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris' }}
-        </button>        
+        </button>    
+        
+
       </div>
 
-      <div *ngIf="!isLoggedIn" class="text-danger mt-3">
+      <div *ngIf="!isLoggedIn" class="text-danger mt-2">
         Vous devez être connecté pour effectuer ces actions.
       </div>
 
@@ -52,38 +49,78 @@
 <p>{{ movie?.revenue > 0 ? 'Box Office : ' + (movie?.revenue | currency: '€') : '' }}</p>
 
 
-      <div class="container-fluid p-0 text-white mt-5">
-        <div id="castCarousel" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner">
-            <ng-container *ngFor="let chunk of chunkedActors; let i = index">
-              <div class="carousel-item" [class.active]="i === 0">
-                <div class="d-flex justify-content-start">
-                  <ng-container *ngFor="let actor of chunk">
-                    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
-                      <div class="card bg-transparent text-white border-0 h-100 cast-card">
-                        <img *ngIf="actor.profile_path; else noImage" class="card-img-top rounded"
-                          [src]="'https://image.tmdb.org/t/p/w185' + actor.profile_path" />
-                        <ng-template #noImage>
-                          <img class="card-img-top rounded"
-                            src="https://m.media-amazon.com/images/G/01/imdbpro/help/outline._CB1537462849_.png" />
-                        </ng-template>
+<div class="container-fluid p-0 text-white mt-3">
 
-                        <div class="card-body p-2 text-center">
-                          <h6 class="card-title mb-1">{{ actor.name || 'Inconnu' }}</h6>
-                          <p class="card-text small">{{ actor.character || 'Inconnu' }}</p>
-                        </div>
+  <ul class="nav nav-tabs text-decoration-none" id="movieTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="cast-tab" data-bs-toggle="tab" data-bs-target="#cast" type="button"
+        role="tab" aria-controls="cast" aria-selected="true">Distribution</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="similar-tab" data-bs-toggle="tab" data-bs-target="#similar" type="button"
+        role="tab" aria-controls="similar" aria-selected="false">Films similaires</button>
+    </li>
+  </ul>
+
+  <div class="tab-content mt-3">
+    
+    <div class="tab-pane fade show active bg-transparent" id="cast" role="tabpanel" aria-labelledby="cast-tab">
+      <div id="castCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <ng-container *ngFor="let chunk of chunkedActors; let i = index">
+            <div class="carousel-item" [class.active]="i === 0" data-bs-interval="5000">
+              <div class="d-flex justify-content-start">
+                <ng-container *ngFor="let actor of chunk">
+                  <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                    <div class="card bg-transparent text-white border-0 h-100 cast-card">
+                      <img *ngIf="actor.profile_path; else noImage" class="card-img-top rounded"
+                        [src]="'https://image.tmdb.org/t/p/w185' + actor.profile_path" />
+                      <ng-template #noImage>
+                        <img class="card-img-top rounded"
+                          src="https://m.media-amazon.com/images/G/01/imdbpro/help/outline._CB1537462849_.png" />
+                      </ng-template>
+                      <div class="card-body p-2 text-center">
+                        <h6 class="card-title mb-1">{{ actor.name || 'Inconnu' }}</h6>
+                        <p class="card-text small">{{ actor.character || 'Inconnu' }}</p>
                       </div>
                     </div>
-                  </ng-container>
-                </div>
+                  </div>
+                </ng-container>
               </div>
-            </ng-container>
-          </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
 
+    <div class="tab-pane fade" id="similar" role="tabpanel" aria-labelledby="similar-tab">
+      <div id="similarCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <ng-container *ngFor="let chunk of chunkedSimilarMovies; let i = index" data-bs-interval="5000">
+            <div class="carousel-item" [class.active]="i === 0">
+              <div class="d-flex justify-content-start">
+                <ng-container *ngFor="let movie of chunk">
+                  <div class="col-8 col-sm-4 col-md-3 col-lg-2 m-2">
+                    <div class="card bg-transparent text-white border-0 h-100">
+                      <a [routerLink]="['/film', movie.id]" class="d-block">
+                      <img *ngIf="movie.poster_path; else noPoster" class="card-img-top rounded"
+                        [src]="'https://image.tmdb.org/t/p/w185' + movie.poster_path" />
+                      </a>
+                      <ng-template #noPoster>
+                        <img class="card-img-top rounded"
+                          src="https://via.placeholder.com/185x278?text=Aucune+Image" />
+                      </ng-template>
+                      <div class="card-body text-center">
+                        <h6 class="card-title text-truncate mb-1">{{ movie?.title }}</h6>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
     </div>
   </div>
-
-
-
-
 </div>
