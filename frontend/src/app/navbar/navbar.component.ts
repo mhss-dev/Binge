@@ -12,7 +12,7 @@ import { AuthService } from '../auth.service';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
-  navbarClass: string = 'navbar-default';
+  navbarClass: string = 'navbar-default'; 
   isLoggedIn = false;
   nickname: string | null = null;
 

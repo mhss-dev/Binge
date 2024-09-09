@@ -18,9 +18,7 @@ export class LoginComponent {
   loginMessage: string = '';
   alertType: string = '';
 
-
   constructor(private authService: AuthService, private router: Router) {}
-
 
   onLogin(): void {
     this.authService.login(this.username, this.password).subscribe({
@@ -36,13 +34,13 @@ export class LoginComponent {
         } else {
           this.loginMessage = 'Une erreur a eu lieu, réessayez.';
           this.alertType = 'alert-danger';
-
         }
       },
-      error: (error) => {
+      error: (err) => {
         this.loginMessage = 'Idenfiants incorrects, réessayez.';
-        this.alertType = 'alert-danger'; 
+        this.alertType = 'alert-danger';
       }
     });
   }
+  
 }

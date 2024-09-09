@@ -9,7 +9,7 @@ import { FavoritesService } from '../favorites.service';
 import { WatchlistService } from '../watchlist.service';
 import { WatchedService } from '../watched.service';
 import { AuthService } from '../auth.service';
-
+import { NavbarComponent } from '../navbar/navbar.component'; 
 
 @Component({
   selector: 'app-films',
@@ -45,12 +45,14 @@ export class FilmsComponent {
     private watchlist: WatchlistService,
     private watched : WatchedService,
     private authService : AuthService,
+    private NavbarComponent: NavbarComponent,
   ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.movieId = +params['id']; 
     })
+    this.NavbarComponent.navbarClass = 'navbar-default'; 
     this.loadFilms(1);
 
     this.authService.isLoggedIn$.subscribe(status => {
