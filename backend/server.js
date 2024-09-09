@@ -126,7 +126,7 @@ app.get("/api/similar/:id", async (req, res) => {
 
   try {
     const response = await axios.get(
-      `https://api.themoviedb.org/3/movie/${movieId}/similar`,
+      `https://api.themoviedb.org/3/movie/${movieId}/recommendations`,
       {
         params: {
           api_key: TMDB_API_KEY,

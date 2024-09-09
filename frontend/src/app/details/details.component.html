@@ -4,8 +4,8 @@
     style="background-size: cover; background-position: center; background-repeat: no-repeat;">
     <div class="overlay position-absolute w-100 h-100 bg-dark opacity-75"></div>
     <div class="content container position-relative d-flex flex-column justify-content-end">
-    <h1 class="display-5 display-md-2">{{ movie?.title }}</h1>
-      <p class="lead mt-1">{{ movie?.tagline }}</p>
+    <h1 class="display-3 display-md-2 text-truncate">{{ movie?.title }}</h1>
+      <p class="lead">{{ movie?.tagline }}</p>
       <div class="d-flex flex-wrap align-items-center mt-3">
         <span class="badge bg-success me-3 fs-6">{{ movie?.vote_average | number: '1.0-0'}}/10</span>
         <span *ngFor="let genre of movie?.genres" class="badge text-bg-dark me-2 fs-6">{{ genre.name }}</span>
@@ -58,7 +58,7 @@
     </li>
     <li class="nav-item" role="presentation">
       <button class="nav-link" id="similar-tab" data-bs-toggle="tab" data-bs-target="#similar" type="button"
-        role="tab" aria-controls="similar" aria-selected="false">Films similaires</button>
+        role="tab" aria-controls="similar" aria-selected="false">Recommendations</button>
     </li>
   </ul>
 
