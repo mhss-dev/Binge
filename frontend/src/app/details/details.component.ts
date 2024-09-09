@@ -44,6 +44,15 @@ export class DetailsComponent {
         console.error("L'ID du film n'a pas été trouvé?");
       }
     });
+
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        window.scrollTo(0, 0);
+      }
+    });
+    this.authService.isLoggedIn$.subscribe(status => {
+      this.isLoggedIn = status;
+    });
   }
   
   

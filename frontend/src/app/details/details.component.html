@@ -4,7 +4,7 @@
     style="background-size: cover; background-position: center; background-repeat: no-repeat;">
     <div class="overlay position-absolute w-100 h-100 bg-dark opacity-75"></div>
     <div class="content container position-relative d-flex flex-column justify-content-end">
-    <h1 class="display-4 display-md-2">{{ movie?.title }}</h1>
+    <h1 class="display-5 display-md-2">{{ movie?.title }}</h1>
       <p class="lead mt-1">{{ movie?.tagline }}</p>
       <div class="d-flex flex-wrap align-items-center mt-3">
         <span class="badge bg-success me-3 fs-6">{{ movie?.vote_average | number: '1.0-0'}}/10</span>
@@ -20,7 +20,7 @@
         
       </p>
 
-      <div class="mt-4 d-flex flex-wrap">
+      <div class="d-flex flex-wrap">
         <button class="btn me-2 mb-2" [ngClass]="isWatched ? 'btn-outline-light' : 'btn-light'"
           (click)="toggleWatched()">
           <i class="fa-solid fa-play me-2"></i>{{ isWatched ? 'Retirer des films vus' : 'Ajouter aux films vus' }}
@@ -39,17 +39,17 @@
 
       </div>
 
-      <div *ngIf="!isLoggedIn" class="text-danger mt-2">
+      <div *ngIf="!isLoggedIn" class="text-danger">
         Vous devez être connecté pour effectuer ces actions.
       </div>
 
-      <p class="mt-2 movie-description">{{ movie?.overview || "Aucune description disponible :(" }}</p>
+      <p class="mt-4 movie-description">{{ movie?.overview || "Aucune description disponible :(" }}</p>
 
-      <p class="mt-2">{{ movie?.budget > 0 ? 'Budget : ' + (movie?.budget | currency: '€') : '' }}</p>
-<p>{{ movie?.revenue > 0 ? 'Box Office : ' + (movie?.revenue | currency: '€') : '' }}</p>
+      <!-- <p class="mt-2">{{ movie?.budget > 0 ? 'Budget : ' + (movie?.budget | currency: '€') : '' }}</p>
+<p>{{ movie?.revenue > 0 ? 'Box Office : ' + (movie?.revenue | currency: '€') : '' }}</p> -->
 
 
-<div class="container-fluid p-0 text-white mt-3">
+<div class="container-fluid p-0 text-white mt-2">
 
   <ul class="nav nav-tabs text-decoration-none" id="movieTabs" role="tablist">
     <li class="nav-item" role="presentation">
@@ -62,7 +62,7 @@
     </li>
   </ul>
 
-  <div class="tab-content mt-3">
+  <div class="tab-content mt-2">
     
     <div class="tab-pane fade show active bg-transparent" id="cast" role="tabpanel" aria-labelledby="cast-tab">
       <div id="castCarousel" class="carousel slide" data-bs-ride="carousel">
