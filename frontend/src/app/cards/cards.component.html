@@ -6,42 +6,22 @@
     </p>
   </div>
 
-  <div id="movieCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
-    <div class="carousel-inner">
-      <div class="carousel-item active">
-        <div class="row">
-          <div *ngFor="let movie of movies.slice(0, 3)" class="col-12 col-md-6 col-lg-4 mb-4">
-            <div class="card border-dark bg-dark text-white shadow-sm">
-              <a [routerLink]="['/film', movie.id]" class="d-block">
-                <img [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path"
-                     class="card-img-top img-fluid rounded"
-                     alt="{{ movie.title }}">
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="carousel-item">
-        <div class="row">
-          <div *ngFor="let movie of movies.slice(6, 9)" class="col-12 col-md-6 col-lg-4 mb-4">
-            <div class="card border-dark bg-dark text-white shadow-sm">
-              <a [routerLink]="['/film', movie.id]" class="d-block">
-                <img [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path"
-                     class="card-img-top img-fluid rounded"
-                     alt="{{ movie.title }}">
-              </a>
-            </div>
-          </div>
+  <div>
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+    <div class="row">
+      <div *ngFor="let movie of movies" class="col-12 col-md-6 col-lg-4 mb-4">
+        <div class="card border-dark bg-dark text-white shadow-sm">
+          <a [routerLink]="['/film', movie.id]" class="d-block">
+            <img [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path"
+                 class="card-img-top img-fluid rounded"
+                 alt="{{ movie.title }} poster">
+          </a>
+          <!-- <div class="card-body text-center">
+            <h5 class="card-title">{{ movie.title }}</h5>
+            <p class="card-text">{{ movie.overview || "Aucune description n'a été fournie par l'API." }}</p>
+          </div> -->
         </div>
       </div>
     </div>
-  
-    <a class="carousel-control-prev" href="#movieCarousel" role="button" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    </a>
-    <a class="carousel-control-next" href="#movieCarousel" role="button" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    </a>
   </div>
-  
 </div>
