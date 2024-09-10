@@ -63,18 +63,17 @@
   </ul>
 
   <div class="tab-content mt-3">
-    
     <div class="tab-pane fade show active bg-transparent" id="cast" role="tabpanel" aria-labelledby="cast-tab">
       <div id="castCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
           <ng-container *ngFor="let chunk of chunkedActors; let i = index">
             <div class="carousel-item" [class.active]="i === 0" data-bs-interval="5000">
-              <div class="d-flex justify-content-start">
+              <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-2">
                 <ng-container *ngFor="let actor of chunk">
-                  <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                  <div class="col">
                     <div class="card bg-transparent text-white border-0 h-100 cast-card">
                       <img *ngIf="actor.profile_path; else noImage" class="card-img-top rounded"
-                        [src]="'https://image.tmdb.org/t/p/w185' + actor.profile_path" />
+                        [src]="'https://image.tmdb.org/t/p/w500' + actor.profile_path" />
                       <ng-template #noImage>
                         <img class="card-img-top rounded"
                           src="https://m.media-amazon.com/images/G/01/imdbpro/help/outline._CB1537462849_.png" />
@@ -92,27 +91,24 @@
         </div>
       </div>
     </div>
-
+  
     <div class="tab-pane fade" id="similar" role="tabpanel" aria-labelledby="similar-tab">
       <div id="similarCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
-          <ng-container *ngFor="let chunk of chunkedSimilarMovies; let i = index" data-bs-interval="5000">
-            <div class="carousel-item" [class.active]="i === 0">
-              <div class="d-flex justify-content-start">
+          <ng-container *ngFor="let chunk of chunkedSimilarMovies; let i = index">
+            <div class="carousel-item" [class.active]="i === 0" data-bs-interval="5000">
+              <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-2">
                 <ng-container *ngFor="let movie of chunk">
-                  <div class="col-8 col-sm-4 col-md-3 col-lg-2 m-2">
+                  <div class="col">
                     <div class="card bg-transparent text-white border-0 h-100">
                       <a [routerLink]="['/film', movie.id]" class="d-block">
-                      <img *ngIf="movie.poster_path; else noPoster" class="card-img-top rounded"
-                        [src]="'https://image.tmdb.org/t/p/w185' + movie.poster_path" />
+                        <img *ngIf="movie.poster_path; else noPoster" class="card-img-top rounded"
+                          [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" />
                       </a>
                       <ng-template #noPoster>
                         <img class="card-img-top rounded"
-                          src="https://via.placeholder.com/185x278?text=Aucune+Image" />
+                          src="https://m.media-amazon.com/images/G/01/imdbpro/help/outline._CB1537462849_.png" />
                       </ng-template>
-                      <div class="card-body text-center">
-                        <h6 class="card-title text-truncate mb-1">{{ movie?.title }}</h6>
-                      </div>
                     </div>
                   </div>
                 </ng-container>
@@ -123,4 +119,5 @@
       </div>
     </div>
   </div>
+  
 </div>

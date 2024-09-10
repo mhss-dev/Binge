@@ -76,7 +76,7 @@ export class DashboardComponent {
         });
       },
       error: (err) => {
-        console.error('Error fetching favorites:', err);
+        console.error('Erreur fetch favoris:', err);
       }
     });
   }

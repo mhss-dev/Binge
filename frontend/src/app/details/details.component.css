@@ -49,7 +49,7 @@
 
 }
 .card-img-top {
-  height: 230px;
+  height: auto;
   object-fit: fill;
 }
 

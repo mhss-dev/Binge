@@ -1,5 +1,5 @@
 <div class="container-fluid p-0">
-  <nav class="navbar navbar-expand-md py-3" [ngClass]="navbarClass">
+  <nav class="navbar navbar-expand-md py-2" [ngClass]="navbarClass">
     <div class="container-fluid">
       <a href="/" class="fs-2 ms-5 text-white d-flex align-items-center text-dark text-decoration-none">
         Binge
@@ -47,7 +47,7 @@
           </ng-container>
 
           <ng-template #loggedInTemplate>
-            <a routerLink="/profil" class="btn btn-dark m-2">
+            <a routerLink="['/profil', nickname]" class="btn btn-dark m-2">
               <i class="fa-solid fa-user"></i> {{ nickname }}
             </a>
             <a (click)="logout()" class="btn btn-dark">

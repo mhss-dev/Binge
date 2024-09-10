@@ -61,6 +61,63 @@ app.get("/api/nowplaying", async (req, res) => {
 });
 
 
+app.get("/api/trending", async (req, res) => {
+  try {
+    const response = await axios.get(
+      "https://api.themoviedb.org/3/trending/movie/week",
+      {
+        params: {
+          api_key: TMDB_API_KEY,
+          language: "fr-FR",
+          page: 1,
+        },
+      }
+    );
+    res.json(response.data);
+  } catch (error) {
+    console.error("Erreur lors de l'appel à l'API TMDb :", error);
+    res.status(500).send("Erreur lors de la récupération des films");
+  }
+});
+
+app.get("/api/top", async (req, res) => {
+  try {
+    const response = await axios.get(
+      "https://api.themoviedb.org/3/movie/top_rated",
+      {
+        params: {
+          api_key: TMDB_API_KEY,
+          language: "fr-FR",
+          page: 1,
+        },
+      }
+    );
+    res.json(response.data);
+  } catch (error) {
+    console.error("Erreur lors de l'appel à l'API TMDb :", error);
+    res.status(500).send("Erreur lors de la récupération des films");
+  }
+});
+
+app.get("/api/upcoming", async (req, res) => {
+  try {
+    const response = await axios.get(
+      "https://api.themoviedb.org/3/movie/upcoming",
+      {
+        params: {
+          api_key: TMDB_API_KEY,
+          language: "fr-FR",
+          page: 1,
+        },
+      }
+    );
+    res.json(response.data);
+  } catch (error) {
+    console.error("Erreur lors de l'appel à l'API TMDb :", error);
+    res.status(500).send("Erreur lors de la récupération des films");
+  }
+});
+
 app.get("/api/films", async (req, res) => {
   try {
     const page = parseInt(req.query.page);

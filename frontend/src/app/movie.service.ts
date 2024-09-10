@@ -8,12 +8,24 @@ import { environment } from '../environments/environment';
 })
 export class MovieService {
   
-  private apiUrl = `${environment.apiUrl}/nowplaying`;
+  private apiUrl = `${environment.apiUrl}`;
 
   constructor(private http: HttpClient) { }
 
   getNowPlayingMovies(): Observable<any> {    
-    return this.http.get<any>(this.apiUrl);
+    return this.http.get<any>(`${this.apiUrl}/nowplaying`);
+  }
+
+  getPopular(): Observable<any> {    
+    return this.http.get<any>(`${this.apiUrl}/popular`);
+  }
+
+  getTopRated(): Observable<any> {    
+    return this.http.get<any>(`${this.apiUrl}/top`);
+  }
+
+  getUpcoming(): Observable<any> {    
+    return this.http.get<any>(`${this.apiUrl}/upcoming`);
   }
 
 }

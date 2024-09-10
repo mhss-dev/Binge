@@ -250,7 +250,7 @@ removeFromWatchlist(): void {
       this.cdr.detectChanges();
     },
     error: (err) => {
-      console.error('Erreur lors de la suppression du film de la liste de surveillance :', err);
+      console.error('Erreur lors de la suppression du film de la watchlist :', err);
     }
   });
 }
