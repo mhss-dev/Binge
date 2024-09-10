@@ -20,7 +20,7 @@
         
       </p>
 
-      <div class="d-flex flex-wrap">
+      <div>
         <button class="btn me-2 mb-2" [ngClass]="isWatched ? 'btn-outline-light' : 'btn-light'"
           (click)="toggleWatched()">
           <i class="fa-solid fa-play me-2"></i>{{ isWatched ? 'Retirer des films vus' : 'Ajouter aux films vus' }}
@@ -49,7 +49,7 @@
 <p>{{ movie?.revenue > 0 ? 'Box Office : ' + (movie?.revenue | currency: '€') : '' }}</p> -->
 
 
-<div class="container-fluid p-0 text-white mt-3">
+<div class="container-fluid p-0 text-white mt-3 mb-3 mb-md-4 mb-lg-5">
 
   <ul class="nav nav-tabs text-decoration-none" id="movieTabs" role="tablist">
     <li class="nav-item" role="presentation">
