@@ -2,7 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const session = require("express-session");
-const MySQLStore = require("express-mysql-session")(session);
+const PgSession = require('connect-pg-simple')(session); 
 const axios = require("axios");
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -28,7 +28,10 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 
-const sessionStore = new MySQLStore({}, db);
+const sessionStore = new PgSession({
+  pool: db,
+  tableName: "session",
+});
 
 app.use(
   session({
@@ -252,6 +255,6 @@ app.use('/api/watchlist', watchlistRoutes);
 app.use('/api/watched', watchedRoutes);
 
 
-app.listen(5000, () => {
-  console.log("Démarrage sur le port 5000");
+app.listen(3000, () => {
+  console.log("Démarrage sur le port 3000");
 });
