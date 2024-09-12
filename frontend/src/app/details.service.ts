@@ -24,8 +24,8 @@ export class DetailsService {
     const url = `${this.apiUrl}/logo/${id}`;
     return this.http.get<any>(url);
   }
-  getNetworkID(id: number): Observable<any> {
-    const url = `${this.apiUrl}/network/${id}`;
+  getTeaserByID(id: number): Observable<any> {
+    const url = `${this.apiUrl}/teaser/${id}`;
     return this.http.get<any>(url);
   }
   getProviders(id: number): Observable<any> {

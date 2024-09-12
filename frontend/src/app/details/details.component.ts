@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { DiscoverService } from '../discover.service';
 import {
   ActivatedRoute,
@@ -14,6 +14,7 @@ import { WatchlistService } from '../watchlist.service';
 import { WatchedService } from '../watched.service';
 import { AuthService } from '../auth.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-details',
@@ -37,6 +38,10 @@ export class DetailsComponent {
   logoUrl: string | undefined;
   similarMovies: any[] = [];
   watchProviders: any | null = null;
+  trailerKey: string | null = null;
+  trailerUrl: SafeResourceUrl | null = null;
+
+  @ViewChild('trailerModal') trailerModal!: ElementRef;
 
   constructor(
     private authService: AuthService,
@@ -52,6 +57,8 @@ export class DetailsComponent {
   ) {}
 
   ngOnInit(): void {
+
+
     this.route.params.subscribe((params) => {
       const id = params['id'];
       if (id) {
@@ -59,6 +66,7 @@ export class DetailsComponent {
         this.loadMovieDetails(movieId);
         this.loadSimilarMovies(movieId);
         this.loadWatchProviders(movieId);
+        this.loadTrailers(movieId); 
       } else {
         console.error("L'ID du film n'a pas été trouvé?");
       }
@@ -67,6 +75,9 @@ export class DetailsComponent {
     this.authService.isLoggedIn$.subscribe((status) => {
       this.isLoggedIn = status;
     });
+
+    
+
   }
   
   
@@ -89,26 +100,58 @@ export class DetailsComponent {
 
   combinedProviders(): { provider_name: string; logo_path?: string }[] {
     const providers: { provider_name: string; logo_path?: string }[] = [];
-
-    
     if (this.watchProviders?.flatrate) {
       providers.push(...this.watchProviders.flatrate);
     }
-
-    
     if (this.watchProviders?.rent) {
       providers.push(...this.watchProviders.rent);
     }
-
-    
     if (this.watchProviders?.buy) {
       providers.push(...this.watchProviders.buy);
     }
-
-    
     const uniqueProviders = Array.from(new Map(providers.map(provider => [provider.logo_path, provider])).values());
-
     return uniqueProviders;
+  }
+
+  private loadTrailers(id: number): void {
+    this.detailsService.getTeaserByID(id).subscribe({
+      next: (data: any) => {
+        if (Array.isArray(data.results)) {
+          const trailers = data.results.filter((result: any) => result.type === 'Trailer');
+          if (trailers.length > 0) {
+            this.trailerKey = trailers[0].key;
+            this.updateTrailerUrl();
+          } else {
+            console.error('Aucun trailer trouvé');
+          }
+        } else {
+          console.error('Une erreur est survenue.');
+        }
+      },
+      error: (error: any) => {
+        console.error('Erreur lors de la récupération des bandes-annonces', error);
+      },
+    });
+  }
+  
+  private updateTrailerUrl(): void {
+    if (this.trailerKey) {
+      const url = `https://www.youtube.com/embed/${this.trailerKey}?autoplay=1&mute=1&rel=0`;
+      this.trailerUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    } else {
+      console.error("Erreur sur l'URL.");
+    }
+  }
+  
+  
+  
+  formatRuntime(minutes: number): string {
+    if (!minutes) return '0 min';
+
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+
+    return `${hours}h${mins} min`;
   }
 
   private loadWatchProviders(id: number): void {

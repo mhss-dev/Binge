@@ -12,7 +12,7 @@ import { DiscoverService } from 'app/discover.service';
 })
 export class ActorComponent {
   actor: any;
-  movies: any;
+  movies: any = [];
   error: any;
   isLoading: boolean = false;
   showBackToTop: boolean = false;

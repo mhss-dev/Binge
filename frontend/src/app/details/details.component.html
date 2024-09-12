@@ -12,7 +12,7 @@
       </div>
 
       <p class="text-secondary mt-4">
-        {{ movie?.release_date | date: 'yyyy' }} • {{ movie?.runtime }} minutes •
+        {{ movie?.release_date | date: 'yyyy' }} • {{ formatRuntime(movie?.runtime) }} •
       
         <ng-container *ngFor="let director of getReal()">
           <a [routerLink]="['/realisateur', director.id]" class="text-secondary">
@@ -21,31 +21,28 @@
         </ng-container>
       </p>
 
-
-      <div *ngIf="watchProviders">
+      <!-- <div *ngIf="watchProviders">
         <ul class="list-unstyled d-flex flex-wrap">
           <ng-container *ngFor="let provider of combinedProviders()">
             <li class="me-3 mb-2">
+              <a href=""></a>
               <img [src]="'https://image.tmdb.org/t/p/w45' + provider.logo_path" [alt]="provider.provider_name" class="img-fluid" />
             </li>
           </ng-container>
         </ul>
       </div>
       
-      
-      
-      
-      
+       -->
       
       <div class="d-flex flex-wrap">
         <button class="btn me-2 mb-2" [ngClass]="isWatched ? 'btn-outline-light' : 'btn-light'"
           (click)="toggleWatched()">
-          <i class="fa-solid fa-play me-2"></i>{{ isWatched ? 'Retirer des films vus' : 'Ajouter aux films vus' }}
+          <i class="fa-solid fa-circle-plus"></i> {{ isWatched ? 'Retirer des films vus' : 'Ajouter aux films vus' }}
         </button>
 
         <button class="btn me-2 mb-2" [ngClass]="isWatchlist ? 'btn-outline-light' : 'btn-light'"
           (click)="toggleWatchlist()">
-          <i class="fa-regular fa-clock me-2"></i>{{ isWatchlist ? 'Retirer de la watchlist' : 'Ajouter à la watchlist'
+          <i class="fa-solid fa-clock me-2"></i>{{ isWatchlist ? 'Retirer de la watchlist' : 'Ajouter à la watchlist'
           }}
         </button>
 
@@ -53,6 +50,10 @@
           <i class="fa-solid" [ngClass]="isFavorite ? 'fa-heart-crack' : 'fa-heart'"></i> {{ isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris' }}
         </button>    
         
+<button class="btn me-2 mb-2 btn-outline-light" data-bs-toggle="modal" data-bs-target="#trailerModal">
+  <i class="fa-solid fa-play me-2"></i>Voir la bande annonce
+</button>
+
 
       </div>
 
@@ -147,5 +148,25 @@
       </div>
     </div>
   </div>
+
+
+<div class="modal fade" id="trailerModal" tabindex="-1" aria-labelledby="trailerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl ">
+    <div class="modal-content bg-black">
+      <div class="">
+        <!-- <h5 class="modal-title" id="trailerModalLabel">Bande annonce {{ movie.title }}</h5> -->
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="ratio ratio-16x9">
+          <iframe [src]="trailerUrl" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
   
 </div>

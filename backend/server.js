@@ -66,24 +66,6 @@ app.get("/api/trending", async (req, res) => {
   }
 });
 
-app.get("/api/videos", async (req, res) => {
-  try {
-    const response = await axios.get(
-      "https://api.themoviedb.org/3/trending/movie/week",
-      {
-        params: {
-          api_key: TMDB_API_KEY,
-          language: "fr-FR",
-          page: 1,
-        },
-      }
-    );
-    res.json(response.data);
-  } catch (error) {
-    console.error("Erreur lors de l'appel à l'API TMDb :", error);
-    res.status(500).send("Erreur lors de la récupération des films");
-  }
-});
 
 app.get("/api/top", async (req, res) => {
   try {
@@ -275,6 +257,26 @@ app.get('/api/films/:id', async (req, res) => {
   }
 });
 
+app.get('/api/teaser/:id', async (req, res) => {
+  const movieId = req.params.id;
+
+  try {
+    const response = await axios.get(
+      `https://api.themoviedb.org/3/movie/${movieId}/videos`,
+      {
+        params: {
+          api_key: TMDB_API_KEY,
+          language: 'fr-FR',
+        },
+      }
+    );
+    res.json(response.data);
+  } catch (error) {
+    console.error(`Erreur lors de l'appel à l'API pour le film ${movieId} :`, error);
+    res.status(500).send('Erreur lors de la récupération des détails du film');
+  }
+});
+
 
 app.get('/api/providers/:id', async (req, res) => {
   const movieId = req.params.id;
@@ -318,6 +320,8 @@ app.get("/api/similar/:id", async (req, res) => {
     res.status(500).send("Erreur lors de la récupération des détails du film");
   }
 });
+
+
 
 app.get('/api/search', async (req, res) => {
   try {
