@@ -12,15 +12,32 @@
       </div>
 
       <p class="text-secondary mt-4">
-        {{ movie?.release_date | date: 'yyy' }} • {{ movie?.runtime }} minutes •
-
-        <span *ngFor="let director of getReal()">
-          {{ director.name }}
-        </span>
-        
+        {{ movie?.release_date | date: 'yyyy' }} • {{ movie?.runtime }} minutes •
+      
+        <ng-container *ngFor="let director of getReal()">
+          <a [routerLink]="['/realisateur', director.id]" class="text-secondary">
+            {{ director.name }}
+          </a>
+        </ng-container>
       </p>
 
-      <div>
+
+      <div *ngIf="watchProviders">
+        <ul class="list-unstyled d-flex flex-wrap">
+          <ng-container *ngFor="let provider of combinedProviders()">
+            <li class="me-3 mb-2">
+              <img [src]="'https://image.tmdb.org/t/p/w45' + provider.logo_path" [alt]="provider.provider_name" class="img-fluid" />
+            </li>
+          </ng-container>
+        </ul>
+      </div>
+      
+      
+      
+      
+      
+      
+      <div class="d-flex flex-wrap">
         <button class="btn me-2 mb-2" [ngClass]="isWatched ? 'btn-outline-light' : 'btn-light'"
           (click)="toggleWatched()">
           <i class="fa-solid fa-play me-2"></i>{{ isWatched ? 'Retirer des films vus' : 'Ajouter aux films vus' }}
@@ -49,7 +66,7 @@
 <p>{{ movie?.revenue > 0 ? 'Box Office : ' + (movie?.revenue | currency: '€') : '' }}</p> -->
 
 
-<div class="container-fluid p-0 text-white mt-3 mb-3 mb-md-4 mb-lg-5">
+<div class="container-fluid p-0 text-white">
 
   <ul class="nav nav-tabs text-decoration-none" id="movieTabs" role="tablist">
     <li class="nav-item" role="presentation">
@@ -63,7 +80,7 @@
   </ul>
 
   <div class="tab-content mt-3">
-    <div class="tab-pane fade show active bg-transparent" id="cast" role="tabpanel" aria-labelledby="cast-tab">
+    <div class="tab-pane fade show active bg-transparent mb-5" id="cast" role="tabpanel" aria-labelledby="cast-tab">
       <div id="castCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
           <ng-container *ngFor="let chunk of chunkedActors; let i = index">
@@ -71,17 +88,27 @@
               <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-2">
                 <ng-container *ngFor="let actor of chunk">
                   <div class="col">
-                    <div class="card bg-transparent text-white border-0 h-100 cast-card">
-                      <img *ngIf="actor.profile_path; else noImage" class="card-img-top rounded"
-                        [src]="'https://image.tmdb.org/t/p/w500' + actor.profile_path" />
+                    <div class="card bg-transparent text-white border-0 h-100 cast-card position-relative">
+                      <a [routerLink]="['/acteur', actor.id]" class="text-decoration-none">
+                        <div class="position-relative">
+                          <img *ngIf="actor.profile_path; else noImage" class="card-img-top rounded"
+                            [src]="'https://image.tmdb.org/t/p/w500' + actor.profile_path" />
+                          <div class="overlay-text">
+                            <h6 class="mb-1">{{ actor.name || 'Inconnu' }}</h6>
+                            <p class="small">{{ actor.character || 'Inconnu' }}</p>
+                          </div>
+                        </div>
+                      </a>
                       <ng-template #noImage>
-                        <img class="card-img-top rounded"
-                          src="https://m.media-amazon.com/images/G/01/imdbpro/help/outline._CB1537462849_.png" />
+                        <a [routerLink]="['/acteur', actor.id]" class="text-decoration-none">
+                          <img class="card-img-top rounded"
+                            src="https://m.media-amazon.com/images/G/01/imdbpro/help/outline._CB1537462849_.png" />
+                          <div class="overlay-text">
+                            <h6 class="mb-1">{{ actor.name || 'Inconnu' }}</h6>
+                            <p class="small">{{ actor.character || 'Inconnu' }}</p>
+                          </div>
+                        </a>
                       </ng-template>
-                      <div class="card-body p-2 text-center">
-                        <h6 class="card-title mb-1">{{ actor.name || 'Inconnu' }}</h6>
-                        <p class="card-text small">{{ actor.character || 'Inconnu' }}</p>
-                      </div>
                     </div>
                   </div>
                 </ng-container>
@@ -91,8 +118,9 @@
         </div>
       </div>
     </div>
+    
   
-    <div class="tab-pane fade" id="similar" role="tabpanel" aria-labelledby="similar-tab">
+    <div class="tab-pane fade bg-transparent mb-5" id="similar" role="tabpanel" aria-labelledby="similar-tab">
       <div id="similarCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
           <ng-container *ngFor="let chunk of chunkedSimilarMovies; let i = index">
@@ -100,7 +128,7 @@
               <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-2">
                 <ng-container *ngFor="let movie of chunk">
                   <div class="col">
-                    <div class="card bg-transparent text-white border-0 h-100">
+                    <div class="card bg-transparent text-white border-0 h-100 cast-card">
                       <a [routerLink]="['/film', movie.id]" class="d-block">
                         <img *ngIf="movie.poster_path; else noPoster" class="card-img-top rounded"
                           [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" />

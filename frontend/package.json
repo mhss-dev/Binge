@@ -24,6 +24,8 @@
     "@capacitor/core": "^6.1.2",
     "@capacitor/ios": "^6.1.2",
     "bootstrap": "^5.3.3",
+    "ngx-cookie-service": "^18.0.0",
+    "ngx-page-scroll": "^13.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"

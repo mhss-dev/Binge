@@ -1,5 +1,5 @@
 <div class="container-fluid p-0">
-  <nav class="navbar navbar-expand-md py-2" [ngClass]="navbarClass">
+  <nav class="navbar navbar-expand-md py-2 navbar-bg">
     <div class="container-fluid">
       <a href="/" class="fs-2 ms-5 text-white d-flex align-items-center text-dark text-decoration-none">
         Binge
@@ -18,19 +18,19 @@
       </button>
 
       <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
-        <ul class="navbar-nav mx-auto d-flex justify-content-center">
+        <ul class="navbar-nav mx-auto d-flex justify-content-center mx-5">
           <li class="nav-item">
-            <a href="/" class="nav-link px-2 text-white">
+            <a href="/" class="nav-link text-white">
               <i class="fa-solid fa-house"></i> Accueil
             </a>
           </li>
           <li class="nav-item">
-            <a routerLink="/films" class="nav-link px-2 text-white">
+            <a routerLink="/films" class="nav-link text-white">
               <i class="fa-solid fa-film"></i> Découverte
             </a>
           </li>
           <li class="nav-item">
-            <a (click)="scrollTo('#aucinema')" class="nav-link px-2 text-white">
+            <a (click)="scrollTo('aucinema')" class="nav-link text-white">
               <i class="fa-solid fa-video"></i> Au cinéma
             </a>
           </li>
@@ -47,7 +47,7 @@
           </ng-container>
 
           <ng-template #loggedInTemplate>
-            <a routerLink="['/profil', nickname]" class="btn btn-dark m-2">
+            <a routerLink="/profil" class="btn btn-dark m-2">
               <i class="fa-solid fa-user"></i> {{ nickname }}
             </a>
             <a (click)="logout()" class="btn btn-dark">

@@ -33,6 +33,8 @@ export class DashboardComponent {
 
   newNickname: string = '';
   errorMessage: string | null = null;
+  isLoggedIn: boolean | undefined;
+
 
   constructor(
     private router: Router, 
@@ -50,6 +52,11 @@ export class DashboardComponent {
       JSON.stringify(response);
       this.nickname = response.nickname;
     });
+
+    this.authService.isLoggedIn$.subscribe(isLoggedIn => {
+      console.log('État de connexion dans le composant Profil:', isLoggedIn);
+      this.isLoggedIn = isLoggedIn;
+    })
     
     this.fetchFavorites();
     this.fetchWatchlist();
@@ -71,12 +78,12 @@ export class DashboardComponent {
             this.cdr.detectChanges();
           },
           error: (err) => {
-            console.error('Error fetching movie details:', err);
+            console.error('Erreur sur la récupération des favoris:', err);
           }
         });
       },
       error: (err) => {
-        console.error('Erreur fetch favoris:', err);
+        console.error('Erreur sur la récupération des favoris:', err);
       }
     });
   }
@@ -127,21 +134,30 @@ export class DashboardComponent {
     });
   }
 
-    updateNickname() {
+  handleEnter(event: KeyboardEvent): void {
+    console.log('Enter key pressed');
+    this.updateNickname();
+  }
+
+  updateNickname() : void{
     this.authService.changeNickname(this.newNickname).subscribe({
       next: (response) => {
         console.log('Pseudo mis à jour :', response);
         this.nickname = this.newNickname;
-        
         this.errorMessage = null;
-        this.cdr.detectChanges()
+        this.cdr.detectChanges();
       },
       error: (err) => {
-        this.errorMessage = err;
+        console.error('Erreur de mise à jour du pseudo :', err); 
+        this.errorMessage = 'Votre pseudonyme est invalide ou dépasse 20 caractères.';
         this.cdr.detectChanges();
       }
-  })
-}
+    });
+  }
+
+  
+  
+  
 
 
 

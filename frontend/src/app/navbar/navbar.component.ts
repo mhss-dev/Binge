@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { ChangeDetectorRef, Component } from '@angular/core';
+import { Router, RouterLink, RouterOutlet, NavigationEnd } from '@angular/router';
 import { AuthService } from '../auth.service';
-
 
 @Component({
   selector: 'app-navbar',
@@ -12,15 +11,14 @@ import { AuthService } from '../auth.service';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
-  navbarClass: string = 'navbar-default'; 
   isLoggedIn = false;
   nickname: string | null = null;
 
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    
+
     this.authService.isLoggedIn$.subscribe({
       next: (status: boolean) => {
         this.isLoggedIn = status; 
@@ -33,7 +31,8 @@ export class NavbarComponent {
       error: (error: any) => {
         console.error("Erreur lors de la  récupération du status de connexion :", error);
       }
-    });
+    })
+    
   }
   
   getNickname(): void {
@@ -63,10 +62,12 @@ export class NavbarComponent {
         }
       });
     }
-    scrollTo(id: string) : void {
-    const element = document.querySelector(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-}
+    scrollTo(id: string): void {
+      const element = document.querySelector(`#${id}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    
 }

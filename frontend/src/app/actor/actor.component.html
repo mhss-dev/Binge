@@ -1,0 +1,28 @@
+<div class="container text-white vh-100">
+    <div class="text-center pb-5 mt-5">
+      <h1 class="display-6">
+        {{ actor.name || 'Inconnu'}}
+      </h1>
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger">
+        {{ error }}
+      </div>
+    <div>
+      <div class="row mb-5">
+        <div *ngFor="let movie of movies" class="col-12 col-md-6 col-lg-4 mb-4">
+          <div class="card border-dark bg-dark text-white shadow-sm">
+            <a [routerLink]="['/film', movie.id]" class="d-block">
+                <img 
+                [src]="movie.poster_path ? 'https://image.tmdb.org/t/p/w500/' + movie.poster_path : 'https://via.placeholder.com/500x750?text=Aucun+poster+disponible'" 
+                class="card-img-top img-fluid rounded"/>
+            </a> 
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="back-to-top" (click)="scrollToTop()">↑</button>
+
+  </div>

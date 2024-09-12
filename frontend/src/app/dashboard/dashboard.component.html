@@ -33,9 +33,6 @@
           <a [routerLink]="['/film', movie.id]" class="d-block">
             <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
           </a>
-          <div class="movie-info">
-            <h5 class="movie-title">{{ movie.title }}</h5>
-          </div>
         </div>
         <div *ngIf="favorites.length === 0" class="text-center mt-3">
           <p>Vous n'avez pas de favoris, ajoutez des films <a href="https://binge-mhss.netlify.app/films">ici</a>.</p>
@@ -62,9 +59,6 @@
           <a [routerLink]="['/film', movie.id]" class="d-block">
             <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
           </a>
-          <div class="movie-info">
-            <h5 class="movie-title">{{ movie.title }}</h5>
-          </div>
         </div>
         <div *ngIf="watchlist.length === 0" class="text-center mt-3">
           <p>Votre watchlist est vide. Ajoutez des films <a href="https://binge-mhss.netlify.app/films">ici</a>.</p>
@@ -91,9 +85,6 @@
           <a [routerLink]="['/film', movie.id]" class="d-block">
             <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
           </a>
-          <div class="movie-info">
-            <h5 class="movie-title">{{ movie.title }}</h5>
-          </div>
         </div>
         <div *ngIf="watched.length === 0" class="text-center mt-3">
           <p>Vous avez vu aucun film ? Impossible. Ajoutez des films <a href="https://binge-mhss.netlify.app/films">ici</a>.</p>
@@ -125,7 +116,7 @@
         <div class="modal-body text-dark">
           <div class="mb-3">
             <label for="nicknameInput" class="form-label">Nouveau pseudo</label>
-            <input type="text" class="form-control" id="nicknameInput" [(ngModel)]="newNickname" />
+          <input type="text" class="form-control" id="nicknameInput" [(ngModel)]="newNickname" (keyup.enter)="updateNickname()">
             <div *ngIf="errorMessage" class="text-danger mt-2">{{ errorMessage }}</div>
           </div>
         </div>

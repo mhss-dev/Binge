@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { environment } from '../environments/environment';
 
@@ -12,8 +12,14 @@ export class FavoritesService {
 
   constructor(private http: HttpClient) { }
 
+  private getAuthHeaders() : HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders().set('Authorization', `Bearer ${token}`)
+
+  }
+
   addFavorite(movieId: number): Observable<any> {  
-    return this.http.post<any>(`${this.apiUrl}/${movieId}/add`, {}, { withCredentials: true }).pipe(
+    return this.http.post<any>(`${this.apiUrl}/${movieId}/add`, { headers: this.getAuthHeaders() }).pipe(
       tap(response => {
         if (response.message) {
           console.log(response.message);
@@ -23,7 +29,7 @@ export class FavoritesService {
   }
   
   removeFavorite(movieId: number): Observable<any> {
-      return this.http.delete<any>(`${this.apiUrl}/${movieId}/delete`, { withCredentials: true }).pipe(
+      return this.http.delete<any>(`${this.apiUrl}/${movieId}/delete`, { headers: this.getAuthHeaders() }).pipe(
       tap(response => {
         if (response.message) {
           console.log(response.message);
@@ -33,7 +39,7 @@ export class FavoritesService {
   }
   getFavorites(): Observable<any[]> {
     
-    return this.http.get<any[]>(`${this.apiUrl}`, { withCredentials: true }).pipe(
+    return this.http.get<any[]>(`${this.apiUrl}`, { headers: this.getAuthHeaders() }).pipe(
       catchError(error => {
         console.error(error);
         return throwError(error);

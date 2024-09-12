@@ -20,7 +20,10 @@ export class LoginComponent {
 
   constructor(private authService: AuthService, private router: Router) {}
 
+
   onLogin(): void {
+
+    
     this.authService.login(this.username, this.password).subscribe({
       next: (response) => {
         if (response.status === 200) {

@@ -1,16 +1,10 @@
-.navbar-default {
+
+.navbar-bg {
   width: 100%;
   margin: 0;
   padding: 0;
   background-color: #14181d !important;
 }
-
-.navbar-home {
-  background-color: #14181C !important;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-} 
 
 
 li {

@@ -30,6 +30,20 @@ export class DiscoverService {
     return this.http.get<any>(url, { params });
   }
 
+  getMoviesByActor(id: number, page: number = 1): Observable<any> {
+    const validPage = Math.max(1, Math.min(page, 500));
+
+    let params = new HttpParams()
+      .set('with_people', id.toString())
+      .set('page', validPage.toString())
+
+    const url = `${this.apiUrl}/actorid`; 
+
+    return this.http.get<any>(url, { params });
+  }
+  
+  
+  
 
   searchFilms(query: string): Observable<any> {
     if (!query) {

@@ -20,6 +20,7 @@ export class RegisterComponent {
 
   constructor(private authService: AuthService, private router: Router) {}
 
+
   onRegister(): void {
     this.authService.register(this.username, this.password, this.nickname).subscribe({
       next: (response) => {

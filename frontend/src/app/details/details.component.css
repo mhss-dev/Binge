@@ -23,6 +23,34 @@
   background-color: transparent;
   border-bottom: solid 3px;
 }
+.card {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-img-top {
+  width: 100%;
+  height: auto;
+}
+
+.overlay-text {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.overlay-text h6,
+.overlay-text p {
+  margin: 0;
+  padding: 0;
+}
+
 
 
 .movie-banner .overlay {

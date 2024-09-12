@@ -47,15 +47,15 @@ export class FilmsComponent {
     private watchlist: WatchlistService,
     private watched : WatchedService,
     private authService : AuthService,
-    private NavbarComponent: NavbarComponent,
   ) {}
 
   ngOnInit(): void {
+
+    
     this.route.params.subscribe(params => {
-      this.movieId = +params['id']; 
-    })
-    this.NavbarComponent.navbarClass = 'navbar-default'; 
-    this.loadFilms(1);
+      this.movieId = +params['id'];
+      this.loadFilms(1); 
+    });
 
     this.authService.isLoggedIn$.subscribe(status => {
       this.isLoggedIn = status; 
@@ -70,6 +70,7 @@ export class FilmsComponent {
     if (this.isLoading || !this.hasMore) return;
 
     this.isLoading = true;
+    this.restoreScrollPosition();
 
     this.discoverService.getFilms(page).subscribe({
       next: (data) => {
@@ -129,7 +130,12 @@ export class FilmsComponent {
     });
   }
 
-
+  restoreScrollPosition(): void {
+    const scrollPosition = sessionStorage.getItem('scrollPosition');
+    if (scrollPosition) {
+      window.scrollTo(0, +scrollPosition);
+    }
+  }
   @HostListener('window:scroll', ['$event'])
   onScroll(event: Event): void {
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
@@ -143,6 +149,8 @@ export class FilmsComponent {
     }
   
     this.showBackToTop = scrollTop > 50;
+    sessionStorage.setItem('scrollPosition', window.scrollY.toString());
+
   }
 
   scrollToTop(): void {
