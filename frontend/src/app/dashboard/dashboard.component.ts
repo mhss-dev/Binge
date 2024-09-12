@@ -9,7 +9,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { UserService } from 'app/services/user.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -47,7 +46,6 @@ export class DashboardComponent {
     private cdr: ChangeDetectorRef,
     private detailsService: DetailsService,
     private userService: UserService,
-    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
