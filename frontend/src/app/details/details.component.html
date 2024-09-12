@@ -36,7 +36,7 @@
       
       <div class="d-flex flex-wrap">
         <button class="btn me-2 mb-2" [ngClass]="isWatched ? 'btn-outline-light' : 'btn-light'" (click)="toggleWatched()">
-          <i class="fa-solid" [ngClass]="isWatched ? 'fa-solid fa-plus' : 'fa-solid fa-minus'"></i> {{ isWatched ? 'Ajouter aux films vus' : 'Retirer des films vus' }}
+          <i class="fa-solid" [ngClass]="isWatched ? 'fa-solid fa-minus' : 'fa-solid fa-plus'"></i> {{ isWatched ? 'Retirer des films vus' : 'Ajouter  aux films vus' }}
         </button>    
         <button class="btn me-2 mb-2" [ngClass]="isWatchlist ? 'btn-outline-light' : 'btn-light'"
           (click)="toggleWatchlist()">
