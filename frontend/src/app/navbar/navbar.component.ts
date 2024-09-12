@@ -15,7 +15,7 @@ export class NavbarComponent {
   nickname: string | null = null;
 
 
-  constructor(private authService: AuthService, private router: Router, cdr: ChangeDetectorRef) {}
+  constructor(private authService: AuthService, private router: Router, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
 
@@ -40,13 +40,16 @@ export class NavbarComponent {
       this.authService.getProfil().subscribe({
         next: (response: any) => {
           this.nickname = response.nickname;
+          this.cdr.detectChanges(); 
         },
         error: (error: any) => {
           this.nickname = '';
+          this.cdr.detectChanges(); 
         }
       });
     } else {
       this.nickname = '';
+      this.cdr.detectChanges(); 
     }
   }
 

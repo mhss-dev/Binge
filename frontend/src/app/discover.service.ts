@@ -57,6 +57,7 @@ export class DiscoverService {
 
     return this.http.get<any>(url, { params });
   }
+  
   getMovieByID(id: number): Observable<any> {
     const url = `${this.apiUrl}`; 
     return this.http.get<any>(url);

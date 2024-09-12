@@ -8,6 +8,8 @@ import { DetailsService } from '../details.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
+import { UserService } from 'app/services/user.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -18,7 +20,7 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent {
-  nickname: string | null = null;
+  nickname: string = '';
   movie: any = null;
   favorites: any[] = [];
   watchlist: any[] = [];
@@ -43,26 +45,48 @@ export class DashboardComponent {
     private watchlistService: WatchlistService, 
     private favoritesService: FavoritesService, 
     private cdr: ChangeDetectorRef,
-    private detailsService: DetailsService
-
+    private detailsService: DetailsService,
+    private userService: UserService,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
-    this.authService.getProfil().subscribe(response => {
-      JSON.stringify(response);
-      this.nickname = response.nickname;
+    
+     
+     this.userService.nickname$.subscribe(nickname => {
+      this.nickname = nickname ?? ''; 
     });
 
-    this.authService.isLoggedIn$.subscribe(isLoggedIn => {
-      console.log('État de connexion dans le composant Profil:', isLoggedIn);
-      this.isLoggedIn = isLoggedIn;
-    })
+    
+    this.authService.getProfil().subscribe({
+      next: (response: any) => {
+        const newNickname = response?.nickname ?? '';
+        this.nickname = newNickname;
+        this.userService.updateNickname(newNickname); 
+      },
+      error: (error: any) => {
+        console.error('Erreur lors de la récupération du profil:', error);
+        this.nickname = ''; 
+        this.userService.updateNickname(this.nickname); 
+      }
+    });
+
+    
+    this.authService.isLoggedIn$.subscribe({
+      next: (isLoggedIn: boolean) => {
+        console.log('État de connexion dans le composant Profil:', isLoggedIn);
+        this.isLoggedIn = isLoggedIn;
+      },
+      error: (error: any) => {
+        console.error('Erreur lors de la vérification du statut de connexion:', error);
+      }
+    });
+
     
     this.fetchFavorites();
     this.fetchWatchlist();
     this.fetchWatched();
     this.combineMovies();
-
   }
 
   
@@ -136,28 +160,34 @@ export class DashboardComponent {
 
   handleEnter(event: KeyboardEvent): void {
     console.log('Enter key pressed');
-    this.updateNickname();
+    this.onSaveNewNickname();
   }
 
-  updateNickname() : void{
+  onSaveNewNickname(): void {
     this.authService.changeNickname(this.newNickname).subscribe({
       next: (response) => {
         console.log('Pseudo mis à jour :', response);
-        this.nickname = this.newNickname;
+        
+        
+        this.userService.updateNickname(this.newNickname); 
+        
+        
         this.errorMessage = null;
+        
+        
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Erreur de mise à jour du pseudo :', err); 
         this.errorMessage = 'Votre pseudonyme est invalide ou dépasse 20 caractères.';
+        
+        
         this.cdr.detectChanges();
       }
     });
   }
 
-  
-  
-  
+
 
 
 

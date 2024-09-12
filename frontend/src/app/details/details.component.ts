@@ -115,9 +115,8 @@ export class DetailsComponent {
     this.detailsService.getProviders(id).subscribe({
       next: (data) => {
         const providers = data.results?.BE;  
-        console.log(providers);
         
-  
+
         if (providers) {
           this.watchProviders = providers;  
         } else {
@@ -137,7 +136,6 @@ export class DetailsComponent {
         if (logoData?.logos?.length > 0) {
           this.logoUrl =
           'https://image.tmdb.org/t/p/w185' + logoData.logos[0].file_path;
-          console.log(logoData);
         } else {
           this.logoUrl = undefined;
         }

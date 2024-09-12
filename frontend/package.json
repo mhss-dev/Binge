@@ -23,6 +23,7 @@
     "@capacitor/cli": "^6.1.2",
     "@capacitor/core": "^6.1.2",
     "@capacitor/ios": "^6.1.2",
+    "@ng-bootstrap/ng-bootstrap": "^17.0.1",
     "bootstrap": "^5.3.3",
     "ngx-cookie-service": "^18.0.0",
     "ngx-page-scroll": "^13.0.0",

@@ -19,7 +19,7 @@ export class FavoritesService {
   }
 
   addFavorite(movieId: number): Observable<any> {  
-    return this.http.post<any>(`${this.apiUrl}/${movieId}/add`, { headers: this.getAuthHeaders() }).pipe(
+    return this.http.post<any>(`${this.apiUrl}/${movieId}/add`, {}, { headers: this.getAuthHeaders() }).pipe(
       tap(response => {
         if (response.message) {
           console.log(response.message);

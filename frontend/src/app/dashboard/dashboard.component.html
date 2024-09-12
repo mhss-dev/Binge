@@ -116,13 +116,13 @@
         <div class="modal-body text-dark">
           <div class="mb-3">
             <label for="nicknameInput" class="form-label">Nouveau pseudo</label>
-          <input type="text" class="form-control" id="nicknameInput" [(ngModel)]="newNickname" (keyup.enter)="updateNickname()">
+          <input type="text" class="form-control" id="nicknameInput" [(ngModel)]="newNickname" (keydown.enter)="onSaveNewNickname()">
             <div *ngIf="errorMessage" class="text-danger mt-2">{{ errorMessage }}</div>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="updateNickname()">Sauvegarder</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="onSaveNewNickname()">Sauvegarder</button>
         </div>
       </div>
     </div>
