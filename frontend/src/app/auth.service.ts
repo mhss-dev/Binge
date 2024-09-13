@@ -76,12 +76,12 @@ export class AuthService {
   
     return this.http.get<any>(`${this.apiUrl}/auth/profil`, { headers });
   }
-  
+
   changeNickname(newNickname: string): Observable<any> {
     const token = localStorage.getItem('token');
     
   
-    return this.http.put<any>(`${this.apiUrl}/auth/profil/update`, 
+    return this.http.patch<any>(`${this.apiUrl}/auth/profil/update`, 
       { newNickname }, 
       { 
         headers: new HttpHeaders({

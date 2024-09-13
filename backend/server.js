@@ -23,7 +23,7 @@ app.use(bodyParser.json());
 
 const corsOptions = {
   origin: "http://localhost:4200",
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"], 
   credentials: true,
 };
