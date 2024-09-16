@@ -9,7 +9,7 @@ import { NgbAlert, NgbCarousel, NgbSlide } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-cards',
   standalone: true,
-  imports: [CommonModule, RouterLink, NgbCarousel, NgbSlide],
+  imports: [CommonModule, RouterLink],
   templateUrl: './cards.component.html',
   styleUrl: './cards.component.css', 
 

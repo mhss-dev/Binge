@@ -39,7 +39,7 @@
 .movie-card img {
   border-radius: 8px;
   height: 40vh;
-  object-fit: cover;
+  object-fit: fill;
   transition: transform 0.3s ease-in-out;
 }
 

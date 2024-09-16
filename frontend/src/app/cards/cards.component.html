@@ -6,7 +6,7 @@
     <div class="carousel-inner">
       <div *ngFor="let movieGroup of chunkArray(trendingMovies, 6); let i = index" class="carousel-item" [ngClass]="{active: i === 0}">
         <div class="d-flex justify-content-around">
-          <div *ngFor="let movie of movieGroup" class="card movie-card">
+          <div *ngFor="let movie of movieGroup" class="card movie-card mx-2">
             <a [routerLink]="['/film', movie.id]" class="d-block">
               <img [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" class="card-img-top img-fluid" alt="{{ movie.title }} poster">
             </a>
