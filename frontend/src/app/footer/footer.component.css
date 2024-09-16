@@ -1,11 +1,51 @@
-a:hover {
-    color: rgb(102, 100, 100);
-    text-decoration: underline;
+footer {
+  background-color: #14181C !important;
+  padding: 20px 0;
+  text-align: center;
+  position: relative;
+}
+
+footer p {
+  margin: 0;
+}
+
+footer a {
+  color: white;
+  font-size: 1rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+footer a:hover {
+  color: rgb(102, 100, 100);
+  text-decoration: underline;
 }
 
 
-footer {
-  background-color: #14181C !important;
-  padding-top: 50%;
+@media (max-width: 768px) {
+  footer {
+    padding: 15px 0;
+  }
 
+  footer a {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 576px) {
+  footer {
+    padding: 10px 0;
+  }
+
+  footer a {
+    font-size: 0.75rem;
+  }
+}
+
+
+@media (max-width: 400px) {
+  footer {
+    display: none;
+  }
 }
