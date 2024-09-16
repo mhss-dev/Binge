@@ -37,6 +37,7 @@ export class FilmsComponent {
   isWatched: boolean = false; 
   isLoggedIn = false;
   nickname: string | null = null;
+  sortOption: string = 'popularity.desc'; // Default sorting option
 
   
 
@@ -57,39 +58,45 @@ export class FilmsComponent {
       this.loadFilms(1); 
     });
 
+    
+    
     this.authService.isLoggedIn$.subscribe(status => {
       this.isLoggedIn = status; 
       if (this.isLoggedIn) {
-          this.getNickname();
+        this.getNickname();
       } else {
         return;
       }
     })
   }
-  loadFilms(page: number): void {
+  loadFilms(page: number): void { 
     if (this.isLoading || !this.hasMore) return;
-
+    
     this.isLoading = true;
-    this.restoreScrollPosition();
-
-    this.discoverService.getFilms(page).subscribe({
+    
+    this.discoverService.getFilms(page, false, this.sortOption).subscribe({
       next: (data) => {
         if (data.items && Array.isArray(data.items)) {
-          this.films = [...this.films, ...this.shuffle(data.items)];
-          this.totalPages = data.totalPages; 
-          this.currentPage = data.currentPage;
+          this.films = page === 1 ? [...data.items] : [...this.films, ...data.items];
+          this.totalPages = data.totalPages;
+          this.currentPage = page; 
           this.hasMore = this.currentPage < this.totalPages;
+          
         } else {
-          console.error('Erreur', data);
+          console.error(data);
         }
+        
+        this.cdr.detectChanges();
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Erreur', err);
+        console.error(err);
         this.isLoading = false;
       }
     });
   }
+  
+  
 
   
   getNickname(): void {
@@ -138,20 +145,19 @@ export class FilmsComponent {
   }
   @HostListener('window:scroll', ['$event'])
   onScroll(event: Event): void {
+    if (this.isLoading || !this.hasMore) return;
+  
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
     const windowHeight = window.innerHeight || document.documentElement.clientHeight;
     const bodyHeight = document.documentElement.scrollHeight;
   
     if (scrollTop + windowHeight >= bodyHeight - 100) {
-      if (this.hasMore) {
-        this.loadFilms(this.currentPage + 1);
-      }
+      this.loadFilms(this.currentPage + 1);
     }
   
     this.showBackToTop = scrollTop > 50;
-    sessionStorage.setItem('scrollPosition', window.scrollY.toString());
-
   }
+  
 
   scrollToTop(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -172,14 +178,6 @@ export class FilmsComponent {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-
-  goToPage(page: number, event? : Event): void {
-    if (event) {
-      event.preventDefault();
-    }
-    if (page < 1 || page > this.totalPages) return; 
-    this.loadFilms(page);
-  }
 
   toggleFavorite(): void {
     if (this.isFavorite) {

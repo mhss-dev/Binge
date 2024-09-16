@@ -3,13 +3,9 @@ a:hover {
     text-decoration: underline;
 }
 
+
 footer {
   background-color: #14181C !important;
+  padding-top: 50%;
+
 }
-
-
-@media (max-width: 576px) {
-    .footer {
-      display: none;
-    }
-  }

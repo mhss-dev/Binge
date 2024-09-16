@@ -25,23 +25,40 @@ export class AuthService {
   }
 
   login(username: string, password: string): Observable<any> {
-    return this.http.post<{ token: string }>(`${this.apiUrl}/auth/login`, { username, password }, { observe: 'response', withCredentials: true  })
-      .pipe(
-        tap(response => {
-          if (response.status === 200 && response.body && response.body.token) {
-            const token = response.body.token;
+    return this.http.post<{ token: string }>(
+      `${this.apiUrl}/auth/login`,
+      { username, password },
+      { observe: 'response', withCredentials: true }
+    ).pipe(
+      tap(response => {
+        // Check if response is successful and token exists
+        if (response.status === 200 && response.body && response.body.token) {
+          const token = response.body.token;
   
-            localStorage.setItem('token', token);
+          // Store token in localStorage
+          localStorage.setItem('token', token);
   
-            this.setLoggedIn(true);
-          }
-        }),
-        catchError(error => {
-          this.setLoggedIn(false);
-          return throwError(() => new Error('Connexion échouée'));
-        })
-      );
+          // Optionally, set the user as logged in in your app's state
+          this.setLoggedIn(true);
+  
+          // Debugging log
+          console.log('Login successful, token stored.');
+        } else {
+          console.warn('Login response did not contain a token.');
+        }
+      }),
+      catchError(error => {
+        // Set logged-in status to false on error
+        this.setLoggedIn(false);
+  
+        // Handle errors, e.g., show a message to the user
+        console.error('Login failed:', error);
+  
+        return throwError(() => new Error('Connexion échouée'));
+      })
+    );
   }
+  
   
   logout(): Observable<any> {
     return this.http.post<{ message: string }>(`${this.apiUrl}/auth/logout`, {}, { 
@@ -81,7 +98,7 @@ export class AuthService {
     const token = localStorage.getItem('token');
     
   
-    return this.http.patch<any>(`${this.apiUrl}/auth/profil/update`, 
+    return this.http.put<any>(`${this.apiUrl}/auth/profil/update`, 
       { newNickname }, 
       { 
         headers: new HttpHeaders({

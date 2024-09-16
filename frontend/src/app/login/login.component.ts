@@ -22,18 +22,17 @@ export class LoginComponent {
 
 
   onLogin(): void {
-
-    
     this.authService.login(this.username, this.password).subscribe({
       next: (response) => {
+
         if (response.status === 200) {
           this.loginMessage = 'Connexion avec succès, redirection sur votre profil.';
           this.alertType = 'alert-success';
-          this.router.navigate(['/profil']);
+          this.router.navigate(['/profil'])
         } else if (response.status === 201) {
           this.loginMessage = 'Vous êtes déjà connecté, redirection.';
           this.alertType = 'alert-warning';
-          setTimeout(() => this.router.navigate(['/profil']), 1000);
+          setTimeout(() => this.router.navigate(['/profil']), 2000);
         } else {
           this.loginMessage = 'Une erreur a eu lieu, réessayez.';
           this.alertType = 'alert-danger';
@@ -45,5 +44,6 @@ export class LoginComponent {
       }
     });
   }
+  
   
 }

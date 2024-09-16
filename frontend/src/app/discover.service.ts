@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams  } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environment } from '../environments/environment';
 
 @Injectable({
@@ -13,23 +13,26 @@ export class DiscoverService {
   private apiUrl = `${environment.apiUrl}`;
 
   constructor(private http: HttpClient) { }
-
-
-  getFilms(page: number = 1, adult: boolean = false): Observable<any> {
+  getFilms(page: number = 1, adult: boolean = false, sortOption: string = 'popularity.desc'): Observable<any> {
     const validPage = Math.max(1, Math.min(page, 500));
-
-    let params = new HttpParams();
-    params = params.set('page', validPage.toString());
-
-    if (adult) {
-      params = params.set('include_adult', 'false');
-    }
-    
-
-    const url = `${this.apiUrl}/films`;     
-    return this.http.get<any>(url, { params });
+  
+    let params = new HttpParams()
+      .set('page', validPage.toString())
+      .set('sort_by', sortOption)
+      .set('include_adult', adult ? 'true' : 'false');
+  
+    const url = `${this.apiUrl}/films`;
+  
+    return this.http.get<any>(url, { params }).pipe(
+      map((response: any) => {
+        response.items = response.items.filter((movie: any) => !movie.original_title || !this.isJapanese(movie.original_title));
+        return response;
+      })
+    );
   }
-
+  
+  
+  
   getMoviesByActor(id: number, page: number = 1): Observable<any> {
     const validPage = Math.max(1, Math.min(page, 500));
 
@@ -42,6 +45,10 @@ export class DiscoverService {
     return this.http.get<any>(url, { params });
   }
   
+  private isJapanese(text: string): boolean {
+    const japaneseRegex = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF]/;
+    return japaneseRegex.test(text);
+  }
   
   
 

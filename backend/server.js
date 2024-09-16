@@ -23,7 +23,7 @@ app.use(bodyParser.json());
 
 const corsOptions = {
   origin: "http://localhost:4200",
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"], 
   credentials: true,
 };
@@ -151,9 +151,10 @@ app.get("/api/logo/:id", async (req, res) => {
 
 app.get("/api/films", async (req, res) => {
   try {
-    const actorId = req.query.with_people;
 
-    const page = parseInt(req.query.page);
+
+    const { page = parseInt(req.query.page), sort_by = 'popularity.desc', actorId } = req.query;
+
     const limit = 12;
     const maxItems = 500;
 
@@ -164,7 +165,10 @@ app.get("/api/films", async (req, res) => {
           api_key: TMDB_API_KEY,
           language: "fr-FR",
           page: page,
+          include_adult: false,
+          sort_by: sort_by,
           with_people: actorId,
+
         },
       }
     );
@@ -173,7 +177,13 @@ app.get("/api/films", async (req, res) => {
     const totalItems = Math.min(data.total_results, maxItems);
     const totalPages = Math.ceil(totalItems / limit);
 
-    const results = data.results.slice(0, limit);
+        // Regular expression to match Japanese characters
+        const japaneseRegex = /[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/u;
+
+        // Filter out movies with Japanese characters in the original title
+        const results = data.results
+          .filter(movie => movie.original_title || japaneseRegex.test(movie.original_title))
+          .slice(0, limit);
 
     res.json({
       items: results,

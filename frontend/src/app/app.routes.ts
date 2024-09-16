@@ -16,8 +16,8 @@ export const routes: Routes = [
     { path: 'film/:id', component: DetailsComponent },
     { path: 'acteur/:id', component: ActorComponent },
     { path: 'realisateur/:id', component: ActorComponent },
-    { path: 'login', component: LoginComponent, canActivate: [noAuthGuard] },
-    { path: 'register', component: RegisterComponent, canActivate: [noAuthGuard] },
+    { path: 'login', component: LoginComponent },
+    { path: 'register', component: RegisterComponent },
     { path: 'logout', component: DashboardComponent },
     { path: 'profil', component: DashboardComponent, canActivate: [AuthGuard] },
     { path: '**', redirectTo: 'home', pathMatch: 'full' }

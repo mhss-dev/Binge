@@ -69,16 +69,6 @@ export class DashboardComponent {
       }
     });
 
-    
-    this.authService.isLoggedIn$.subscribe({
-      next: (isLoggedIn: boolean) => {
-        console.log('État de connexion dans le composant Profil:', isLoggedIn);
-        this.isLoggedIn = isLoggedIn;
-      },
-      error: (error: any) => {
-        console.error('Erreur lors de la vérification du statut de connexion:', error);
-      }
-    });
 
     
     this.fetchFavorites();
@@ -157,7 +147,6 @@ export class DashboardComponent {
   }
 
   handleEnter(event: KeyboardEvent): void {
-    console.log('Enter key pressed');
     this.onSaveNewNickname();
   }
 
@@ -216,7 +205,7 @@ onLogout(): void {
   });
 }
 
-combineMovies() {
+combineMovies() : void {
   this.combinedMovies = [
     ...this.favorites.map(movie => ({ ...movie, type: 'Favorite' })),
     ...this.watchlist.map(movie => ({ ...movie, type: 'Watchlist' })),

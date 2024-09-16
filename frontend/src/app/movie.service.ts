@@ -16,8 +16,8 @@ export class MovieService {
     return this.http.get<any>(`${this.apiUrl}/nowplaying`);
   }
 
-  getPopular(): Observable<any> {    
-    return this.http.get<any>(`${this.apiUrl}/popular`);
+  getTrending(): Observable<any> {    
+    return this.http.get<any>(`${this.apiUrl}/trending`);
   }
 
   getTopRated(): Observable<any> {    
