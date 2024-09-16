@@ -2,7 +2,7 @@
   <div class="mb-4">
     <h3 class="font-weight-bold">Actuellement en tendance</h3>
   </div>
-  <div id="trendingCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000">
+  <div id="trendingCarousel" class="carousel slide" class="carousel slide" data-bs-interval="false" data-bs-ride="false">
     <div class="carousel-inner">
       <div *ngFor="let movieGroup of chunkArray(trendingMovies, 6); let i = index" class="carousel-item" [ngClass]="{active: i === 0}">
         <div class="d-flex justify-content-around">
