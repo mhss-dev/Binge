@@ -177,13 +177,7 @@ app.get("/api/films", async (req, res) => {
     const totalItems = Math.min(data.total_results, maxItems);
     const totalPages = Math.ceil(totalItems / limit);
 
-        // Regular expression to match Japanese characters
-        const japaneseRegex = /[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/u;
-
-        // Filter out movies with Japanese characters in the original title
-        const results = data.results
-          .filter(movie => movie.original_title || japaneseRegex.test(movie.original_title))
-          .slice(0, limit);
+    const results = data.results.slice(0, limit);
 
     res.json({
       items: results,

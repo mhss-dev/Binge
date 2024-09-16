@@ -1,72 +1,23 @@
-<div class="container-fluid py-5 text-white text-center">
-  <div class="mb-4">
-    <h3 class="font-weight-bold">Actuellement en tendance</h3>
+<div class="container text-white">
+  <div class="text-center mb-5 pb-5" id="aucinema">
+    <h1 class="display-4 font-weight-bold">Actuellement au cinéma</h1>
+    <p class="lead text-secondary">
+      Du {{ minDate | date:'dd/MM/yyyy' }} au {{ maxDate | date:'dd/MM/yyyy' }}
+    </p>
   </div>
-  <div id="trendingCarousel" class="carousel slide" class="carousel slide" data-bs-interval="false" data-bs-ride="false">
-    <div class="carousel-inner">
-      <div *ngFor="let movieGroup of chunkArray(trendingMovies, 6); let i = index" class="carousel-item" [ngClass]="{active: i === 0}">
-        <div class="d-flex justify-content-around">
-          <div *ngFor="let movie of movieGroup" class="card movie-card mx-2">
-            <a [routerLink]="['/film', movie.id]" class="d-block">
-              <img [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" class="card-img-top img-fluid" alt="{{ movie.title }} poster">
-            </a>
-          </div>
+
+  <div>
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+    <div class="row">
+      <div *ngFor="let movie of movies" class="col-12 col-md-6 col-lg-4 mb-4">
+        <div class="card border-dark bg-dark text-white shadow-sm">
+          <a [routerLink]="['/film', movie.id]" class="d-block">
+            <img [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path"
+                 class="card-img-top img-fluid rounded"
+                 alt="{{ movie.title }} poster">
+          </a>
         </div>
       </div>
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#trendingCarousel" data-bs-slide="prev" aria-label="Previous slide">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#trendingCarousel" data-bs-slide="next" aria-label="Next slide">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    </button>
-    
-  </div>
-
-
-  <div class="my-3 mb-4">
-    <h3 class="font-weight-bold">Actuellement au cinéma</h3>
-  </div>
-  <div id="nowPlayingCarousel" class="carousel slide" data-bs-interval="false" data-bs-ride="false">
-    <div class="carousel-inner">
-      <div *ngFor="let movieGroup of chunkArray(movies, 6); let i = index" class="carousel-item" [ngClass]="{active: i === 0}">
-        <div class="d-flex justify-content-around">
-          <div *ngFor="let movie of movieGroup" class="card movie-card mx-2">
-            <a [routerLink]="['/film', movie.id]" class="d-block">
-              <img [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" class="card-img-top img-fluid" alt="{{ movie.title }} poster">
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#nowPlayingCarousel" data-bs-slide="prev" aria-label="Previous slide">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#nowPlayingCarousel" data-bs-slide="next" aria-label="Next slide">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    </button>
-  </div>
-
-  <div class="my-3 mb-4">
-    <h3 class="font-weight-bold">Prochaines sorties</h3>
-  </div>
-  <div id="upcomingCarousel" class="carousel slide" data-bs-interval="false" data-bs-ride="false">
-    <div class="carousel-inner">
-      <div *ngFor="let movieGroup of chunkArray(upcomingMovies, 6); let i = index" class="carousel-item" [ngClass]="{active: i === 0}">
-        <div class="d-flex justify-content-around">
-          <div *ngFor="let movie of movieGroup" class="card movie-card mx-2">
-            <a [routerLink]="['/film', movie.id]" class="d-block">
-              <img [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" class="card-img-top img-fluid" alt="{{ movie.title }} poster">
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#upcomingCarousel" data-bs-slide="prev" aria-label="Previous slide">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#upcomingCarousel" data-bs-slide="next" aria-label="Next slide">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    </button>
   </div>
 </div>

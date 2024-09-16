@@ -25,7 +25,6 @@ export class DiscoverService {
   
     return this.http.get<any>(url, { params }).pipe(
       map((response: any) => {
-        response.items = response.items.filter((movie: any) => !movie.original_title || !this.isJapanese(movie.original_title));
         return response;
       })
     );
@@ -44,13 +43,7 @@ export class DiscoverService {
 
     return this.http.get<any>(url, { params });
   }
-  
-  private isJapanese(text: string): boolean {
-    const japaneseRegex = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF]/;
-    return japaneseRegex.test(text);
-  }
-  
-  
+
 
   searchFilms(query: string): Observable<any> {
     if (!query) {

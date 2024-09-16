@@ -1,70 +1,81 @@
-
-.carousel-item {
-  padding-left: 2rem; 
-  padding-right: 2rem;
+h1 {
+  padding-top: 10rem;
 }
-
-
-.carousel-control-prev,
-.carousel-control-next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  width: 5%;
-}
-
-.carousel-control-prev {
-  left: 0;
-}
-
-.carousel-control-next {
-  right: 0;
-}
-
-
-
-.movie-card {
-  min-width: 150px;
-  flex: 0 0 auto;
-  position: relative;
-}
-
-.carousel-inner {
+.card-container {
   display: flex;
-  align-items: center;
-  min-height: 400px;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
 }
 
-.movie-card img {
-  border-radius: 8px;
-  height: 40vh;
-  object-fit: fill;
+.card {
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
   transition: transform 0.3s ease-in-out;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin: 0;
+  height: 100%;
 }
 
+.card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 
-@media (max-width: 767.98px) {
-  .carousel-item {
-    flex: 0 0 100%;
-    width: 100%;
-    box-sizing: border-box;
+.card-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.card-text {
+  font-size: 0.875rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  margin-bottom: 1rem;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card-body .btn {
+  margin-right: 20px;
+}
+
+.card img {
+  width: 100%; 
+  height: 30rem; 
+  object-fit: fill; 
+}
+
+.card-body {
+  padding: 0.5rem;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-
-  .movie-card {
-    min-width: 100%;
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 767.98px) { 
+  .display-4 {
+    font-size: 1.75rem; 
   }
 }
 
 @media (min-width: 768px) {
-  .movie-card {
-    min-width: 200px;
+  .display-4 {
+    font-size: 2.5rem;
   }
-}
-
-@media (min-width: 1200px) {
-  .movie-card {
-    min-width: 250px;
-  }
-
 }

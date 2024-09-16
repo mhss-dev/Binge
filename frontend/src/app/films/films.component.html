@@ -1,19 +1,21 @@
 <div class="container my-5 text-white pt-5">
-  <div class="text-center mb-5 pb-5">
-      <h1 class="display-5 font-weight-bold">Découverte de vos goûts{{ nickname ? ', ' + nickname : '' }}</h1>
-  </div>
-
-  <div class="row mb-4 pb-2">
-      <div class="col-md-4 me-auto">
-          <form class="d-flex" (keydown.enter)="searchFilms(searchQuery)" (input)="searchFilms(searchQuery)">
-              <div class="search-container">
-                  <i class="fa fa-search search-icon"></i>
-                  <input class="form-control search-input d-f" type="search" placeholder="Trouvez un film" aria-label="Search" [(ngModel)]="searchQuery" name="searchQuery">
-              </div>
-          </form>
+    <div class="text-center mb-5 pb-5">
+      <h1 class="display-5 font-weight-bold">
+        Découverte de vos goûts{{ nickname ? ', ' + nickname : '' }}
+      </h1>
+    </div>
+  
+    <div class="row mb-4 pb-2">
+      <div class="col-12 col-md-6 mb-2 mb-md-0">
+        <form class="d-flex" (keydown.enter)="searchFilms(searchQuery)" (input)="searchFilms(searchQuery)">
+          <div class="search-container w-100">
+            <i class="fa fa-search search-icon"></i>
+            <input class="form-control search-input" type="search" placeholder="Trouvez un film" aria-label="Search" [(ngModel)]="searchQuery" name="searchQuery">
+          </div>
+        </form>
       </div>
-      
-      <div class="col-md-4 ms-auto">
+  
+      <div class="col-12 col-md-4 ms-md-auto">
         <select class="form-control" [(ngModel)]="sortOption" name="sortOption" (change)="loadFilms(1)">
           <option value="popularity.desc">Popularité (+/-)</option>
           <option value="popularity.asc">Popularité (-/+)</option>
@@ -21,24 +23,22 @@
           <option value="primary_release_date.asc">Date de sortie (-/+)</option>
         </select>
       </div>
-      
-
-      </div>
-      
-
-  <div>  
+    </div>
+  
+    <div>
       <div class="row">
-          <div *ngFor="let film of films" class="col-md-4 mb-4 text-center">
-              <div class="card border-dark bg-dark text-white">
-                  <a [routerLink]="['/film', film.id]" class="d-block">
-                      <img 
-                          [src]="film.poster_path ? 'https://image.tmdb.org/t/p/w500/' + film.poster_path : 'https://via.placeholder.com/500x750?text=Aucun+poster+disponible'" 
-                          class="img-fluid rounded">
-                  </a>            
-              </div>
+        <div *ngFor="let film of films" class="col-12 col-sm-6 col-md-4 mb-4 text-center">
+          <div class="card border-dark bg-dark text-white h-100">
+            <a [routerLink]="['/film', film.id]" class="d-block">
+              <img 
+                [src]="film.poster_path ? 'https://image.tmdb.org/t/p/w500/' + film.poster_path : 'https://via.placeholder.com/500x750?text=Aucun+poster+disponible'" 
+                class="img-fluid rounded">
+            </a>            
           </div>
+        </div>
       </div>
+    </div>
+  
+    <button class="back-to-top" (click)="scrollToTop()">↑</button>
   </div>
-
-  <button class="back-to-top" (click)="scrollToTop()">↑</button>
-</div>
+  
