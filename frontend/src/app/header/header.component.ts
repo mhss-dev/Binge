@@ -22,7 +22,7 @@ export class HeaderComponent {
   private subscription: Subscription = new Subscription();
   private readonly BACKDROP_UPDATE_INTERVAL = 5000;
 
-  constructor(private movieService: DiscoverService) {}
+  constructor(private movieService: MovieService) {}
 
   ngOnInit(): void {
     this.loadMovies();
@@ -35,9 +35,9 @@ export class HeaderComponent {
   
 
   loadMovies() {
-    this.movieService.getFilms().subscribe({
+    this.movieService.getNowPlayingMovies().subscribe({
       next: (data) => {        
-        this.movie = data.items[this.getRandomBackdrop(0, data.items.length -1)];
+        this.movie = data.results[this.getRandomBackdrop(0, data.results.length -1)];
         this.loading = false;
       },
       error: (error) => {

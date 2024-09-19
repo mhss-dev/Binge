@@ -9,7 +9,6 @@ import { FavoritesService } from '../favorites.service';
 import { WatchlistService } from '../watchlist.service';
 import { WatchedService } from '../watched.service';
 import { AuthService } from '../auth.service';
-import { NavbarComponent } from '../navbar/navbar.component'; 
 
 @Component({
   selector: 'app-films',
@@ -37,7 +36,7 @@ export class FilmsComponent {
   isWatched: boolean = false; 
   isLoggedIn = false;
   nickname: string | null = null;
-  sortOption: string = 'popularity.desc'; // Default sorting option
+  sortOption: string = 'popularity.desc';
 
   
 
