@@ -1,5 +1,5 @@
 h1 {
-  padding-top: 10rem;
+  padding-top: 5rem;
 }
 .card-container {
   display: flex;
@@ -9,7 +9,7 @@ h1 {
 }
 
 .card {
-  min-width: 300px;
+  min-width: 100%;
   display: flex;
   flex-direction: column;
   transition: transform 0.3s ease;
@@ -126,7 +126,6 @@ h1 {
   }
 }
 
-
 .section {
   opacity: 0;
   transition: opacity 0.5s ease-in-out;
@@ -138,7 +137,6 @@ h1 {
   display: block;
 }
 
-
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -149,14 +147,48 @@ h1 {
     transform: translateY(0);
   }
 }
+
 @media (max-width: 767.98px) { 
   .display-4 {
     font-size: 1.75rem; 
+  }
+
+  .h1 {
+    padding-top: 2rem;
+  }
+
+  .toggle-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .toggle-button {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .card {
+    min-width: 100%;
+    margin-bottom: 2rem;
+  }
+
+  .back-to-top {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+
+  .section {
+    margin-top: 1rem;
   }
 }
 
 @media (min-width: 768px) {
   .display-4 {
     font-size: 2.5rem;
+  }
+
+  .card {
+    min-width: 200px;
   }
 }
