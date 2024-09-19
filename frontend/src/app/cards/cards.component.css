@@ -58,6 +58,85 @@ h1 {
   padding: 0.5rem;
 }
 
+
+.toggle-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 25px;
+  background-color: #14181d;
+  overflow: hidden;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.toggle-button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background: transparent;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.toggle-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.toggle-button.active {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.5);
+  transition: 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.back-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #505050;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.back-to-top:hover {
+  background-color: #6b6b6b;
+}
+
+@media (min-width: 768px) {
+  .toggle-button {
+    font-size: 16px;
+  }
+}
+
+
+.section {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  display: none;
+}
+
+.section.active {
+  opacity: 1;
+  display: block;
+}
+
+
 @keyframes fadeInUp {
   from {
     opacity: 0;

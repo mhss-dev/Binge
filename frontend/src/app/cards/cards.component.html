@@ -1,18 +1,28 @@
 <div class="container text-white">
   <div class="text-center mb-5 pb-5" id="aucinema">
-    <h1 class="display-4 font-weight-bold">Actuellement au cinéma</h1>
+    <h1 class="display-4 font-weight-bold"> {{ title }}</h1>
     <p class="lead text-secondary">
-      Du {{ minDate | date:'dd/MM/yyyy' }} au {{ maxDate | date:'dd/MM/yyyy' }}
+      Du {{ minDate | date:'dd/MM/yyyy'}} au {{ maxDate | date:'dd/MM/yyyy'}}
     </p>
   </div>
 
-  <div>
-    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-    <div class="row mt-5">
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <div class="toggle-container mb-4 border-2">
+    <button (click)="selectTab('nowPlaying')" [class.active]="currentTab === 'nowPlaying'" class="toggle-button">Actuellement au cinéma</button>
+    <button (click)="selectTab('trending')" [class.active]="currentTab === 'trending'" class="toggle-button">Tendance du moment</button>
+    <button (click)="selectTab('toprated')" [class.active]="currentTab === 'toprated'" class="toggle-button">Les mieux évalués</button>
+    <button (click)="selectTab('upcoming')" [class.active]="currentTab === 'upcoming'" class="toggle-button">Prochaines sorties</button>
+  </div>
+  
+  
+
+  <div [ngClass]="{'active': currentTab === 'nowPlaying'}" class="section">
+    <div class="row">
       <div *ngFor="let movie of movies" class="col-6 col-md-4 col-lg-3 mb-4">
-        <div class="card bg-dark text-white border-0 shadow-sm">
+        <div class="card bg-dark text-white border-0 shadow-sm h-100">
           <a [routerLink]="['/film', movie?.id]" class="d-block">
-            <img 
+            <img
               [src]="movie?.poster_path ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path : 'https://via.placeholder.com/500x750?text=Aucun+poster+disponible'"
               class="card-img-top img-fluid rounded"
               alt="{{ movie?.title || 'Inconnu' }}">
@@ -21,4 +31,53 @@
       </div>
     </div>
   </div>
+
+  <div [ngClass]="{'active': currentTab === 'trending'}" class="section">
+    <div class="row">
+      <div *ngFor="let movie of trendingMovies" class="col-6 col-md-4 col-lg-3 mb-4">
+        <div class="card bg-dark text-white border-0 shadow-sm h-100">
+          <a [routerLink]="['/film', movie?.id]" class="d-block">
+            <img
+              [src]="movie?.poster_path ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path : 'https://via.placeholder.com/500x750?text=Aucun+poster+disponible'"
+              class="card-img-top img-fluid rounded"
+              alt="{{ movie?.title || 'Inconnu' }}">
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div [ngClass]="{'active': currentTab === 'toprated'}" class="section">
+    <div class="row">
+      <div *ngFor="let movie of toprated" class="col-6 col-md-4 col-lg-3 mb-4">
+        <div class="card bg-dark text-white border-0 shadow-sm h-100">
+          <a [routerLink]="['/film', movie?.id]" class="d-block">
+            <img
+              [src]="movie?.poster_path ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path : 'https://via.placeholder.com/500x750?text=Aucun+poster+disponible'"
+              class="card-img-top img-fluid rounded"
+              alt="{{ movie?.title || 'Inconnu' }}">
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div [ngClass]="{'active': currentTab === 'upcoming'}" class="section">
+    <div class="row">
+      <div *ngFor="let movie of upcomingMovies" class="col-6 col-md-4 col-lg-3 mb-4">
+        <div class="card bg-dark text-white border-0 shadow-sm h-100">
+          <a [routerLink]="['/film', movie?.id]" class="d-block">
+            <img
+              [src]="movie?.poster_path ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path : 'https://via.placeholder.com/500x750?text=Aucun+poster+disponible'"
+              class="card-img-top img-fluid rounded"
+              alt="{{ movie?.title || 'Inconnu' }}">
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="back-to-top btn btn-dark shadow" (click)="scrollToTop()" aria-label="Back to top">
+    ↑
+  </button>
 </div>
