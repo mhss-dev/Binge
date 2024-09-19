@@ -26,14 +26,15 @@
     </div>
   
     <div>
-      <div class="row">
-        <div *ngFor="let film of films" class="col-12 col-sm-6 col-md-4 mb-4 text-center">
-          <div class="card border-dark bg-dark text-white h-100">
-            <a [routerLink]="['/film', film.id]" class="d-block">
+      <div class="row mt-5">
+        <div *ngFor="let movie of films" class="col-6 col-md-4 col-lg-3 mb-4">
+          <div class="card bg-dark text-white border-0 shadow-sm">
+            <a [routerLink]="['/film', movie?.id]" class="d-block">
               <img 
-                [src]="film.poster_path ? 'https://image.tmdb.org/t/p/w500/' + film.poster_path : 'https://via.placeholder.com/500x750?text=Aucun+poster+disponible'" 
-                class="img-fluid rounded">
-            </a>            
+                [src]="movie?.poster_path ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path : 'https://via.placeholder.com/500x750?text=Aucun+poster+disponible'"
+                class="card-img-top img-fluid rounded"
+                alt="{{ movie?.title || 'Inconnu' }}">
+            </a>
           </div>
         </div>
       </div>

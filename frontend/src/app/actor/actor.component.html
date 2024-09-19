@@ -1,28 +1,37 @@
-<div class="container text-white vh-100">
-    <div class="text-center pb-5 mt-5">
-      <h1 class="display-6">
-        {{ actor?.name || 'Inconnu'}}
-      </h1>
+<div class="container text-white my-5">
+  
+  <div class="row">
+    <div class="col-12 col-md-4 text-center">
+      <img 
+        [src]="actor?.profile_path ? 'https://image.tmdb.org/t/p/w500/' + actor?.profile_path : 'https://via.placeholder.com/500x750?text=No+Image'" 
+        class="img-fluid rounded shadow-lg"
+        alt="{{ actor?.name || 'Inconnu' }}"
+        style="width: 100%; max-width: 350px;">
     </div>
 
-    <div *ngIf="error" class="alert alert-danger">
-        {{ error }}
-      </div>
-    <div>
-      <div class="row mb-5">
-        <div *ngFor="let movie of movies" class="col-12 col-md-6 col-lg-4 mb-4">
-          <div class="card border-dark bg-dark text-white shadow-sm">
-            <a [routerLink]="['/film', movie?.id]" class="d-block">
-                <img 
-                [src]="movie?.poster_path ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path : 'https://via.placeholder.com/500x750?text=Aucun+poster+disponible'" 
-                class="card-img-top img-fluid rounded"/>
-            </a> 
-            
-          </div>
-        </div>
-      </div>
+    <div class="col-12 col-md-8 mt-4 mt-md-0">
+      <h1 class="display-4 fw-bold">{{ actor?.name || 'Inconnu' }}</h1>
+      <p class="small-text text-secondary">Date de naissance : {{ actor?.birthday | date:'dd-MM-YYY' || 'Inconnue' }} ({{ getAge(actor?.birthday) }} ans)</p>
+      <p class="small-text text-secondary">Lieu de naissance : {{ actor?.place_of_birth || 'Inconnu' }}</p>
+      <hr class="bg-light">
+      <p class="lead">{{ actor?.biography || 'Aucune biographie disponible.' }}</p>
+      
     </div>
-
-    <button class="back-to-top" (click)="scrollToTop()">↑</button>
-
   </div>
+  
+  <div class="row mt-5">
+    <h2 class="mb-4">Filmographie</h2>
+    <div *ngFor="let movie of movies" class="col-6 col-md-4 col-lg-3 mb-4">
+      <div class="card bg-dark text-white border-0 shadow-sm">
+        <a [routerLink]="['/film', movie?.id]" class="d-block">
+          <img 
+            [src]="movie?.poster_path ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path : 'https://via.placeholder.com/500x750?text=Aucun+poster+disponible'"
+            class="card-img-top img-fluid rounded"
+            alt="{{ movie?.title || 'Inconnu' }}">
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <button class="back-to-top" (click)="scrollToTop()">↑</button>
+</div>

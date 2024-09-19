@@ -1,110 +1,95 @@
-h1 {
-    padding-top: 10rem;
-  }
-  .card-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    justify-content: space-between;
-  }
-  
-  
-  .card {
-    min-width: 300px;
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.3s ease-in-out;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    height: 100%;
-  }
-  
-  
-  .card-body {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  
-  .card-title {
-    font-size: 1.25rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-  }
-  
-  
-  .card-text {
-    font-size: 0.875rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    margin-bottom: 1rem;
-  }
-  
-  
-  .card img {
-    height: 100%;
-    object-fit: fill;
-  } 
-  
-  
-  
-  .card:hover {
-    transform: scale(1.05);
-  }
-  
-  
-  .card-body .btn {
-    margin-right: 20px;
-  }
-  
-  
-  .card-container {
-    align-items: stretch;
-  }
-  
+
+h1, h2 {
+  padding-top: 2rem;
+}
+
+.display-4 {
+  font-size: 2.5rem;
+}
+
+p.lead {
+  font-size: 1.125rem;
+  line-height: 1.5;
+  color: #ddd;
+}
+
+hr.bg-light {
+  border: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 1.5rem 0;
+}
+
+
+
+img.rounded {
+  object-fit: cover;
+  border-radius: 10px;
+  max-height: 500px;
+  width: 100%;
+}
+
+.card {
+  background-color: #23272b;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card-body {
+  padding: 1rem;
+  text-align: center;
+}
+
+.card-title {
+  font-size: 1.1rem;
+  color: #fff;
+}
+
+.card small {
+  color: #ccc;
+}
+
 .back-to-top {
-    position: fixed;
-    bottom: 20px;
-    right: 5px;
-    background-color: #505050;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 24px;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #505050;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.back-to-top:hover {
+  background-color: #6b6b6b;
+}
+
+
+@media (max-width: 767.98px) {
+  .display-4 {
+      font-size: 1.75rem;
   }
-  
-  .back-to-top:hover {
-    background-color: rgb(102, 100, 100);
+
+  img.rounded {
+      max-width: 250px;
   }
-  
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  @media (max-width: 767.98px) { 
-    .display-4 {
-      font-size: 1.75rem; 
-    }
-  }
-  
-  @media (min-width: 768px) {
-    .display-4 {
+}
+
+@media (min-width: 768px) {
+  .display-4 {
       font-size: 2.5rem;
-    }
   }
-  
+
+  .card-title {
+      font-size: 1.25rem;
+  }
+}

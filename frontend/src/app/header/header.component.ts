@@ -3,11 +3,12 @@ import { MovieService } from '../movie.service';
 import { CommonModule } from '@angular/common';
 import { interval, Subscription } from 'rxjs';
 import { DiscoverService } from 'app/discover.service';
+import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgbToastModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
@@ -16,6 +17,7 @@ export class HeaderComponent {
   movie: any = {};
   error: string = '';
   loading: boolean = true;
+
 
   private subscription: Subscription = new Subscription();
   private readonly BACKDROP_UPDATE_INTERVAL = 5000;
@@ -30,6 +32,7 @@ export class HeaderComponent {
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
+  
 
   loadMovies() {
     this.movieService.getFilms().subscribe({

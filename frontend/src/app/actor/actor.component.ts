@@ -19,6 +19,8 @@ export class ActorComponent {
   hasMore: boolean = true;
   totalPages: number = 0;
   currentPage: number = 1;
+  expanded: boolean = false; // To track the toggle state
+  maxBiographyLength: number = 500; // Maximum characters for truncated view
 
   constructor(private route: ActivatedRoute, private discoverService : DiscoverService) {}
 
@@ -36,6 +38,8 @@ export class ActorComponent {
       next: (data) => {
         if (data) {
           this.actor = data.actor || null;
+          console.log(data.actor);
+          
           this.movies = Array.isArray(data.movies) ? data.movies : [];
           this.totalPages = data.totalPages; 
           this.currentPage = data.currentPage;
@@ -102,5 +106,15 @@ export class ActorComponent {
   scrollToTop(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+  getAge(birthday: string | null): number | string {
+    if (!birthday) return 'Date de naissance non disponible';
+    
+    const birthDate = new Date(birthday);
+    const timeDiff = Math.abs(Date.now() - birthDate.getTime()); 
+    const age = Math.floor((timeDiff / (1000 * 3600 * 24)) / 365.25);
+    return age;
+  }
+  
 
 }
