@@ -68,6 +68,8 @@ export class FilmsComponent {
       }
     })
   }
+
+
   loadFilms(page: number): void { 
     if (this.isLoading || !this.hasMore) return;
     
@@ -84,7 +86,6 @@ export class FilmsComponent {
         } else {
           console.error(data);
         }
-        
         this.cdr.detectChanges();
         this.isLoading = false;
       },

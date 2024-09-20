@@ -27,6 +27,8 @@ export class CardsComponent implements OnInit {
   nowPlayingDates: any;
   trendingDates: any;
   upcomingDates: any;
+  isLoading: boolean = false;
+  hasMore: boolean = true; 
 
   constructor(private movieService: MovieService) {}
 
@@ -64,6 +66,8 @@ export class CardsComponent implements OnInit {
       },
     });
   }
+
+  
 
   chunkArray(myArray: any[], chunkSize: number) {
     let results = [];
