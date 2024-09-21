@@ -21,6 +21,6 @@ Binge est une application web permettant de gérer une liste de favoris et de su
   - Express : Framework pour construire des applications web et API en Node.js.
   
 - **Base de données :**
-  - MySQL : Base de données pour stocker les données de l'utilisateur.
+  - PostgreSQL : Base de données pour stocker les données de l'utilisateur.
 
 ##
