@@ -19,20 +19,19 @@ export class ActorComponent {
   hasMore: boolean = true;
   totalPages: number = 0;
   currentPage: number = 1;
-  expanded: boolean = false; // To track the toggle state
-  maxBiographyLength: number = 500; // Maximum characters for truncated view
+  expanded: boolean = false; 
+  maxBiographyLength: number = 500;
 
   constructor(private route: ActivatedRoute, private discoverService : DiscoverService) {}
 
-
   ngOnInit(): void {
     const actorId = this.route.snapshot.paramMap.get('id');
-    this.loadFilms(1);
     
     if (actorId) {
-      this.getMoviesByActor(+actorId)
+      this.getMoviesByActor(+actorId, 1);
     }
   }
+  
   private getMoviesByActor(id: number, page: number = 1): void {
     this.discoverService.getMoviesByActor(id, page).subscribe({
       next: (data) => {
@@ -58,26 +57,22 @@ export class ActorComponent {
   
     this.isLoading = true;
   
-    this.discoverService.getMoviesByActor(page).subscribe({
+    this.discoverService.getMoviesByActor(this.actor.id, page).subscribe({
       next: (data) => {
         if (data && data.movies && Array.isArray(data.movies)) {
-          this.movies = [...this.movies, ...this.shuffle(data.movies)];
-          this.totalPages = data.totalPages; 
+         this.movies = [...this.movies, ...this.filterDuplicates(data.movies)];
+          this.totalPages = data.totalPages;
           this.currentPage = data.currentPage;
-          this.hasMore = this.currentPage < this.totalPages;
-        } else {
-          console.error('Erreur dans la récupération des données', data);
+          this.hasMore = this.currentPage < this.totalPages; 
         }
-        this.isLoading = false;
+        this.isLoading = false; 
       },
       error: (err) => {
         console.error('Erreur dans la récupération des données', err);
-        this.isLoading = false;
+        this.isLoading = false; 
       }
     });
   }
-  
-
 
   @HostListener('window:scroll', ['$event'])
   onScroll(event: Event): void {
@@ -85,24 +80,18 @@ export class ActorComponent {
     const windowHeight = window.innerHeight || document.documentElement.clientHeight;
     const bodyHeight = document.documentElement.scrollHeight;
   
-    if (scrollTop + windowHeight >= bodyHeight - 100) {
-      if (this.hasMore) {
-        this.loadFilms(this.currentPage + 1);
-      }
+    if (scrollTop + windowHeight >= bodyHeight - 100 && this.hasMore && !this.isLoading) {
+      this.loadFilms(this.currentPage + 1);
     }
-  
+
     this.showBackToTop = scrollTop > 50;
   }
 
-  private shuffle(array: any[]): any[] {
-    let currentIndex = array.length, randomIndex;
-    while (currentIndex !== 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-      [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-    }
-    return array;
+  private filterDuplicates(newMovies: any[]): any[] {
+    const existingIds = new Set(this.movies.map((movie:any) => movie.id));
+    return newMovies.filter(movie => !existingIds.has(movie.id));
   }
+
   scrollToTop(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
