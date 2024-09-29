@@ -6,7 +6,7 @@
     </p>
   </div>
 
-  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
 
   <div class="toggle-container mb-4 border-2">
     <button (click)="selectTab('nowPlaying')" [class.active]="currentTab === 'nowPlaying'" class="toggle-button">Actuellement au cinéma</button>

@@ -297,6 +297,7 @@ app.get('/api/providers/:id', async (req, res) => {
       }
     );
     res.json(response.data);
+    
   } catch (error) {
     console.error(`Erreur lors de l'appel à l'API pour le provider ${movieId} :`, error);
     res.status(500).send('Erreur lors de la récupération des providers');

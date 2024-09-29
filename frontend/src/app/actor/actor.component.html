@@ -20,7 +20,7 @@
   </div>
   
   <div class="row mt-5">
-    <h2 class="mb-4">Filmographie</h2>
+    <h2 class="mb-4">{{movies.length <= 0 ? '' : 'Filmographie'}}</h2>
     <div *ngFor="let movie of movies" class="col-6 col-md-4 col-lg-3 mb-4">
       <div class="card bg-dark text-white border-0 shadow-sm">
         <a [routerLink]="['/film', movie?.id]" class="d-block">
