@@ -58,7 +58,7 @@ export class CardsComponent implements OnInit {
 
       },
       error: (error) => {
-        this.error = 'Erreur lors de la récupération des films';
+        this.error = "Dans 99% des cas, rafraîchir la page résout ce problème, qui est lié à Netlify.";
         console.error(error);
       },
       complete: () => {
