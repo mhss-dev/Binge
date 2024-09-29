@@ -10,7 +10,7 @@
 
   <div class="toggle-container mb-4 border-2">
     <button (click)="selectTab('nowPlaying')" [class.active]="currentTab === 'nowPlaying'" class="toggle-button">Actuellement au cinéma</button>
-    <button (click)="selectTab('trending')" [class.active]="currentTab === 'trending'" class="toggle-button">Tendance du moment</button>
+    <button (click)="selectTab('trending')" [class.active]="currentTab === 'trending'" class="toggle-button">Tendance de la semaine</button>
     <button (click)="selectTab('toprated')" [class.active]="currentTab === 'toprated'" class="toggle-button">Les mieux évalués</button>
     <button (click)="selectTab('upcoming')" [class.active]="currentTab === 'upcoming'" class="toggle-button">Prochaines sorties</button>
   </div>
