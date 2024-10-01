@@ -98,7 +98,7 @@ export class CardsComponent implements OnInit {
         this.title = 'Actuellement au cinéma';
         break;
       case 'trending':
-        this.title = 'Tendance du moment';
+        this.title = 'Tendance de la semaine';
         break;
       case 'toprated':
         this.title = 'Les mieux évalués';
