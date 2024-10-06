@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnInit, signal } from '@angular/core';
 import { MovieService } from '../movie.service';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Route } from '@angular/router';
@@ -29,6 +29,8 @@ export class CardsComponent implements OnInit {
   upcomingDates: any;
   isLoading: boolean = false;
   hasMore: boolean = true; 
+  isButtonVisible = signal(false);
+
 
   constructor(private movieService: MovieService) {}
 
@@ -67,19 +69,17 @@ export class CardsComponent implements OnInit {
     });
   }
 
-  
-
-  chunkArray(myArray: any[], chunkSize: number) {
-    let results = [];
-    for (let i = 0; i < myArray.length; i += chunkSize) {
-      let chunk = myArray.slice(i, i + chunkSize);
-      results.push(chunk);
-    }
-    return results;
-  }
 
   scrollToTop(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  
+  @HostListener('window:scroll', [])
+  onWindowScroll(): void {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrollPercentage = (scrollTop / scrollHeight) * 100;
+    this.isButtonVisible.set(scrollPercentage > 30);
   }
 
   selectTab(tab: string) {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DiscoverService } from 'app/discover.service';
 
@@ -21,24 +21,25 @@ export class ActorComponent {
   currentPage: number = 1;
   expanded: boolean = false; 
   maxBiographyLength: number = 500;
+  isButtonVisible = signal(false);
 
-  constructor(private route: ActivatedRoute, private discoverService : DiscoverService) {}
+  constructor(private route: ActivatedRoute, private discoverService : DiscoverService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    const actorId = this.route.snapshot.paramMap.get('id');
     
-    if (actorId) {
-      this.getMoviesByActor(+actorId, 1);
-    }
+    this.route.paramMap.subscribe((paramMap) => {
+      const actorId = +paramMap.get('id')!;
+      if (actorId) {
+        this.getMoviesByActor(actorId, 1);
+      }
+    });
   }
   
   private getMoviesByActor(id: number, page: number = 1): void {
     this.discoverService.getMoviesByActor(id, page).subscribe({
       next: (data) => {
         if (data) {
-          this.actor = data.actor || null;
-          console.log(data.actor);
-          
+          this.actor = data.actor || null;          
           this.movies = Array.isArray(data.movies) ? data.movies : [];
           this.totalPages = data.totalPages; 
           this.currentPage = data.currentPage;
@@ -53,47 +54,56 @@ export class ActorComponent {
   }
   
   loadFilms(page: number): void {
-    if (this.isLoading || !this.hasMore || this.actor === null) return;
+    
+    if (this.isLoading || !this.hasMore || !this.actor || !this.actor.id) return;
   
     this.isLoading = true;
   
     this.discoverService.getMoviesByActor(this.actor.id, page).subscribe({
       next: (data) => {
         if (data && data.movies && Array.isArray(data.movies)) {
-         this.movies = [...this.movies, ...this.filterDuplicates(data.movies)];
+          this.movies = [...this.movies, ...this.filterDuplicates(data.movies)];
           this.totalPages = data.totalPages;
           this.currentPage = data.currentPage;
-          this.hasMore = this.currentPage < this.totalPages; 
+          this.hasMore = this.currentPage < this.totalPages;
         }
         this.isLoading = false; 
       },
       error: (err) => {
-        console.error('Erreur dans la récupération des données', err);
+        console.error('Error fetching movies', err);
         this.isLoading = false; 
       }
     });
   }
+  
 
   @HostListener('window:scroll', ['$event'])
   onScroll(event: Event): void {
+    
+    if (this.isLoading || !this.hasMore || !this.actor || !this.actor.id) return;
+  
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
     const windowHeight = window.innerHeight || document.documentElement.clientHeight;
     const bodyHeight = document.documentElement.scrollHeight;
   
-    if (scrollTop + windowHeight >= bodyHeight - 100 && this.hasMore && !this.isLoading) {
-      this.loadFilms(this.currentPage + 1);
+    
+    if (scrollTop + windowHeight >= bodyHeight - 100) {
+      this.loadFilms(this.currentPage + 1); 
     }
-
-    this.showBackToTop = scrollTop > 50;
+  
+    
+    const scrollPercentage = (scrollTop / (bodyHeight - windowHeight)) * 100;
+    this.isButtonVisible.set(scrollPercentage > 70);
   }
+  
+  scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
 
   private filterDuplicates(newMovies: any[]): any[] {
     const existingIds = new Set(this.movies.map((movie:any) => movie.id));
     return newMovies.filter(movie => !existingIds.has(movie.id));
-  }
-
-  scrollToTop(): void {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   getAge(birthday: string | null): number | string {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, HostListener, ChangeDetectorRef, signal } from '@angular/core';
 import { DiscoverService } from '../discover.service';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
@@ -37,6 +37,8 @@ export class FilmsComponent {
   isLoggedIn = false;
   nickname: string | null = null;
   sortOption: string = 'popularity.desc';
+  isButtonVisible = signal(false);
+
 
   
 
@@ -151,23 +153,24 @@ export class FilmsComponent {
   @HostListener('window:scroll', ['$event'])
   onScroll(event: Event): void {
     if (this.isLoading || !this.hasMore) return;
-  
+
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
     const windowHeight = window.innerHeight || document.documentElement.clientHeight;
     const bodyHeight = document.documentElement.scrollHeight;
-  
+
     if (scrollTop + windowHeight >= bodyHeight - 100) {
-      this.loadFilms(this.currentPage + 1);
+      this.loadFilms(this.currentPage + 1); 
     }
-  
-    this.showBackToTop = scrollTop > 50;
+
+    const scrollPercentage = (scrollTop / (bodyHeight - windowHeight)) * 100;
+
+    this.isButtonVisible.set(scrollPercentage > 70);
   }
   
-
   scrollToTop(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-  
+
 
   private shuffle(array: any[]): any[] {
     let currentIndex = array.length, randomIndex;
@@ -191,7 +194,7 @@ export class FilmsComponent {
       this.router.navigate(['/login']);
       return;
   }
-  
+
     if (!movie) {
       return;
     }
