@@ -46,7 +46,7 @@
       </button>
       
       <button class="btn me-2 mb-2" 
-              [ngClass]="movie.isWatchlist ? 'text-white' : 'text-success'" 
+              [ngClass]="movie.isWatchlist ? 'text-success' : 'text-white'" 
               (click)="toggleWatchlist(movie.id)"
               data-bs-toggle="tooltip" 
               title="{{ movie.isWatchlist ? 'Retirer de la watchlist' : 'Ajouter à la watchlist' }}">
