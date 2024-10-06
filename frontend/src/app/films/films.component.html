@@ -38,7 +38,7 @@
 
             <div class="position-absolute bottom-0 start-0 w-100 custom-background d-flex justify-content-evenly">
               <button class="btn btn-link me-2 mb-2" 
-              [ngClass]="movie.isWatched ? 'text-danger' : 'text-white'" 
+              [ngClass]="movie.isWatched ? 'text-success' : 'text-white'" 
               (click)="toggleWatched(movie.id)"
               data-bs-toggle="tooltip" 
               title="{{ movie.isWatched ? 'Marquer comme non regardé' : 'Marquer comme regardé' }}">
@@ -46,7 +46,7 @@
       </button>
       
       <button class="btn me-2 mb-2" 
-              [ngClass]="movie.isWatchlist ? 'text-danger' : 'text-white'" 
+              [ngClass]="movie.isWatchlist ? 'text-success' : 'text-white'" 
               (click)="toggleWatchlist(movie.id)"
               data-bs-toggle="tooltip" 
               title="{{ movie.isWatchlist ? 'Retirer de la watchlist' : 'Ajouter à la watchlist' }}">
@@ -54,7 +54,7 @@
       </button>
       
       <button class="btn me-2 mb-2" 
-              [ngClass]="movie.isFavorite ? 'text-danger' : 'text-white'" 
+              [ngClass]="movie.isFavorite ? 'text-success' : 'text-white'" 
               (click)="toggleFavorite(movie.id)"
               data-bs-toggle="tooltip" 
               title="{{ movie.isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris' }}">
