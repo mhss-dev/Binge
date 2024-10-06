@@ -36,7 +36,7 @@
               alt="{{ movie?.title || 'Inconnu' }}">
           </a>
 
-            <div class="position-absolute bottom-0 w-100 custom-background d-flex justify-content-evenly">
+            <div class="position-absolute bottom-0 w-100 custom-background d-flex p-0 justify-content-evenly">
               <button class="btn btn-link me-2 mb-2" 
               [ngClass]="movie.isWatched ? 'text-info' : 'text-white'" 
               (click)="toggleWatched(movie.id)"

@@ -7,8 +7,8 @@
     <p class="lead mb-4">Enregistrez ceux que vous souhaitez voir, partagez vos découvertes avec vos amis.</p>
     <p class="text-small text-secondary mt-4 fs-5 movie-name">{{ movie?.title || "J'utilise un backend gratuit qui s'éteint lorsqu'il n'y a pas de trafic et se rallume automatiquement. Merci de patienter quelques instants." }} ({{ movie.release_date | date: 'yyyy' || "Chargement... Merci de patienter quelques instants." }})</p>
     
-    <div class="arrow-container mt-4">
-      <a (click)="scrollTo('aucinema')">
+    <div class="arrow-container">
+      <a class="mt-5" (click)="scrollTo('aucinema')">
         <i class="fas fa-arrow-down"></i>
       </a>
         </div>

@@ -83,7 +83,7 @@ fetchWatched(): void {
     }
   });
 }
-
+  
 fetchWatchlist(): void {
   const routeNickname = this.route.snapshot.paramMap.get('nickname');
   
