@@ -62,18 +62,7 @@ fetchFavorites(): void {
   this.favoritesService.getFavorites(routeNickname || undefined).subscribe({
     next: (favorites: any[]) => {
       this.favoritesCount = favorites.length;
-      const movieIds = favorites.map(fav => fav.movie_id);
-      const requests = movieIds.map(id => this.detailsService.getMovieByID(id));
-      
-      forkJoin(requests).subscribe({
-        next: (movies) => {
-          this.favorites = movies;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error('Fetching favoris erreur :', err);
-        }
-      });
+      this.cdr.detectChanges();
     },
     error: (err) => {
       console.error('Fetching favoris erreur :', err);
