@@ -4,7 +4,7 @@ import { DiscoverService } from '../discover.service';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FavoritesService } from '../favorites.service';
 import { WatchlistService } from '../watchlist.service';
 import { WatchedService } from '../watched.service';
@@ -46,6 +46,7 @@ export class FilmsComponent {
     private cdr: ChangeDetectorRef,
     private watchlist: WatchlistService,
     private watched : WatchedService,
+    private router: Router,
     private authService : AuthService,
   ) {}
 
@@ -186,6 +187,11 @@ export class FilmsComponent {
   toggleFavorite(movieId: number): void {
     const movie = this.films.find(m => m.id === movieId);
   
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/login']);
+      return;
+  }
+  
     if (!movie) {
       return;
     }
@@ -308,6 +314,11 @@ removeFromWatchlist(movieId: number): void {
 toggleWatchlist(movieId: number): void {
     const movie = this.films.find(m => m.id === movieId);
 
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/login']);
+      return;
+  }
+
     if (!movie) {
         return;
     }
@@ -343,6 +354,10 @@ checkIfWatchlist(): void {
 toggleWatched(movieId: number): void {
   const movie = this.films.find(m => m.id === movieId);
 
+  if (!this.isLoggedIn) {
+    this.router.navigate(['/login']);
+    return;
+}
   if (!movie) {
       return;
   }
