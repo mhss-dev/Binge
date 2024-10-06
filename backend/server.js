@@ -11,6 +11,7 @@ const authRoutes = require('./routes/auth');
 const favoritesRoutes = require('./routes/favorites');
 const watchlistRoutes = require('./routes/watchlist');
 const watchedRoutes = require('./routes/watched');
+const members = require('./routes/members');
 const cookieParser = require('cookie-parser')
 
 
@@ -176,6 +177,8 @@ app.get("/api/films", async (req, res) => {
     );
 
     const data = response.data;
+    console.log(data);
+    
     const totalItems = Math.min(data.total_results, maxItems);
     const totalPages = Math.ceil(totalItems / limit);
 
@@ -352,10 +355,12 @@ app.get('/api/search', async (req, res) => {
   }
 });
 
+
 app.use('/api/auth', authRoutes);
 app.use('/api/favorites', favoritesRoutes);
 app.use('/api/watchlist', watchlistRoutes);
 app.use('/api/watched', watchedRoutes);
+app.use('/api/members', members);
 
 
 app.listen(3000, () => {
