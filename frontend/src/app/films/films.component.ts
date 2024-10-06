@@ -38,7 +38,7 @@ export class FilmsComponent {
   nickname: string | null = null;
   sortOption: string = 'popularity.desc';
   isButtonVisible = signal(false);
-  selectedGenre: string = ''; // Default selected genre
+  selectedGenre: string = ''; 
 
   
 
