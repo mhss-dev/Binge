@@ -11,22 +11,24 @@
                         <hr class="text-white">
                         <div class="row justify-content-center mb-3">
                             <div class="col-auto text-center">
-                                <p class="text-secondary small">
-                                    <i class="fa-solid fa-heart"></i> <span class="fw-bold"> 0</span>
-                                </p>
+                              <p class="text-danger small">
+                                <i class="fa-solid fa-heart" data-bs-toggle="tooltip" title="Nombre de favoris"></i> 
+                                <span class="fw-bold"> {{ favoritesCount }}</span>
+                              </p>
                             </div>
                             <div class="col-auto text-center">
-                                <p class="text-secondary small">
-                                    <i class="fa-solid fa-clock"></i> <span class="fw-bold"> 0</span>
-                                </p>
+                              <p class="text-info small">
+                                <i class="fa-solid fa-film" data-bs-toggle="tooltip" title="Films regardés"></i> 
+                                <span class="fw-bold"> {{ watchedCount }}</span>
+                              </p>
                             </div>
                             <div class="col-auto text-center">
-                                <p class="text-secondary small">
-                                    <i class="fa-solid fa-film"></i> <span class="fw-bold"> 0</span>
-                                </p>
+                              <p class="text-warning small">
+                                <i class="fa-solid fa-clock" data-bs-toggle="tooltip" title="Films à voir"></i> 
+                                <span class="fw-bold"> {{ watchlistCount }}</span>
+                              </p>
                             </div>
-                        </div>
-                        
+                          </div>
                     </div>
                 </div>
             </a>
