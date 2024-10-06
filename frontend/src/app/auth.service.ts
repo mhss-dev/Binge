@@ -31,27 +31,23 @@ export class AuthService {
       { observe: 'response', withCredentials: true }
     ).pipe(
       tap(response => {
-        // Check if response is successful and token exists
+        
         if (response.status === 200 && response.body && response.body.token) {
           const token = response.body.token;
   
-          // Store token in localStorage
+          
           localStorage.setItem('token', token);
-  
-          // Optionally, set the user as logged in in your app's state
           this.setLoggedIn(true);
-  
-          // Debugging log
           console.log('Login successful, token stored.');
         } else {
           console.warn('Login response did not contain a token.');
         }
       }),
       catchError(error => {
-        // Set logged-in status to false on error
+        
         this.setLoggedIn(false);
   
-        // Handle errors, e.g., show a message to the user
+        
         console.error('Login failed:', error);
   
         return throwError(() => new Error('Connexion échouée'));
@@ -80,9 +76,8 @@ export class AuthService {
       })
     );
   }
-  
 
-  getProfil(): Observable<any> {
+  getProfil(nickname?: string): Observable<any> {
     const token = localStorage.getItem('token');
     
     if (!token) {
@@ -91,8 +86,12 @@ export class AuthService {
   
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
   
-    return this.http.get<any>(`${this.apiUrl}/auth/profil`, { headers });
+    const url = nickname ? `${this.apiUrl}/auth/profil/${nickname}` : `${this.apiUrl}/auth/profil`;
+  
+    return this.http.get<any>(url, { headers });
   }
+  
+  
 
   changeNickname(newNickname: string): Observable<any> {
     const token = localStorage.getItem('token');

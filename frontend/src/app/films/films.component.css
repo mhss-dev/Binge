@@ -30,6 +30,9 @@ h1 {
 .card-body .btn {
   margin-right: 20px;
 }
+.custom-background {
+  background-color: rgba(0, 0, 0, 0.75);
+}
 
 .search-container {
   position: relative;

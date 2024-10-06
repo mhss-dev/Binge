@@ -40,8 +40,14 @@ export class WatchlistService {
     );
   }
 
-  getWatchlist(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}`, { headers: this.getAuthHeaders() }).pipe(
+  getWatchlist(nickname?: string): Observable<any[]> {
+    let url = this.apiUrl;
+    
+    if (nickname) {
+      url += `?nickname=${nickname}`; 
+    }
+  
+    return this.http.get<any[]>(url, { headers: this.getAuthHeaders() }).pipe(
       catchError(error => {
         console.error(error);
         return throwError(error);

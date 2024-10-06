@@ -82,6 +82,10 @@ export class FilmsComponent {
           this.totalPages = data.totalPages;
           this.currentPage = page; 
           this.hasMore = this.currentPage < this.totalPages;
+          this.checkIfFavorites(); 
+          this.checkIfWatched(); 
+          this.checkIfWatchlist(); 
+
           
         } else {
           console.error(data);
@@ -179,153 +183,236 @@ export class FilmsComponent {
   }
 
 
-  toggleFavorite(): void {
-    if (this.isFavorite) {
-      this.removeFromFavorites();
-    } else {
-      this.addToFavorites();
-    }
-  }
-  toggleWatchlist(): void {
-    if (this.isWatchlist) {
-      this.removeFromWatchlist();
-      
-    } else {
-      this.addWatchlist();
-    }
-  }
+  toggleFavorite(movieId: number): void {
+    const movie = this.films.find(m => m.id === movieId);
   
-  toggleWatched(): void {
-    if (this.isWatched) {
-      this.removeWatched();
-      
-    } else {
-      this.addWatched();
+    if (!movie) {
+      return;
     }
-  }
   
   
-  addToFavorites(): void {
-    this.favoritesService.addFavorite(this.movieId).subscribe({
+    if (movie.isFavorite) {
+      this.removeFromFavorites(movieId);
+    } else {
+      this.addToFavorites(movieId);
+    }
+  }
+
+  addToFavorites(movieId: number): void {
+    const isCurrentlyFavorite = this.films.find(movie => movie.id === movieId)?.isFavorite;
+  
+    if (isCurrentlyFavorite) {
+      return;
+    }
+  
+    this.favoritesService.addFavorite(movieId).subscribe({
       next: () => {
-        console.log('Film ajouté aux favoris');
-        this.isFavorite = true;
+        const movie = this.films.find(m => m.id === movieId);
+        if (movie) {
+          movie.isFavorite = true;
+        }
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Erreur lors de l\'ajout du film aux favoris :', err);
       }
     });
   }
   
-  removeFromFavorites(): void {
-    this.favoritesService.removeFavorite(this.movieId).subscribe({
-      next: () => {
-        console.log('Film retiré des favoris');
-        this.isFavorite = false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Erreur lors de la suppression du film des favoris :', err);
-      }
-    });
-  }
   
-  checkIfFavorite(): void {
+  removeFromFavorites(movieId: number): void {
+    const isCurrentlyFavorite = this.films.find(movie => movie.id === movieId)?.isFavorite;
+
+    if (!isCurrentlyFavorite) {
+        return;
+    }
+
+    this.favoritesService.removeFavorite(movieId).subscribe({
+        next: () => {
+            const movie = this.films.find(m => m.id === movieId);
+            if (movie) {
+                movie.isFavorite = false; 
+            }
+            this.cdr.detectChanges();
+        },
+        error: (err) => {
+        }
+    });
+}
+
+  
+  
+  checkIfFavorites(): void {
     this.favoritesService.getFavorites().subscribe({
       next: (favorites: { movie_id: number }[]) => {
         const favoriteMovieIds = favorites.map(fav => fav.movie_id);
-        this.isFavorite = favoriteMovieIds.includes(this.movieId);
-        this.cdr.detectChanges();
+  
+        
+        this.films.forEach(movie => {
+          movie.isFavorite = favoriteMovieIds.includes(movie.id);
+        });
+  
+        this.cdr.detectChanges(); 
       },
       error: (err) => {
-        console.error('Erreur lors de la récupération des favoris :', err);
       }
     });
   }
   
-  checkIfWatchlist(): void {
+
+    
+
+addWatchlist(movieId: number): void {
+
+  const isCurrentlyInWatchlist = this.films.find(movie => movie.id === movieId)?.isWatchlist; 
+
+  if (isCurrentlyInWatchlist) {
+      return; 
+  }
+
+  this.watchlist.addWatchlist(movieId).subscribe({
+      next: () => {
+          const movie = this.films.find(m => m.id === movieId);
+          if (movie) {
+              movie.isWatchlist = true; 
+          }
+          this.cdr.detectChanges();
+      },
+      error: (err) => {
+      }
+  });
+}
+
+
+removeFromWatchlist(movieId: number): void {
+
+  const isCurrentlyInWatchlist = this.films.find(movie => movie.id === movieId)?.isWatchlist; 
+
+  if (!isCurrentlyInWatchlist) {
+      return; 
+  }
+
+  this.watchlist.removeFromWatchlist(movieId).subscribe({
+      next: () => {
+          const movie = this.films.find(m => m.id === movieId);
+          if (movie) {
+              movie.isWatchlist = false; 
+          }
+          this.cdr.detectChanges();
+      },
+      error: (err) => {
+      }
+  });
+}
+
+
+toggleWatchlist(movieId: number): void {
+    const movie = this.films.find(m => m.id === movieId);
+
+    if (!movie) {
+        return;
+    }
+
+    if (movie.isWatchlist) {
+        this.removeFromWatchlist(movieId);
+    } else {
+        this.addWatchlist(movieId);
+    }
+}
+
+
+checkIfWatchlist(): void {
     this.watchlist.getWatchlist().subscribe({
       next: (watchlist: { movie_id: number }[]) => {
-        const watchlistIds = watchlist.map(watch => watch.movie_id);
-        this.isWatchlist = watchlistIds.includes(this.movieId);
-        this.cdr.detectChanges();
-      },
-      error: (err: any) => {
-        console.error('Erreur lors de la récupération de la watchlist :', err);
-      }
-    });
-  }
-  
-  
-  addWatchlist(): void {
-    console.log('Méthode addWatchlist appelée');
-    
-    this.watchlist.addWatchlist(this.movieId).subscribe({
-      next: () => {
-        console.log('Film ajouté à la watchlist');
-        this.isWatchlist = true;
-        this.cdr.detectChanges();
+        const watchlistMovieIds = watchlist.map(item => item.movie_id);
+
+        
+        this.films.forEach(movie => {
+          movie.isWatchlist = watchlistMovieIds.includes(movie.id);
+        });
+
+        this.cdr.detectChanges(); 
       },
       error: (err) => {
-        console.error('Erreur lors de l\'ajout du film à la watchlist :', err);
       }
     });
-  }
+}
+
+
   
-  removeFromWatchlist(): void {
-    console.log('Méthode removeFromWatchlist appelée');
-    this.watchlist.removeFromWatchlist(this.movieId).subscribe({
-      next: () => {
-        console.log('Film retiré de la watchlist');
-        this.isWatchlist = false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Erreur lors de la suppression du film de la watchlist :', err);
-      }
-    });
+
+toggleWatched(movieId: number): void {
+  const movie = this.films.find(m => m.id === movieId);
+
+  if (!movie) {
+      return;
   }
-  
-  checkIfWatched(): void {
-    this.watched.getWatched().subscribe({
+
+  if (movie.isWatched) {
+      this.removeWatched(movieId);
+  } else {
+      this.addWatched(movieId);
+  }
+}
+
+
+checkIfWatched(): void {
+  this.watched.getWatched().subscribe({
       next: (watched: { movie_id: number }[]) => {
-        const watchedIds = watched.map(watch => watch.movie_id);
-        this.isWatched = watchedIds.includes(this.movieId);
-        this.cdr.detectChanges();
+          const watchedIds = watched.map(watch => watch.movie_id);
+          
+          
+          this.films.forEach(movie => {
+              movie.isWatched = watchedIds.includes(movie.id);
+          });
+
+          this.cdr.detectChanges(); 
       },
       error: (err: any) => {
-        console.error('Erreur lors de la récupération des films regardés :', err);
       }
-    });
+  });
+}
+
+
+addWatched(movieId: number): void {
+
+  const isCurrentlyWatched = this.films.find(movie => movie.id === movieId)?.isWatched; 
+
+  if (isCurrentlyWatched) {
+      return; 
   }
-  
-  
-  addWatched(): void {
-    console.log('Méthode addWatched appelée');
-    this.watched.addWatched(this.movieId).subscribe({
+
+  this.watched.addWatched(movieId).subscribe({
       next: () => {
-        console.log('Film ajouté aux films regardés');
-        this.isWatched = true;
-        this.cdr.detectChanges();
+          const movie = this.films.find(m => m.id === movieId);
+          if (movie) {
+              movie.isWatched = true; 
+          }
+          this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Erreur lors de l\'ajout du film aux films regardés :', err);
       }
-    });
+  });
+}
+
+
+removeWatched(movieId: number): void {
+
+  const isCurrentlyWatched = this.films.find(movie => movie.id === movieId)?.isWatched; 
+
+  if (!isCurrentlyWatched) {
+      return; 
   }
-  
-  removeWatched(): void {
-    console.log('Méthode removeFromWatched appelée');
-    this.watched.removeWatched(this.movieId).subscribe({
+
+  this.watched.removeWatched(movieId).subscribe({
       next: () => {
-        console.log('Film retiré des films regardés');
-        this.isWatched = false;
-        this.cdr.detectChanges();
+          const movie = this.films.find(m => m.id === movieId);
+          if (movie) {
+              movie.isWatched = false; 
+          }
+          this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Erreur lors de la suppression du film des films regardés :', err);
       }
-    });
-  }
+  });
+}
 }

@@ -40,6 +40,37 @@ header p {
   z-index: 2;
 }
 
+
+.arrow-container {
+  display: flex;
+  justify-content: center;
+  animation: fadeInUp 1s ease-out;
+  margin-top: 3rem !important;
+}
+
+.arrow-container i {
+  animation: fadeInUp 1s ease-out;
+  font-size: 3rem; 
+  color: #fff;     
+  animation: blink 2s infinite;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -50,6 +81,7 @@ header p {
     transform: translateY(0);
   }
 }
+
 
 @media (max-width: 1200px) {
   header h1 {
@@ -87,6 +119,11 @@ header p {
   .movie-name {
     font-size: 1rem;
   }
+
+ 
+  .blink {
+    font-size: 2.5rem;
+  }
 }
 
 @media (max-width: 576px) {
@@ -104,5 +141,11 @@ header p {
 
   .movie-name {
     font-size: 0.9rem;
+  }
+
+ 
+  .blink {
+    font-size: 2rem;
+    
   }
 }

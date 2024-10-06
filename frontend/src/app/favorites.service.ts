@@ -37,14 +37,21 @@ export class FavoritesService {
       }),
     );
   }
-  getFavorites(): Observable<any[]> {
+  getFavorites(nickname?: string): Observable<any[]> {
+    let url = this.apiUrl;
     
-    return this.http.get<any[]>(`${this.apiUrl}`, { headers: this.getAuthHeaders() }).pipe(
+    if (nickname) {
+      url += `?nickname=${nickname}`; 
+    }
+  
+    return this.http.get<any[]>(url, { headers: this.getAuthHeaders() }).pipe(
       catchError(error => {
         console.error(error);
         return throwError(error);
       })
     );
   }
+  
+  
 
 }

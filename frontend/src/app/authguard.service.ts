@@ -1,4 +1,4 @@
-import { CanActivate, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
@@ -12,8 +12,7 @@ export class AuthGuard implements CanActivate {
   constructor(private router: Router, private http: HttpClient) {}
   private apiUrl = `${environment.apiUrl}`;
 
-  
-  canActivate(): Observable<boolean> {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     const token = localStorage.getItem('token');
 
     if (!token) {
@@ -60,11 +59,4 @@ export class AuthGuard implements CanActivate {
       return true;
     }
   }
-  
-  
-  
-  
-  
-  
-  
-}  
+}

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FavoritesService } from '../favorites.service';
 import { WatchlistService } from '../watchlist.service';
 import { WatchedService } from '../watched.service';
@@ -24,6 +24,7 @@ export class DashboardComponent {
   favorites: any[] = [];
   watchlist: any[] = [];
   watched: any[] = [];
+  currentUserNickname: string = ''; 
 
   moviesPerPage = 45;
   combinedMovies: any=[];
@@ -46,40 +47,51 @@ export class DashboardComponent {
     private cdr: ChangeDetectorRef,
     private detailsService: DetailsService,
     private userService: UserService,
+    private route: ActivatedRoute,
   ) {}
-
+  
   ngOnInit(): void {
-    
-     
-     this.userService.nickname$.subscribe(nickname => {
-      this.nickname = nickname ?? ''; 
-    });
-
-    
-    this.authService.getProfil().subscribe({
-      next: (response: any) => {
-        const newNickname = response?.nickname ?? '';
-        this.nickname = newNickname;
-        this.userService.updateNickname(newNickname); 
-      },
-      error: (error: any) => {
-        console.error('Erreur lors de la récupération du profil:', error);
-        this.nickname = ''; 
-        this.userService.updateNickname(this.nickname); 
+    this.route.paramMap.subscribe(params => {
+      const routeNickname = params.get('nickname');
+  
+      if (routeNickname) {
+        
+        this.authService.getProfil(routeNickname).subscribe({
+          next: (response: any) => {
+            this.nickname = response?.nickname ?? '';
+            
+            this.fetchFavorites();
+            this.fetchWatchlist();
+            this.fetchWatched();
+            this.combineMovies();
+          },
+          error: (error: any) => {
+            console.error('Erreur lors de la récupération du profil:', error);
+            this.nickname = '';  
+          }
+        });
+      } else {
+        
+        this.authService.getProfil().subscribe({
+          next: (response: any) => {
+            this.nickname = response?.nickname ?? '';
+          },
+          error: (error: any) => {
+            console.error('Erreur lors de la récupération du profil:', error);
+            this.nickname = ''; 
+          }
+        });  
       }
     });
 
-
-    
-    this.fetchFavorites();
-    this.fetchWatchlist();
-    this.fetchWatched();
-    this.combineMovies();
   }
+  
 
   
   fetchFavorites(): void {
-    this.favoritesService.getFavorites().subscribe({
+    const routeNickname = this.route.snapshot.paramMap.get('nickname');
+    
+    this.favoritesService.getFavorites(routeNickname|| undefined).subscribe({
       next: (favorites: any[]) => {
         const movieIds = favorites.map(fav => fav.movie_id);
         const requests = movieIds.map(id => this.detailsService.getMovieByID(id));
@@ -98,10 +110,13 @@ export class DashboardComponent {
         console.error('Erreur sur la récupération des favoris:', err);
       }
     });
-  }
-
+  }  
+  
+  
   fetchWatchlist(): void {
-    this.watchlistService.getWatchlist().subscribe({
+    const routeNickname = this.route.snapshot.paramMap.get('nickname');
+
+    this.watchlistService.getWatchlist(routeNickname|| undefined).subscribe({
       next: (watchlist: any[]) => {
         const movieIds = watchlist.map(item => item.movie_id);
         const requests = movieIds.map(id => this.detailsService.getMovieByID(id));
@@ -124,7 +139,9 @@ export class DashboardComponent {
 
 
   fetchWatched(): void {
-    this.watchedService.getWatched().subscribe({
+    const routeNickname = this.route.snapshot.paramMap.get('nickname');
+
+    this.watchedService.getWatched(routeNickname|| undefined).subscribe({
       next: (watched: any[]) => {
         const movieIds = watched.map(item => item.movie_id);
         const requests = movieIds.map(id => this.detailsService.getMovieByID(id));

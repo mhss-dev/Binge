@@ -18,7 +18,8 @@
       </button>
 
       <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
-        <ul class="navbar-nav mx-auto d-flex justify-content-center mx-5">
+        <!-- Apply flex-grow to make sure the navbar spans correctly -->
+        <ul class="navbar-nav mx-auto d-flex justify-content-center flex-grow-1">
           <li class="nav-item">
             <a href="/" class="nav-link text-white">
               <i class="fa-solid fa-house"></i> Accueil
@@ -30,8 +31,8 @@
             </a>
           </li>
           <li class="nav-item">
-            <a (click)="scrollTo('aucinema')" class="nav-link text-white">
-              <i class="fa-solid fa-video"></i> Au cinéma
+            <a routerLink="/membres" class="nav-link text-white">
+              <i class="fa-solid fa-user-friends"></i> Membres
             </a>
           </li>
         </ul>
@@ -39,19 +40,19 @@
         <div class="d-flex">
           <ng-container *ngIf="!isLoggedIn; else loggedInTemplate">
             <a routerLink="/login" class="btn btn-dark m-2">
-              <i class="fa-solid fa-sign-in-alt"></i> Connexion
+              <i class="fa-solid fa-sign-in-alt"></i>
             </a>
             <a routerLink="/register" class="btn btn-dark">
-              <i class="fa-solid fa-user-plus"></i> Inscription
+              <i class="fa-solid fa-user-plus"></i>
             </a>
           </ng-container>
 
           <ng-template #loggedInTemplate>
-            <a routerLink="/profil" class="btn btn-dark m-2">
-              <i class="fa-solid fa-user"></i> {{ nickname }}
+            <a [routerLink]="['/profil', nickname]" class="btn btn-dark m-2">
+              <i class="fa-solid fa-user"></i>
             </a>
-            <a (click)="logout()" class="btn btn-dark">
-              <i class="fa-solid fa-right-from-bracket"></i> Déconnexion
+            <a (click)="logout()" class="btn btn-danger">
+              <i class="fa-solid fa-right-from-bracket"></i>
             </a>
           </ng-template>
         </div>

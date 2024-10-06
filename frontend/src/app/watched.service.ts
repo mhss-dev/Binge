@@ -49,15 +49,18 @@ export class WatchedService {
     );
   }
   
-  getWatched(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}`, { headers: this.getAuthHeaders() }).pipe(
-      tap(response => {
-        console.log('Films récupérés:', response);
-      }),
+  getWatched(nickname?: string): Observable<any[]> {
+    let url = this.apiUrl;
+    
+    if (nickname) {
+      url += `?nickname=${nickname}`; 
+    }
+  
+    return this.http.get<any[]>(url, { headers: this.getAuthHeaders() }).pipe(
       catchError(error => {
-        console.error('Erreur lors de la récupération des films vus:', error.message);
-        return throwError(() => new Error('Erreur lors de la récupération des films vus'));
+        console.error(error);
+        return throwError(error);
       })
     );
-  }  
+  }
 }
