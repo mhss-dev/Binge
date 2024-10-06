@@ -30,22 +30,24 @@ h1 {
 .card-body .btn {
   margin-right: 20px;
 }
+
 .custom-background {
   background-color: rgba(0, 0, 0, 0.75);
+  padding: 0px !important;
 }
 
 .search-container {
   position: relative;
   display: flex;
   align-items: center;
-  width: 100%; /* Ensure full width on all devices */
+  width: 100%;
 }
 
 .search-icon {
   position: absolute;
   left: 10px;
-  top: 50%; /* Center vertically */
-  transform: translateY(-50%); /* Adjust for vertical centering */
+  top: 50%;
+  transform: translateY(-50%);
   font-size: 18px;
   color: #aaa;
   cursor: pointer;
@@ -53,10 +55,10 @@ h1 {
 }
 
 .search-input {
-  width: 100%; /* Full width of the container */
-  padding: 10px 10px 10px 40px; /* Padding for the search icon */
+  width: 100%;
+  padding: 10px 10px 10px 40px;
   border: 1px solid #ccc;
-  border-radius: 5px; /* Added rounded corners for aesthetics */
+  border-radius: 5px;
   transition: width 0.5s ease-in-out;
 }
 
@@ -107,24 +109,24 @@ h1 {
 }
 
 
-/* Media queries for responsiveness */
+
 @media (max-width: 768px) {
   .search-input {
-    padding: 10px 10px 10px 40px; /* Maintain padding for smaller screens */
+    padding: 10px 10px 10px 40px;
   }
 
   .search-container {
-    width: 100%; /* Ensures the search container takes full width */
+    width: 100%;
   }
 
   .form-control {
-    width: 100%; /* Make dropdowns take full width in smaller screens */
+    width: 100%;
   }
 }
 
 @media (min-width: 769px) {
   .search-input {
-    max-width: 300px; /* Optional: limit the width on larger screens */
+    max-width: 300px;
   }
 }
 

@@ -39,6 +39,9 @@ export class DetailsComponent {
   watchProviders: any | null = null;
   trailerKey: string | null = null;
   trailerUrl: SafeResourceUrl | null = null;
+  reviews: any[] = []; // Store user reviews
+newReview: string = ''; // Store new review input
+
 
   @ViewChild('trailerModal') trailerModal!: ElementRef;
 
