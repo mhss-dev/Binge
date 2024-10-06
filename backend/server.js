@@ -154,9 +154,7 @@ app.get("/api/logo/:id", async (req, res) => {
 
 app.get("/api/films", async (req, res) => {
   try {
-
-
-    const { page = parseInt(req.query.page), sort_by = 'popularity.desc', actorId } = req.query;
+    const { page = parseInt(req.query.page), sort_by = 'popularity.desc', actorId, genre } = req.query;
 
     const limit = 12;
     const maxItems = 500;
@@ -168,20 +166,17 @@ app.get("/api/films", async (req, res) => {
           api_key: TMDB_API_KEY,
           language: "fr-FR",
           page: page,
+          with_genres: genre,
           include_adult: false,
           sort_by: sort_by,
           with_people: actorId,
-
         },
       }
     );
 
     const data = response.data;
-    console.log(data);
-    
     const totalItems = Math.min(data.total_results, maxItems);
     const totalPages = Math.ceil(totalItems / limit);
-
     const results = data.results.slice(0, limit);
 
     res.json({
@@ -195,6 +190,7 @@ app.get("/api/films", async (req, res) => {
     res.status(500).send("Erreur lors de la récupération des films");
   }
 });
+
 
 app.get("/api/actorid", async (req, res) => {
   try {

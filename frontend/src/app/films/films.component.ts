@@ -38,7 +38,7 @@ export class FilmsComponent {
   nickname: string | null = null;
   sortOption: string = 'popularity.desc';
   isButtonVisible = signal(false);
-
+  selectedGenre: string = ''; // Default selected genre
 
   
 
@@ -78,7 +78,7 @@ export class FilmsComponent {
     
     this.isLoading = true;
     
-    this.discoverService.getFilms(page, false, this.sortOption).subscribe({
+    this.discoverService.getFilms(page, false, this.sortOption, this.selectedGenre).subscribe({
       next: (data) => {
         if (data.items && Array.isArray(data.items)) {
           this.films = page === 1 ? [...data.items] : [...this.films, ...data.items];

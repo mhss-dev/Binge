@@ -5,25 +5,53 @@
     </h1>
   </div>
 
-  <div class="row mb-4 pb-2">
+  <div class="row mb-4 pb-2 align-items-end">
     <div class="col-12 col-md-6 mb-2 mb-md-0">
-      <form class="d-flex" (keydown.enter)="searchFilms(searchQuery)" (input)="searchFilms(searchQuery)">
-        <div class="search-container w-100">
-          <i class="fa fa-search search-icon"></i>
-          <input class="form-control search-input" type="search" placeholder="Trouvez un film 🎥" aria-label="Search" [(ngModel)]="searchQuery" name="searchQuery">
-        </div>
-      </form>
+        <form class="d-flex shadow-none" (keydown.enter)="searchFilms(searchQuery)" (input)="searchFilms(searchQuery)">
+            <div class="search-container w-100 me-2">
+                <i class="fa fa-search search-icon"></i>
+                <input class="form-control search-input" type="search" placeholder="Trouvez un film" aria-label="Search" [(ngModel)]="searchQuery" name="searchQuery">
+            </div>
+        </form>
     </div>
 
-    <div class="col-12 col-md-4 ms-md-auto">
-      <select class="form-control" [(ngModel)]="sortOption" name="sortOption" (change)="loadFilms(1)">
-        <option value="popularity.desc">Popularité (+/-) ⭐</option>
-        <option value="popularity.asc">Popularité (-/+) ⭐</option>
-        <option value="primary_release_date.desc">Date de sortie (+/-) 📅</option>
-        <option value="primary_release_date.asc">Date de sortie (-/+) 📅</option>
-      </select>
+    <div class="col-12 col-md-6 d-flex justify-content-md-end">
+        <select class="form-control custom-width me-2" [(ngModel)]="sortOption" name="sortOption" (change)="loadFilms(1)">
+            <option value="popularity.desc">Popularité (+/-)</option>
+            <option value="popularity.asc">Popularité (-/+)</option>
+            <option value="primary_release_date.desc">Date de sortie (+/-)</option>
+            <option value="primary_release_date.asc">Date de sortie (-/+)</option>
+        </select>
+
+        <select class="form-control custom-width" [(ngModel)]="selectedGenre" name="genreOption" (change)="loadFilms(1)">
+            <option value="">Tous les genres</option>
+            <option value="28">Action</option>
+            <option value="12">Aventure</option>
+            <option value="16">Animation</option>
+            <option value="35">Comédie</option>
+            <option value="80">Crime</option>
+            <option value="99">Documentaire</option>
+            <option value="18">Drame</option>
+            <option value="10751">Famille</option>
+            <option value="14">Fantastique</option>
+            <option value="36">Histoire</option>
+            <option value="27">Horreur</option>
+            <option value="10402">Musique</option>
+            <option value="9648">Mystère</option>
+            <option value="10749">Romance</option>
+            <option value="878">Science-fiction</option>
+            <option value="10770">Téléfilm</option>
+            <option value="53">Thriller</option>
+            <option value="10752">Guerre</option>
+            <option value="37">Western</option>
+        </select>
     </div>
-  </div>
+</div>
+
+
+
+
+
 
   <div>
     <div class="row mt-5">

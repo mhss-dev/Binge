@@ -26,20 +26,20 @@ export class LoginComponent {
       next: (response) => {
 
         if (response.status === 200) {
-          this.loginMessage = 'Connexion avec succès, redirection sur votre profil.';
+          this.loginMessage = 'Connexion réussie, redirection vers votre profil.';
           this.alertType = 'alert-success';
           this.router.navigate(['/profil'])
         } else if (response.status === 201) {
-          this.loginMessage = 'Vous êtes déjà connecté, redirection.';
+          this.loginMessage = 'Vous êtes déjà connecté, redirection en cours.';
           this.alertType = 'alert-warning';
           setTimeout(() => this.router.navigate(['/profil']), 2000);
         } else {
-          this.loginMessage = 'Une erreur a eu lieu, réessayez.';
+          this.loginMessage = 'Une erreur est survenue, veuillez réessayer.';
           this.alertType = 'alert-danger';
         }
       },
       error: (err) => {
-        this.loginMessage = 'Idenfiants incorrects, réessayez.';
+        this.loginMessage = 'Les identifiants ne sont pas valides, veuillez tenter à nouveau.';
         this.alertType = 'alert-danger';
       }
     });

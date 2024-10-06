@@ -38,12 +38,14 @@ h1 {
   position: relative;
   display: flex;
   align-items: center;
-  width: 100%;
+  width: 100%; /* Ensure full width on all devices */
 }
 
 .search-icon {
   position: absolute;
   left: 10px;
+  top: 50%; /* Center vertically */
+  transform: translateY(-50%); /* Adjust for vertical centering */
   font-size: 18px;
   color: #aaa;
   cursor: pointer;
@@ -51,16 +53,19 @@ h1 {
 }
 
 .search-input {
-  width: 100%;
-  padding: 10px 10px 10px 40px;
-  border-radius: 20px;
+  width: 100%; /* Full width of the container */
+  padding: 10px 10px 10px 40px; /* Padding for the search icon */
   border: 1px solid #ccc;
+  border-radius: 5px; /* Added rounded corners for aesthetics */
   transition: width 0.5s ease-in-out;
 }
 
-.search-input:focus {
-  width: 50%;
-  outline: none;
+.form-control {
+  border-radius: 5px;
+}
+
+.form-control:focus {
+  box-shadow: none;
 }
 
 .back-to-top {
@@ -78,6 +83,10 @@ h1 {
   justify-content: center;
   cursor: pointer;
   font-size: 24px;
+}
+.custom-width {
+  width: 150px;
+  padding: 10px 10px; 
 }
 
 .back-to-top:hover {
@@ -98,9 +107,24 @@ h1 {
 }
 
 
-@media (min-width: 768px) {
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
   .search-input {
-    width: 300px;
+    padding: 10px 10px 10px 40px; /* Maintain padding for smaller screens */
+  }
+
+  .search-container {
+    width: 100%; /* Ensures the search container takes full width */
+  }
+
+  .form-control {
+    width: 100%; /* Make dropdowns take full width in smaller screens */
+  }
+}
+
+@media (min-width: 769px) {
+  .search-input {
+    max-width: 300px; /* Optional: limit the width on larger screens */
   }
 }
 

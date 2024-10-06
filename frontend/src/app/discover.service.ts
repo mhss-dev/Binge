@@ -13,13 +13,17 @@ export class DiscoverService {
   private apiUrl = `${environment.apiUrl}`;
 
   constructor(private http: HttpClient) { }
-  getFilms(page: number = 1, adult: boolean = false, sortOption: string = 'popularity.desc'): Observable<any> {
+  getFilms(page: number = 1, adult: boolean = false, sortOption: string = 'popularity.desc', genreId: string = ''): Observable<any> {
     const validPage = Math.max(1, Math.min(page, 500));
   
     let params = new HttpParams()
       .set('page', validPage.toString())
       .set('sort_by', sortOption)
       .set('include_adult', adult ? 'true' : 'false');
+    
+    if (genreId) {
+      params = params.set('genre', genreId);
+    }
   
     const url = `${this.apiUrl}/films`;
   
@@ -29,7 +33,6 @@ export class DiscoverService {
       })
     );
   }
-  
   
   
   getMoviesByActor(id: number, page: number = 1): Observable<any> {
