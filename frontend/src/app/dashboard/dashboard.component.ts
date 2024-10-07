@@ -65,10 +65,9 @@ export class DashboardComponent {
           catchError((error) => {
             console.error('Erreur lors de la récupération du profil:', error);
             if (error.status === 404) {
-              // Redirect to the not-found page if profile is not found
-              this.router.navigate(['/not-found']);
+              this.router.navigate(['/profil']);
             }
-            return of(null); // Return a null observable to keep the subscription chain alive
+            return of(null);
           })
         ).subscribe((response: any) => {
           if (response) {
