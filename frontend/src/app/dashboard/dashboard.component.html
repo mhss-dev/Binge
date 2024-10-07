@@ -5,9 +5,15 @@
       <h1 class="mt-3">Profil de {{ nickname }}</h1>
       
       <div class="row text-center">
-        <p class="small">Followers : 0</p>
-        <p class="small">Following : 0</p>
-        <hr class="text-white">
+        <p class="small p-0">Abonnés : {{ followersCount }}</p>
+        <p class="small p-0">Abonnements : {{ followingCount }}</p>
+        <hr class="text-white">        
+
+        <button class="btn btn-primary" (click)="toggleFollow()">
+          {{ isFollowing ? 'Ne plus suivre' : 'Suivre' }}
+        </button>
+      
+        
     </div>
     </div>
     </div>

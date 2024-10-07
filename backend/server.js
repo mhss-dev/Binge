@@ -12,7 +12,8 @@ const favoritesRoutes = require('./routes/favorites');
 const watchlistRoutes = require('./routes/watchlist');
 const watchedRoutes = require('./routes/watched');
 const members = require('./routes/members');
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
+const authenticateToken = require("./middlewares/authentification");
 
 
 const app = express();

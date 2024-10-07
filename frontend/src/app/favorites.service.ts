@@ -38,19 +38,26 @@ export class FavoritesService {
     );
   }
   getFavorites(nickname?: string): Observable<any[]> {
-    let url = this.apiUrl;
-    
+    let url = `${this.apiUrl}/favorites`;
+  
     if (nickname) {
-      url += `?nickname=${nickname}`; 
+        url += `/${nickname}`;
+        console.log('Fetching from URL:', url);
     }
   
     return this.http.get<any[]>(url, { headers: this.getAuthHeaders() }).pipe(
-      catchError(error => {
-        console.error(error);
-        return throwError(error);
-      })
+        catchError(error => {
+            console.error('Error during favorites retrieval:', error);
+            return throwError(error);
+        })
     );
   }
+  
+
+
+
+  
+  
   
   
 

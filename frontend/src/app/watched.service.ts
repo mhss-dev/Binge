@@ -50,17 +50,18 @@ export class WatchedService {
   }
   
   getWatched(nickname?: string): Observable<any[]> {
-    let url = this.apiUrl;
-    
+    let url = `${this.apiUrl}/watched`;
+
     if (nickname) {
-      url += `?nickname=${nickname}`; 
+        url += `/${nickname}`; 
     }
-  
+
     return this.http.get<any[]>(url, { headers: this.getAuthHeaders() }).pipe(
-      catchError(error => {
-        console.error(error);
-        return throwError(error);
-      })
+        catchError(error => {
+            console.error(error);
+            return throwError(error);
+        })
     );
-  }
+}
+
 }

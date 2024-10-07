@@ -7,8 +7,9 @@ import { WatchedService } from '../watched.service';
 import { DetailsService } from '../details.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { forkJoin } from 'rxjs';
+import { catchError, forkJoin, of } from 'rxjs';
 import { UserService } from 'app/services/user.service';
+import { MembersService } from 'app/members.service';
 
 
 @Component({
@@ -26,8 +27,10 @@ export class DashboardComponent {
   watched: any[] = [];
   currentUserNickname: string = ''; 
 
-  moviesPerPage = 45;
+  moviesPerPage = 60;
   combinedMovies: any=[];
+  isFollowing: boolean = false;
+
 
   currentFavoritesPage = 1;
   currentWatchlistPage = 1;
@@ -37,6 +40,8 @@ export class DashboardComponent {
   errorMessage: string | null = null;
   isLoggedIn: boolean | undefined;
 
+  followersCount: number = 0;
+  followingCount: number = 0;
 
   constructor(
     private router: Router, 
@@ -48,6 +53,7 @@ export class DashboardComponent {
     private detailsService: DetailsService,
     private userService: UserService,
     private route: ActivatedRoute,
+    private memberservice: MembersService,
   ) {}
   
   ngOnInit(): void {
@@ -55,62 +61,155 @@ export class DashboardComponent {
       const routeNickname = params.get('nickname');
   
       if (routeNickname) {
-        
-        this.authService.getProfil(routeNickname).subscribe({
-          next: (response: any) => {
-            this.nickname = response?.nickname ?? '';
-            
-            this.fetchFavorites();
-            this.fetchWatchlist();
-            this.fetchWatched();
-            this.combineMovies();
-          },
-          error: (error: any) => {
+        this.authService.getProfil(routeNickname).pipe(
+          catchError((error) => {
             console.error('Erreur lors de la récupération du profil:', error);
+            if (error.status === 404) {
+              // Redirect to the not-found page if profile is not found
+              this.router.navigate(['/not-found']);
+            }
+            return of(null); // Return a null observable to keep the subscription chain alive
+          })
+        ).subscribe((response: any) => {
+          if (response) {
+            this.nickname = response.nickname ?? '';
+            this.fetchFollowers(routeNickname);
+            this.fetchFavorites();
+            this.fetchWatched();
+            this.fetchWatchlist();
+            this.fetchFollowings(routeNickname);
+            this.checkFollowingStatus(routeNickname);
+          } else {
             this.nickname = '';  
           }
         });
       } else {
-        
-        this.authService.getProfil().subscribe({
-          next: (response: any) => {
-            this.nickname = response?.nickname ?? '';
-          },
-          error: (error: any) => {
+        this.authService.getProfil().pipe(
+          catchError((error) => {
             console.error('Erreur lors de la récupération du profil:', error);
+            if (error.status === 404) {
+              this.router.navigate([`/profil`]);
+            }
+            return of(null);
+          })
+        ).subscribe((response: any) => {
+          if (response) {
+            this.nickname = response.nickname ?? '';
+            this.fetchFollowers(this.nickname);
+            this.fetchFollowings(this.nickname);
+            this.checkFollowingStatus(this.nickname);
+            this.fetchFavorites();
+            this.fetchWatched();
+            this.fetchWatchlist();
+          } else {
             this.nickname = ''; 
           }
-        });  
+        });
       }
     });
-
   }
+
+  checkFollowingStatus(nickname: string): void {
+    this.memberservice.isFollowing(nickname).subscribe({
+        next: (response: any) => {
+            this.isFollowing = response.isFollowing; 
+        },
+        error: (err) => {
+            this.isFollowing = false; 
+        }
+    });
+}
+
+
   
+  
+fetchFollowers(nickname: string): void {
+  this.memberservice.getFollowers(nickname).subscribe({
+      next: (followers: any[]) => {
+          this.followersCount = Array.isArray(followers) ? followers.length : 0; 
+      },
+      error: (err) => {
+          console.error('Erreur lors de la récupération des followers :', err);
+          this.followersCount = 0; 
+      }
+  });
+}
+
+fetchFollowings(nickname: string): void {
+  this.memberservice.getFollowings(nickname).subscribe({
+      next: (followings: any[]) => {
+          this.followingCount = Array.isArray(followings) ? followings.length : 0; 
+      },
+      error: (err) => {
+          console.error('Erreur lors de la récupération des following:', err);
+          this.followingCount = 0; 
+      }
+  });
+}
+
+
+toggleFollow(): void {
+  if (this.isFollowing) {
+      this.memberservice.unfollowUser(this.nickname).subscribe({
+          next: () => {
+              this.isFollowing = false; 
+              this.followersCount--; 
+              this.cdr.detectChanges(); 
+
+          },
+          error: (err) => {
+              console.error('Erreur unfollowing:', err);
+          }
+      });
+  } else {
+      this.memberservice.followUser(this.nickname).subscribe({
+          next: () => {
+              this.isFollowing = true; 
+              this.followersCount++; 
+              this.cdr.detectChanges(); 
+          },
+          error: (err) => {
+              console.error('Erreur following :', err);
+          }
+      });
+  }
+}
+
+
+
 
   
   fetchFavorites(): void {
     const routeNickname = this.route.snapshot.paramMap.get('nickname');
-    
-    this.favoritesService.getFavorites(routeNickname|| undefined).subscribe({
+
+    this.favoritesService.getFavorites(routeNickname || undefined).subscribe({
       next: (favorites: any[]) => {
+        if (favorites.length === 0) {
+          this.favorites = [];
+          return;
+        }
+    
         const movieIds = favorites.map(fav => fav.movie_id);
         const requests = movieIds.map(id => this.detailsService.getMovieByID(id));
-        
+    
         forkJoin(requests).subscribe({
           next: (movies) => {
             this.favorites = movies;
             this.cdr.detectChanges();
           },
           error: (err) => {
-            console.error('Erreur sur la récupération des favoris:', err);
+            console.error('Fetch favoris :', err);
           }
         });
       },
       error: (err) => {
-        console.error('Erreur sur la récupération des favoris:', err);
+        console.error('Fetch favoris :', err);
       }
     });
-  }  
+    
+  }
+  
+
   
   
   fetchWatchlist(): void {
@@ -171,13 +270,10 @@ export class DashboardComponent {
     this.authService.changeNickname(this.newNickname).subscribe({
       next: (response) => {
         console.log('Pseudo mis à jour :', response);
-        
-        
+      
         this.userService.updateNickname(this.newNickname); 
-        
-        
+      
         this.errorMessage = null;
-        
         
         this.cdr.detectChanges();
       },

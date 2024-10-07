@@ -30,7 +30,6 @@ export class MembersComponent {
   constructor(
     private MembreService: MembersService, 
     private favoritesService: FavoritesService,
-    private detailsService: DetailsService,
     private watchedService: WatchedService,
     private watchlistService: WatchlistService,
     private cdr: ChangeDetectorRef,
@@ -39,63 +38,31 @@ export class MembersComponent {
 
   ) {}
 
-  ngOnInit() : void {
-
-      this.fetchFavorites();
-      this.fetchWatched();
-      this.fetchWatchlist();
-
-    this.MembreService.getMembers().subscribe({
-      next: (response) => {
-        this.members = response;        
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Erreur lors de la récupération des membres:', err)
+    ngOnInit(): void {
+      this.MembreService.getMembers().subscribe({
+        next: (response) => {
+          this.members = response;
+          this.updateCounts();
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Erreur lors de la récupération des membres:', err);
+        }
+      });
+    }
+  
+    updateCounts(): void {
+      const routeNickname = this.route.snapshot.paramMap.get('nickname');
+      const currentUser = this.members.find(member => member.nickname === routeNickname);
+  
+      if (currentUser) {
+        this.favoritesCount = currentUser.favorites_count || 0;
+        this.watchedCount = currentUser.watched_count || 0;
+        this.watchlistCount = currentUser.watchlist_count || 0;
+      } else {
+        this.favoritesCount = 0;
+        this.watchedCount = 0;
+        this.watchlistCount = 0;
       }
-  })
-}
-
-fetchFavorites(): void {
-  const routeNickname = this.route.snapshot.paramMap.get('nickname');
-  
-  this.favoritesService.getFavorites(routeNickname || undefined).subscribe({
-    next: (favorites: any[]) => {
-      this.favoritesCount = favorites.length;
-      this.cdr.detectChanges();
-    },
-    error: (err) => {
-      console.error('Fetching favoris erreur :', err);
     }
-  });
-}
-
-fetchWatched(): void {
-  const routeNickname = this.route.snapshot.paramMap.get('nickname');
-  
-  this.watchedService.getWatched(routeNickname || undefined).subscribe({
-    next: (watched: any[]) => {
-      this.watchedCount = watched.length; 
-      this.cdr.detectChanges();
-    },
-    error: (err) => {
-      console.error('Fetching watched erreur :', err);
-    }
-  });
-}
-  
-fetchWatchlist(): void {
-  const routeNickname = this.route.snapshot.paramMap.get('nickname');
-  
-  this.watchlistService.getWatchlist(routeNickname || undefined).subscribe({
-    next: (watchlist: any[]) => {
-      this.watchlistCount = watchlist.length; 
-      this.cdr.detectChanges();
-    },
-    error: (err) => {
-      console.error('Fetching watchlist erreur :', err);
-    }
-  });
-}
-    
-}
+  }

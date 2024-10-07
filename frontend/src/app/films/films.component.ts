@@ -88,8 +88,7 @@ export class FilmsComponent {
           this.checkIfFavorites(); 
           this.checkIfWatched(); 
           this.checkIfWatchlist(); 
-
-          
+          this.cdr.detectChanges();
         } else {
           console.error(data);
         }
@@ -110,9 +109,11 @@ export class FilmsComponent {
     if (this.authService.isLoggedIn$) {
       this.authService.getProfil().subscribe({
         next: (response: any) => {
+          console.log('Profil récupéré:', response);
           this.nickname = response.nickname;
         },
         error: (error: any) => {
+          console.error('Erreur lors de la récupération du profil:', error);
           this.nickname = '';
         }
       });
@@ -120,6 +121,7 @@ export class FilmsComponent {
       this.nickname = '';
     }
   }
+  
   searchFilms(query: string): void {
     if (!query) return;
 
@@ -219,10 +221,15 @@ export class FilmsComponent {
         const movie = this.films.find(m => m.id === movieId);
         if (movie) {
           movie.isFavorite = true;
+          this.cdr.detectChanges();
         }
-        this.cdr.detectChanges();
       },
       error: (err) => {
+        if (err.status === 400) {
+          console.log(`Erreur: Le film ${movieId} est déjà dans les favoris.`);
+        } else {
+          console.error('Error adding to favorites:', err);
+        }
       }
     });
   }
@@ -230,45 +237,44 @@ export class FilmsComponent {
   
   removeFromFavorites(movieId: number): void {
     const isCurrentlyFavorite = this.films.find(movie => movie.id === movieId)?.isFavorite;
-
+  
     if (!isCurrentlyFavorite) {
-        return;
+      return;
     }
-
+  
     this.favoritesService.removeFavorite(movieId).subscribe({
-        next: () => {
-            const movie = this.films.find(m => m.id === movieId);
-            if (movie) {
-                movie.isFavorite = false; 
-            }
-            this.cdr.detectChanges();
-        },
-        error: (err) => {
+      next: () => {
+        const movie = this.films.find(m => m.id === movieId);
+        if (movie) {
+          movie.isFavorite = false; 
         }
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Erreur lors de la suppression des favoris:', err);
+      }
     });
-}
+  }
+  
 
   
   
   checkIfFavorites(): void {
     this.favoritesService.getFavorites().subscribe({
       next: (favorites: { movie_id: number }[]) => {
-        const favoriteMovieIds = favorites.map(fav => fav.movie_id);
-  
+        const favoritesMovieIds = favorites.map(item => item.movie_id);
+
         
         this.films.forEach(movie => {
-          movie.isFavorite = favoriteMovieIds.includes(movie.id);
+          movie.isFavorite = favoritesMovieIds.includes(movie.id);
         });
-  
+
         this.cdr.detectChanges(); 
       },
       error: (err) => {
       }
     });
   }
-  
-
-    
 
 addWatchlist(movieId: number): void {
 

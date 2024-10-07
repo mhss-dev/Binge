@@ -130,12 +130,14 @@ h1 {
   opacity: 0;
   transition: opacity 0.5s ease-in-out;
   display: none;
+  margin-bottom: 15rem;
 }
 
 .section.active {
   opacity: 1;
   display: block;
 }
+
 
 @keyframes fadeInUp {
   from {
