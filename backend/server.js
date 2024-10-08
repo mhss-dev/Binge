@@ -96,7 +96,7 @@ app.get("/api/upcoming", async (req, res) => {
         params: {
           api_key: TMDB_API_KEY,
           language: "fr-FR",
-          region: "FR",
+          region: "be",
           page: 1,
         },
       }
@@ -117,7 +117,7 @@ app.get('/api/nowplaying', async (req, res) => {
         params: {
           api_key: TMDB_API_KEY,
           language: 'fr-FR',
-          region: 'FR',
+          region: 'BE',
           page: 1,
         },
       }
