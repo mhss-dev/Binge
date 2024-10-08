@@ -26,6 +26,7 @@ export class DashboardComponent {
   watchlist: any[] = [];
   watched: any[] = [];
   currentUserNickname: string = ''; 
+  profileImage: string | ArrayBuffer | null = null;
 
   moviesPerPage = 60;
   combinedMovies: any=[];
@@ -118,7 +119,6 @@ export class DashboardComponent {
         }
     });
 }
-
 
   
   
@@ -259,7 +259,7 @@ toggleFollow(): void {
         }
 
         watched.reverse();
-        
+
         const movieIds = watched.map(item => item.movie_id);
         const requests = movieIds.map(id => this.detailsService.getMovieByID(id));
         
