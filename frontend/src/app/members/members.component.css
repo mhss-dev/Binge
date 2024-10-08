@@ -2,6 +2,9 @@ a {
     text-decoration: none;
 }
 
+h1 {
+    margin-top: 5rem;
+}
 .container {
     max-width: 1200px;
     margin: 0 auto;
