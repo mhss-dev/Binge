@@ -6,11 +6,10 @@
       
       <div class="row text-center p-0">
         <div class="d-flex justify-content-center align-items-center gap-3">
-            <p class="small">Abonné{{ followersCount < 2 ? '' : 's' }} : {{ followersCount }}</p>
-            <p class="small">Abonnement{{ followingCount < 2 ? '' : 's' }} : {{ followingCount }}</p>
+            <p class="small">Abonné{{ followersCount <= 2 ? '' : 's' }} : {{ followersCount }}</p>
+            <p class="small">Abonnement{{ followingCount <= 2 ? '' : 's' }} : {{ followingCount }}</p>
         </div>
-        <hr class="text-white">        
-    
+        <hr class="text-white"> 
         <button class="btn btn-primary" (click)="toggleFollow()">
             {{ isFollowing ? 'Ne plus suivre' : 'Suivre' }}
         </button>
