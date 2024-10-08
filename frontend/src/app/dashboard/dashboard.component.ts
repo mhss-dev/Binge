@@ -187,6 +187,8 @@ toggleFollow(): void {
           this.favorites = [];
           return;
         }
+
+        favorites.reverse();
     
         const movieIds = favorites.map(fav => fav.movie_id);
         const requests = movieIds.map(id => this.detailsService.getMovieByID(id));
@@ -216,6 +218,15 @@ toggleFollow(): void {
 
     this.watchlistService.getWatchlist(routeNickname|| undefined).subscribe({
       next: (watchlist: any[]) => {
+
+
+        if (watchlist.length === 0) {
+          this.watchlist = [];
+          return;
+        }
+
+        watchlist.reverse();
+
         const movieIds = watchlist.map(item => item.movie_id);
         const requests = movieIds.map(id => this.detailsService.getMovieByID(id));
         
@@ -241,6 +252,14 @@ toggleFollow(): void {
 
     this.watchedService.getWatched(routeNickname|| undefined).subscribe({
       next: (watched: any[]) => {
+
+        if (watched.length === 0) {
+          this.watchlist = [];
+          return;
+        }
+
+        watched.reverse();
+        
         const movieIds = watched.map(item => item.movie_id);
         const requests = movieIds.map(id => this.detailsService.getMovieByID(id));
         

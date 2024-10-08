@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 
 @Injectable({
@@ -15,8 +15,6 @@ export class AuthService {
 
   constructor(private http: HttpClient) {
     this.checkLoginStatus();
-
-    
   }
 
   checkLoginStatus(): void {
@@ -40,8 +38,9 @@ export class AuthService {
           
           localStorage.setItem('token', token);
           this.setLoggedIn(true);
+          console.log('Login successful, token stored.');
         } else {
-          console.warn('Aucun token sur ce login');
+          console.warn('Login response did not contain a token.');
         }
       }),
       catchError(error => {
@@ -49,7 +48,7 @@ export class AuthService {
         this.setLoggedIn(false);
   
         
-        console.error('Connexion échouée:', error);
+        console.error('Login failed:', error);
   
         return throwError(() => new Error('Connexion échouée'));
       })
@@ -86,14 +85,11 @@ export class AuthService {
     }
   
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  
     const url = nickname ? `${this.apiUrl}/auth/profil/${nickname}` : `${this.apiUrl}/auth/profil`;
   
-    return this.http.get<any>(url, { headers }).pipe(
-      catchError((error) => {
-        return throwError(() => error);
-      })
-    );
-  }  
+    return this.http.get<any>(url, { headers });
+  }
   
   
 
