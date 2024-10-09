@@ -29,9 +29,6 @@ export class MembersComponent {
   
   constructor(
     private MembreService: MembersService, 
-    private favoritesService: FavoritesService,
-    private watchedService: WatchedService,
-    private watchlistService: WatchlistService,
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
 
@@ -41,7 +38,7 @@ export class MembersComponent {
     ngOnInit(): void {
       this.MembreService.getMembers().subscribe({
         next: (response) => {
-          this.members = response;
+          this.members = response;          
           this.updateCounts();
           this.cdr.detectChanges();
         },

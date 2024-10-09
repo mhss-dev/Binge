@@ -25,7 +25,7 @@ app.use(bodyParser.json());
 
 const corsOptions = {
   origin: "http://localhost:4200",
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"], 
   credentials: true,
 };
@@ -351,7 +351,6 @@ app.get('/api/search', async (req, res) => {
     res.status(500).json({ error: 'Erreur lors de la recherche dans l\'API TMDb', details: error.message });
   }
 });
-
 
 app.use('/api/auth', authRoutes);
 app.use('/api/favorites', favoritesRoutes);

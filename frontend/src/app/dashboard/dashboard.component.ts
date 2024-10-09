@@ -25,8 +25,14 @@ export class DashboardComponent {
   favorites: any[] = [];
   watchlist: any[] = [];
   watched: any[] = [];
-  currentUserNickname: string = ''; 
   profileImage: string | ArrayBuffer | null = null;
+  currentNickname: string = '';
+  currentProfile: any;
+
+  avatars: string[] = this.getAvatars();
+
+
+  selectedAvatar: string | null = null;
 
   moviesPerPage = 60;
   combinedMovies: any=[];
@@ -44,6 +50,7 @@ export class DashboardComponent {
   followersCount: number = 0;
   followingCount: number = 0;
 
+
   constructor(
     private router: Router, 
     private authService: AuthService, 
@@ -58,55 +65,63 @@ export class DashboardComponent {
   ) {}
   
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const routeNickname = params.get('nickname');
-  
-      if (routeNickname) {
-        this.authService.getProfil(routeNickname).pipe(
-          catchError((error) => {
-            console.error('Erreur lors de la récupération du profil:', error);
-            if (error.status === 404) {
-              this.router.navigate(['/profil']);
-            }
-            return of(null);
-          })
-        ).subscribe((response: any) => {
-          if (response) {
-            this.nickname = response.nickname ?? '';
-            this.fetchFollowers(routeNickname);
-            this.fetchFavorites();
-            this.fetchWatched();
-            this.fetchWatchlist();
-            this.fetchFollowings(routeNickname);
-            this.checkFollowingStatus(routeNickname);
-          } else {
-            this.nickname = '';  
-          }
-        });
-      } else {
-        this.authService.getProfil().pipe(
-          catchError((error) => {
-            console.error('Erreur lors de la récupération du profil:', error);
-            if (error.status === 404) {
-              this.router.navigate([`/profil`]);
-            }
-            return of(null);
-          })
-        ).subscribe((response: any) => {
-          if (response) {
-            this.nickname = response.nickname ?? '';
-            this.fetchFollowers(this.nickname);
-            this.fetchFollowings(this.nickname);
-            this.checkFollowingStatus(this.nickname);
-            this.fetchFavorites();
-            this.fetchWatched();
-            this.fetchWatchlist();
-          } else {
-            this.nickname = ''; 
-          }
-        });
+    
+   this.loadProfile();
+}
+
+  loadProfile() : void {
+
+    this.authService.getProfil().pipe(
+      catchError((error) => {
+          console.error('Erreur lors de la récupération du profil de l\'utilisateur connecté:', error);
+          return of(null);
+      })
+  ).subscribe((response: any) => {
+      if (response) {
+          this.currentNickname = response.nickname;
       }
-    });
+      
+      this.route.paramMap.subscribe(params => {
+          const routeNickname = params.get('nickname');
+
+          if (routeNickname) {
+              
+              this.authService.getProfil(routeNickname).pipe(
+                  catchError((error) => {
+                      console.error('Erreur lors de la récupération du profil:', error);
+                      if (error.status === 404) {
+                          this.router.navigate(['/profil']);
+                      }
+                      return of(null);
+                  })
+              ).subscribe((profileResponse: any) => {
+                  if (profileResponse) {
+                      this.nickname = profileResponse.nickname; 
+                      this.currentProfile = profileResponse;
+                      
+                      this.fetchFollowers(routeNickname);
+                      this.fetchFavorites();
+                      this.fetchWatched();
+                      this.fetchWatchlist();
+                      this.fetchFollowings(routeNickname);
+                      this.checkFollowingStatus(routeNickname);
+                  } else {
+                      this.nickname = '';  
+                  }
+              });
+          } else {
+              this.nickname = this.currentNickname;
+              console.log(this.nickname);
+
+              this.fetchFollowers(this.nickname);
+              this.fetchFollowings(this.nickname);
+              this.checkFollowingStatus(this.nickname);
+              this.fetchFavorites();
+              this.fetchWatched();
+              this.fetchWatchlist();
+          }
+      });
+  });
   }
 
   checkFollowingStatus(nickname: string): void {
@@ -175,9 +190,6 @@ toggleFollow(): void {
 }
 
 
-
-
-  
   fetchFavorites(): void {
     const routeNickname = this.route.snapshot.paramMap.get('nickname');
 
@@ -211,8 +223,33 @@ toggleFollow(): void {
   }
   
 
+  selectAvatar(avatarUrl: string): void {
+    this.selectedAvatar = avatarUrl;
+  }
+  
+  saveAvatar(): void {
+    if (this.selectedAvatar) {
+      this.memberservice.updateAvatar(this.selectedAvatar).subscribe({
+        next: (response) => {          
+          this.currentProfile.avatarUrl = this.selectedAvatar;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+    }
+  }
   
   
+  getAvatars(): string[] {
+    const images: string[] = [];
+    for (let i = 1; i <= 13; i++) {
+        images.push(`assets/images/${i}.png`);
+    }
+    return images;
+}
+
   fetchWatchlist(): void {
     const routeNickname = this.route.snapshot.paramMap.get('nickname');
 
@@ -281,29 +318,36 @@ toggleFollow(): void {
   }
 
   handleEnter(event: KeyboardEvent): void {
-    this.onSaveNewNickname();
+    if (event.key === 'Enter') {
+      this.onSaveNewNickname();
+    }
   }
 
   onSaveNewNickname(): void {
+    if (!this.newNickname || this.newNickname.length > 20) {
+      this.errorMessage = 'Votre pseudonyme est invalide ou dépasse 20 caractères.';
+      this.cdr.detectChanges();
+      return;
+    }
+
     this.authService.changeNickname(this.newNickname).subscribe({
       next: (response) => {
         console.log('Pseudo mis à jour :', response);
-      
-        this.userService.updateNickname(this.newNickname); 
-      
+        this.userService.updateNickname(this.newNickname);
         this.errorMessage = null;
+        
         
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Erreur de mise à jour du pseudo :', err); 
-        this.errorMessage = 'Votre pseudonyme est invalide ou dépasse 20 caractères.';
-        
-        
+        console.error('Erreur de mise à jour du pseudo :', err);
+        this.errorMessage = 'Erreur lors de la mise à jour du pseudonyme. Veuillez réessayer plus tard.';
         this.cdr.detectChanges();
       }
     });
   }
+
+  
 
 
 

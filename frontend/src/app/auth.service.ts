@@ -92,27 +92,22 @@ export class AuthService {
   }
   
   
-
   changeNickname(newNickname: string): Observable<any> {
     const token = localStorage.getItem('token');
     
-  
-    return this.http.put<any>(`${this.apiUrl}/auth/profil/update`, 
-      { newNickname }, 
-      { 
-        headers: new HttpHeaders({
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }),
-        withCredentials: true
-      }
-    ).pipe(
-      tap(
-        response => console.log('Réponse:', response),
-        error => console.error('Erreur:', error)
-      )
+    const headers = new HttpHeaders({
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+    });
+
+    return this.http.patch<any>(
+        `${this.apiUrl}/auth/profil/update`, 
+        { newNickname }, // This is the body of the request
+        { headers } // Headers set separately
     );
-  }
+}
+
+
    
 
   register(username: string, password: string, nickname: string): Observable<any> {

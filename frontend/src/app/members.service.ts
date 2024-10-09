@@ -49,11 +49,11 @@ unfollowUser(nickname: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/unfollow/${nickname}`, { headers: this.getAuthHeaders() });
 }
 
-uploadProfileImage(file: File) {
-  const formData = new FormData();
-  formData.append('profileImage', file);
+updateAvatar(avatarUrl: string): Observable<any> {
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-  return this.http.post<{ imageUrl: string }>(`${this.apiUrl}/upload-profile-image`, formData,  { headers: this.getAuthHeaders() });
+  return this.http.patch<any>(`${this.apiUrl}/profil/avatar`, { avatarUrl }, { headers });
 }
 
 
