@@ -1,8 +1,7 @@
 
 .navbar-bg {
   width: 100%;
-  margin: 0;
-  padding: 0;
+  padding-top: env(safe-area-inset-top) !important;
   background-color: #14181d !important;
 }
 
@@ -61,3 +60,13 @@ li:hover {
   color: #14181C;
 }
 
+
+@media (max-width: 820px) {
+  .container-fluid {
+    
+    padding-top: 2rem !important; /* Ajuste cette valeur selon tes besoins */
+  }
+  a {
+    display: none !important;
+  }
+}
