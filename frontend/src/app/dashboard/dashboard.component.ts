@@ -282,7 +282,6 @@ toggleFollow(): void {
     });
   }
 
-
   fetchWatched(): void {
     const routeNickname = this.route.snapshot.paramMap.get('nickname');
 
