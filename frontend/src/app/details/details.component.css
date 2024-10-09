@@ -83,36 +83,35 @@
 
 @media (max-width: 576px) {
   .movie-page {
-    height: auto; /* Permettre le défilement */
-    padding: 1rem; /* Ajouter un peu de padding */
+    height: auto;
   }
 
   .movie-banner {
-    height: 300px; /* Ajuster la hauteur pour les petits écrans */
+    height: 100vh;
   }
 
   .display-3 {
-    font-size: 1.5rem; /* Ajuster la taille du titre */
+    font-size: 1.5rem;
   }
 
   .lead {
-    font-size: 1rem; /* Ajuster la taille du slogan */
+    font-size: 1rem;
   }
 
   .nav-tabs .nav-link {
-    padding: 0.5rem 0.3rem; /* Réduire le padding des liens de la navbar */
+    padding: 0.5rem 0.3rem;
   }
 
   .cast-card {
-    width: 100%; /* Ajuster à 100% pour petits écrans */
+    width: 100%;
   }
 
   .movie-description {
-    font-size: 0.9rem; /* Réduire la taille de police pour les descriptions */
+    font-size: 0.9rem;
   }
 
   .btn {
-    font-size: 0.9rem; /* Ajuster la taille des boutons */
+    font-size: 0.9rem;
   }
 }
 

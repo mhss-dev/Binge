@@ -24,7 +24,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const corsOptions = {
-  origin: "http://localhost:4200",
+  origin: ["http://localhost:4200",
+    "capacitor://localhost"
+  ],
   methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"], 
   credentials: true,

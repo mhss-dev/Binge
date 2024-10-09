@@ -36,9 +36,7 @@
               "src/styles.css"
             ],
             "scripts": [
-              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
-              "node_modules/@popperjs/core/dist/umd/popper.min.js"
-              
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"              
             ]
           },
           "configurations": {
@@ -50,9 +48,7 @@
                 }
               ],
               "scripts": [
-                "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
-                "node_modules/@popperjs/core/dist/umd/popper.min.js"
-                
+                "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"                
               ],
               "budgets": [
                 {
@@ -117,7 +113,8 @@
               "@angular/material/prebuilt-themes/azure-blue.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"]
           }
         }
       }

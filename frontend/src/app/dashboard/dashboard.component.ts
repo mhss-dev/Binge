@@ -90,7 +90,7 @@ export class DashboardComponent {
                   catchError((error) => {
                       console.error('Erreur lors de la récupération du profil:', error);
                       if (error.status === 404) {
-                          this.router.navigate(['/profil']);
+                          this.router.navigate(['/profil', this.currentNickname]);
                       }
                       return of(null);
                   })
@@ -111,8 +111,6 @@ export class DashboardComponent {
               });
           } else {
               this.nickname = this.currentNickname;
-              console.log(this.nickname);
-
               this.fetchFollowers(this.nickname);
               this.fetchFollowings(this.nickname);
               this.checkFollowingStatus(this.nickname);
@@ -230,9 +228,9 @@ toggleFollow(): void {
   saveAvatar(): void {
     if (this.selectedAvatar) {
       this.memberservice.updateAvatar(this.selectedAvatar).subscribe({
-        next: (response) => {          
-          this.currentProfile.avatarUrl = this.selectedAvatar;
-          this.cdr.detectChanges();
+        next: () => {          
+          this.currentProfile.avatar_url = this.selectedAvatar;
+          this.cdr.detectChanges(); 
         },
         error: (err) => {
           console.error(err);
@@ -240,6 +238,7 @@ toggleFollow(): void {
       });
     }
   }
+  
   
   
   getAvatars(): string[] {
@@ -329,14 +328,17 @@ toggleFollow(): void {
       this.cdr.detectChanges();
       return;
     }
-
+  
     this.authService.changeNickname(this.newNickname).subscribe({
       next: (response) => {
-        console.log('Pseudo mis à jour :', response);
-        this.userService.updateNickname(this.newNickname);
+  
+        this.nickname = this.newNickname;
+        this.currentNickname = this.newNickname; 
+        this.userService.updateNickname(this.newNickname); 
         this.errorMessage = null;
-        
-        
+  
+        this.router.navigate(['/profil', this.newNickname]);
+
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -346,12 +348,8 @@ toggleFollow(): void {
       }
     });
   }
-
   
-
-
-
-
+  
 
 
   @HostListener('window:scroll', ['$event'])

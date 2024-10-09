@@ -109,7 +109,6 @@ export class FilmsComponent {
     if (this.authService.isLoggedIn$) {
       this.authService.getProfil().subscribe({
         next: (response: any) => {
-          console.log('Profil récupéré:', response);
           this.nickname = response.nickname;
         },
         error: (error: any) => {
@@ -228,7 +227,7 @@ export class FilmsComponent {
         if (err.status === 400) {
           console.log(`Erreur: Le film ${movieId} est déjà dans les favoris.`);
         } else {
-          console.error('Error adding to favorites:', err);
+          console.error('Erreur ajout aux favoris ', err);
         }
       }
     });

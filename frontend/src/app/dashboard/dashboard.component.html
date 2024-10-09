@@ -12,24 +12,20 @@
         </div>
         <hr class="text-white"> 
         
-<button class="btn btn-primary" 
+        <button class="btn btn-primary" 
         *ngIf="nickname && currentNickname && nickname !== currentNickname" 
         (click)="toggleFollow()">
     {{ isFollowing ? 'Ne plus suivre' : 'Suivre' }}
 </button>
 
-
 <div class="d-flex justify-content-center align-items-center gap-3">
-  <button class="btn btn-primary" data-bs-target="#changeNicknameModal" data-bs-toggle="modal" *ngIf="nickname === currentNickname" >
+  <button class="btn btn-primary" data-bs-target="#changeNicknameModal" data-bs-toggle="modal" *ngIf="nickname === currentNickname">
     <i class="fa-solid fa-pen"></i> Changez de pseudo
   </button>
 
   <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#selectAvatarModal" *ngIf="nickname === currentNickname">
     <i class="fa-solid fa-upload"></i> Changez votre avatar
-</button>
-
-
-  
+  </button>
 </div>
 
 
@@ -152,15 +148,16 @@
       </div>
     </div>
   </div>
+
   <div class="modal fade" id="selectAvatarModal" tabindex="-1" aria-labelledby="selectAvatarModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="selectAvatarModalLabel">Choisissez un avatar</h5>
+          <div class="modal-header text-dark">
+            <h5 class="modal-title" id="selectAvatarModalLabel">Choisissez un avatar</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <div class="avatar-container">
+            <div class="modal-body text-dark">
+              <div class="avatar-container">
                     <div *ngFor="let avatar of avatars" (click)="selectAvatar(avatar)" class="avatar-option">
                         <img [src]="avatar" alt="Avatar" class="rounded-circle" style="width: 100px; height: 100px;">
                     </div>

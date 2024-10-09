@@ -1,100 +1,96 @@
-<div class="container my-5 text-white pt-5 p-0">
-  <div class="text-center mb-5 pb-5">
+<div class="container text-white pt-5 p-0">
+  <div class="text-center mb-5">
     <h1 class="display-5 font-weight-bold">
       Découverte de vos goûts{{ nickname ? ', ' + nickname : '' }} 🎬
     </h1>
   </div>
 
-  <div class="row mb-4 pb-2 align-items-end">
-    <div class="col-12 col-md-6 mb-2 mb-md-0">
-        <form class="d-flex shadow-none" (keydown.enter)="searchFilms(searchQuery)" (input)="searchFilms(searchQuery)">
-            <div class="search-container w-100 me-2">
-                <i class="fa fa-search search-icon"></i>
-                <input class="form-control search-input" type="search" placeholder="Trouvez un film" aria-label="Search" [(ngModel)]="searchQuery" name="searchQuery">
-            </div>
-        </form>
+  <div class="row mb-4 align-items-end">
+    <div class="col-12 col-md-6 mb-3 mb-md-0">
+      <form class="d-flex shadow-none" (keydown.enter)="searchFilms(searchQuery)" (input)="searchFilms(searchQuery)">
+        <div class="search-container w-100 me-2">
+          <i class="fa fa-search search-icon"></i>
+          <input class="form-control search-input" type="search" placeholder="Trouvez un film" aria-label="Search" [(ngModel)]="searchQuery" name="searchQuery">
+        </div>
+      </form>
     </div>
 
-    <div class="col-12 col-md-6 d-flex justify-content-md-end">
-        <select class="form-control custom-width me-2" [(ngModel)]="sortOption" name="sortOption" (change)="loadFilms(1)">
-            <option value="popularity.desc">Popularité (+/-)</option>
-            <option value="popularity.asc">Popularité (-/+)</option>
-            <option value="primary_release_date.desc">Date de sortie (+/-)</option>
-            <option value="primary_release_date.asc">Date de sortie (-/+)</option>
-        </select>
+    <div class="col-12 col-md-6 d-flex justify-content-md-end mb-3 mb-md-0">
+      <select class="form-control custom-width me-2" [(ngModel)]="sortOption" name="sortOption" (change)="loadFilms(1)">
+        <option value="popularity.desc">Popularité (+/-)</option>
+        <option value="popularity.asc">Popularité (-/+)</option>
+        <option value="primary_release_date.desc">Date de sortie (+/-)</option>
+        <option value="primary_release_date.asc">Date de sortie (-/+)</option>
+      </select>
 
-        <select class="form-control custom-width" [(ngModel)]="selectedGenre" name="genreOption" (change)="loadFilms(1)">
-            <option value="">Tous les genres</option>
-            <option value="28">Action</option>
-            <option value="12">Aventure</option>
-            <option value="16">Animation</option>
-            <option value="35">Comédie</option>
-            <option value="80">Crime</option>
-            <option value="99">Documentaire</option>
-            <option value="18">Drame</option>
-            <option value="10751">Famille</option>
-            <option value="14">Fantastique</option>
-            <option value="36">Histoire</option>
-            <option value="27">Horreur</option>
-            <option value="10402">Musique</option>
-            <option value="9648">Mystère</option>
-            <option value="10749">Romance</option>
-            <option value="878">Science-fiction</option>
-            <option value="10770">Téléfilm</option>
-            <option value="53">Thriller</option>
-            <option value="10752">Guerre</option>
-            <option value="37">Western</option>
-        </select>
+      <select class="form-control custom-width" [(ngModel)]="selectedGenre" name="genreOption" (change)="loadFilms(1)">
+        <option value="">Tous les genres</option>
+        <option value="28">Action</option>
+        <option value="12">Aventure</option>
+        <option value="16">Animation</option>
+        <option value="35">Comédie</option>
+        <option value="80">Crime</option>
+        <option value="99">Documentaire</option>
+        <option value="18">Drame</option>
+        <option value="10751">Famille</option>
+        <option value="14">Fantastique</option>
+        <option value="36">Histoire</option>
+        <option value="27">Horreur</option>
+        <option value="10402">Musique</option>
+        <option value="9648">Mystère</option>
+        <option value="10749">Romance</option>
+        <option value="878">Science-fiction</option>
+        <option value="10770">Téléfilm</option>
+        <option value="53">Thriller</option>
+        <option value="10752">Guerre</option>
+        <option value="37">Western</option>
+      </select>
     </div>
-</div>
-
-
+  </div>
 
   <div>
-    <div class="row mt-5">
-      <div *ngFor="let movie of films" class="col-6 col-md-4 col-lg-3 mb-4">
-        <div class="card bg-dark text-white border-0 shadow-sm position-relative">
-          <a [routerLink]="['/film', movie?.id]" class="d-block">
-            <img 
-              [src]="movie?.poster_path ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path : 'https://via.placeholder.com/500x750?text=Aucun+poster+disponible'"
-              class="card-img-top img-fluid rounded"
-              alt="{{ movie?.title || 'Inconnu' }}">
-
-              
-          </a>
-
+      <div class="row mt-5">
+        <div *ngFor="let movie of films" class="col-6 col-md-4 col-lg-3 mb-4 d-flex">
+          <div class="card bg-dark text-white border-0 shadow-sm flex-fill">
+            <a [routerLink]="['/film', movie?.id]" class="d-block">
+              <img 
+                [src]="movie?.poster_path ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path : 'https://via.placeholder.com/500x750?text=Aucun+poster+disponible'"
+                class="card-img-top img-fluid rounded"
+                alt="{{ movie?.title || 'Inconnu' }}">
+            </a>
+      
             <div class="position-absolute bottom-0 w-100 custom-background d-flex justify-content-center">
               <button class="btn btn-link me-2 mb-2" 
-              [ngClass]="movie.isWatched ? 'text-info' : 'text-white'" 
-              (click)="toggleWatched(movie.id)"
-              data-bs-toggle="tooltip" 
-              title="{{ movie.isWatched ? 'Marquer comme non regardé' : 'Marquer comme regardé' }}">
-          <i class="fa-solid fa-eye"></i>
-      </button>
-      
-      <button class="btn me-2 mb-2" 
-              [ngClass]="movie.isWatchlist ? 'text-warning' : 'text-white'" 
-              (click)="toggleWatchlist(movie.id)"
-              data-bs-toggle="tooltip" 
-              title="{{ movie.isWatchlist ? 'Retirer de la watchlist' : 'Ajouter à la watchlist' }}">
-          <i class="fa-solid" [ngClass]="movie.isWatchlist ? 'fa-clock' : 'fa-clock'"></i>
-      </button>
-      
-      <button class="btn me-2 mb-2" 
-              [ngClass]="movie.isFavorite ? 'text-danger' : 'text-white'" 
-              (click)="toggleFavorite(movie.id)"
-              data-bs-toggle="tooltip" 
-              title="{{ movie.isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris' }}">
-          <i class="fa-solid" [ngClass]="movie.isFavorite ? 'fa-heart' : 'fa-heart'"></i>
-      </button>
-      
-  
-            </div>
+                [ngClass]="movie.isWatched ? 'text-info' : 'text-white'" 
+                (click)="toggleWatched(movie.id)"
+                data-bs-toggle="tooltip" 
+                title="{{ movie.isWatched ? 'Marquer comme non regardé' : 'Marquer comme regardé' }}">
+                <i class="fa-solid fa-eye"></i>
+              </button>
               
+              <button class="btn me-2 mb-2" 
+                [ngClass]="movie.isWatchlist ? 'text-warning' : 'text-white'" 
+                (click)="toggleWatchlist(movie.id)"
+                data-bs-toggle="tooltip" 
+                title="{{ movie.isWatchlist ? 'Retirer de la watchlist' : 'Ajouter à la watchlist' }}">
+                <i class="fa-solid" [ngClass]="movie.isWatchlist ? 'fa-clock' : 'fa-clock'"></i>
+              </button>
+              
+              <button class="btn me-2 mb-2" 
+                [ngClass]="movie.isFavorite ? 'text-danger' : 'text-white'" 
+                (click)="toggleFavorite(movie.id)"
+                data-bs-toggle="tooltip" 
+                title="{{ movie.isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris' }}">
+                <i class="fa-solid" [ngClass]="movie.isFavorite ? 'fa-heart' : 'fa-heart'"></i>
+              </button>
+            </div>
           </div>
         </div>
-        </div>
+      
+        <button *ngIf="isButtonVisible()" class="back-to-top btn btn-dark shadow" (click)="scrollToTop()">↑</button>
+      </div>
+      
 
-      <button *ngIf="isButtonVisible()" class="back-to-top btn btn-dark shadow" (click)="scrollToTop()" >↑</button>
+      <button *ngIf="isButtonVisible()" class="back-to-top btn btn-dark shadow" (click)="scrollToTop()">↑</button>
     </div>
-</div>
+  </div>

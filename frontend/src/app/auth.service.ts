@@ -24,10 +24,10 @@ export class AuthService {
     });
   }
 
-  login(username: string, password: string): Observable<any> {
+  login(username: string, password: string, nickname?: string): Observable<any> {
     return this.http.post<{ token: string }>(
       `${this.apiUrl}/auth/login`,
-      { username, password },
+      { username, password, nickname },
       { observe: 'response', withCredentials: true }
     ).pipe(
       tap(response => {
@@ -38,9 +38,8 @@ export class AuthService {
           
           localStorage.setItem('token', token);
           this.setLoggedIn(true);
-          console.log('Login successful, token stored.');
         } else {
-          console.warn('Login response did not contain a token.');
+          console.warn('Erreur aucun token');
         }
       }),
       catchError(error => {
@@ -48,7 +47,7 @@ export class AuthService {
         this.setLoggedIn(false);
   
         
-        console.error('Login failed:', error);
+        console.error('Connexion echouée :', error);
   
         return throwError(() => new Error('Connexion échouée'));
       })
