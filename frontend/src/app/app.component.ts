@@ -22,8 +22,8 @@ export class AppComponent {
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
-        this.showFooter = event.url !== '/film';
-        console.log(event.url);
+        this.showFooter = !event.url.startsWith('/film');
+        
         
       });
 }
