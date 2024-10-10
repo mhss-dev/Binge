@@ -1,10 +1,8 @@
-import { AfterViewInit, Component, HostListener, OnInit, signal } from '@angular/core';
+import { Component, HostListener, OnInit, signal } from '@angular/core';
 import { MovieService } from '../movie.service';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Route } from '@angular/router';
 import { forkJoin } from 'rxjs';
-import * as bootstrap from 'bootstrap';
-import { NgbAlert, NgbCarousel, NgbSlide } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-cards',
@@ -64,7 +62,7 @@ export class CardsComponent implements OnInit {
         console.error(error);
       },
       complete: () => {
-        console.log('Données des films récupérées avec succès');
+        console.log('Données des films récupérés avec succès');
       },
     });
   }

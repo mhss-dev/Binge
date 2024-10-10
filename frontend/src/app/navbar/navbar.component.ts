@@ -13,9 +13,23 @@ import { AuthService } from '../auth.service';
 export class NavbarComponent {
   isLoggedIn = false;
   nickname: string | null = null;
+  isLogoVisible: boolean = true; 
 
 
   constructor(private authService: AuthService, private router: Router, private cdr: ChangeDetectorRef) {}
+
+  ngAfterViewInit() {
+    const navbarCollapse = document.getElementById('navbarNav');
+    if (navbarCollapse) {
+      navbarCollapse.addEventListener('show.bs.collapse', () => {
+        this.isLogoVisible = true;
+      });
+
+      navbarCollapse.addEventListener('hide.bs.collapse', () => {
+        this.isLogoVisible = false;
+      });
+    }
+  }
 
   ngOnInit(): void {
 
@@ -35,6 +49,10 @@ export class NavbarComponent {
     
   }
   
+  toggleLogo() {
+    this.isLogoVisible = !this.isLogoVisible;
+  }
+
   getNickname(): void {
     if (this.authService.isLoggedIn$) {
       this.authService.getProfil().subscribe({
