@@ -55,8 +55,34 @@
     </li>
   </ul>
 
+  <div class="tab-pane fade show active" id="watched" role="tabpanel" aria-labelledby="watched-tab">
+    <div class="movie-list">
+      <div *ngFor="let movie of paginatedWatched()" class="movie-card">
+        <a [routerLink]="['/film', movie.id]" class="d-block">
+          <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
+        </a>
+      </div>
+      <div *ngIf="watched.length === 0" class="text-center mt-3">
+        <p>Vous avez vu aucun film ? Impossible. Ajoutez des films <a href="https://binge-mhss.netlify.app/films">ici</a>.</p>
+      </div>
+    </div>
+    <nav *ngIf="watched.length > moviesPerPage" aria-label="Watched pagination">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="currentWatchedPage === 1">
+          <a class="page-link" (click)="previousWatchedPage()">Précédent</a>
+        </li>
+        <li class="page-item" [class.active]="currentWatchedPage === pageNumber" *ngFor="let pageNumber of totalWatchedPages">
+          <a class="page-link" (click)="goToWatchedPage(pageNumber)">{{ pageNumber }}</a>
+        </li>
+        <li class="page-item" [class.disabled]="currentWatchedPage === totalWatchedPages.length">
+          <a class="page-link" (click)="nextWatchedPage()">Suivant</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
   <div class="tab-content mt-3">
-    <div class="tab-pane fade show active" id="favorites" role="tabpanel" aria-labelledby="favorites-tab">
+    <div class="tab-pane fade" id="favorites" role="tabpanel" aria-labelledby="favorites-tab">
       <div class="movie-list">
         <div *ngFor="let movie of paginatedFavorites()" class="movie-card">
           <a [routerLink]="['/film', movie.id]" class="d-block">
@@ -108,31 +134,6 @@
       </nav>
     </div>
 
-    <div class="tab-pane fade" id="watched" role="tabpanel" aria-labelledby="watched-tab">
-      <div class="movie-list">
-        <div *ngFor="let movie of paginatedWatched()" class="movie-card">
-          <a [routerLink]="['/film', movie.id]" class="d-block">
-            <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
-          </a>
-        </div>
-        <div *ngIf="watched.length === 0" class="text-center mt-3">
-          <p>Vous avez vu aucun film ? Impossible. Ajoutez des films <a href="https://binge-mhss.netlify.app/films">ici</a>.</p>
-        </div>
-      </div>
-      <nav *ngIf="watched.length > moviesPerPage" aria-label="Watched pagination">
-        <ul class="pagination justify-content-center">
-          <li class="page-item" [class.disabled]="currentWatchedPage === 1">
-            <a class="page-link" (click)="previousWatchedPage()">Précédent</a>
-          </li>
-          <li class="page-item" [class.active]="currentWatchedPage === pageNumber" *ngFor="let pageNumber of totalWatchedPages">
-            <a class="page-link" (click)="goToWatchedPage(pageNumber)">{{ pageNumber }}</a>
-          </li>
-          <li class="page-item" [class.disabled]="currentWatchedPage === totalWatchedPages.length">
-            <a class="page-link" (click)="nextWatchedPage()">Suivant</a>
-          </li>
-        </ul>
-      </nav>
-    </div>
   </div>
 
   <div class="modal fade" id="changeNicknameModal" tabindex="-1" aria-labelledby="changeNicknameModalLabel" aria-hidden="true">

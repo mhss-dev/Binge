@@ -63,8 +63,8 @@
 }
 
 .logo {
-  height: 7rem;
-  width: auto;
+  height: 200px;
+  width: 200px;
 }
 
 .cast-card {
@@ -112,6 +112,11 @@
 
   .btn {
     font-size: 0.9rem;
+  }
+
+  .logo {
+    height: 2rem;
+    width: 1rem;
   }
 }
 

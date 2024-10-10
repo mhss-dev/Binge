@@ -1,26 +1,31 @@
-<div class="d-flex flex-column min-vh-100 ">
-    <div class="d-flex flex-column justify-content-center flex-grow-1">
-      <div class="container">
-        <div class="login-container mx-auto">
-          <div class="text-center mb-4">
-            <h2>Connexion</h2>
-            <div *ngIf="loginMessage" class="alert {{ alertType }}" role="alert">
-              {{ loginMessage }}
-            </div>
+<div class="d-flex flex-column min-vh-100">
+  <div class="container my-5">
+      <div class="row justify-content-center align-items-center">
+          <div class="col-lg-5">
+              <div class="login-container p-5 bg-white shadow rounded">
+                  <div class="text-center mb-4">
+                      <h2>Connexion</h2>
+                      <div *ngIf="loginMessage" class="alert {{ alertType }} mt-3" role="alert">
+                          {{ loginMessage }}
+                      </div>
+                  </div>
+                  <form (ngSubmit)="onLogin()">
+                      <div clas
+                      s="mb-4">
+                          <label for="username" class="form-label">Nom de compte :</label>
+                          <input type="text" id="username" class="form-control" [(ngModel)]="username" name="username" required placeholder="Entrez votre nom de compte">
+                      </div>
+                      <div class="mb-4">
+                          <label for="password" class="form-label mt-3">Mot de passe :</label>
+                          <input type="password" id="password" class="form-control" [(ngModel)]="password" name="password" required placeholder="Entrez votre mot de passe">
+                      </div>
+                      <button type="submit" class="btn btn-primary w-100 py-2">Se connecter</button>
+                      <div class="text-center mt-4">
+                          <a href="/register" class="">Pas encore inscrit ?</a>
+                      </div>
+                  </form>
+              </div>
           </div>
-          <form (ngSubmit)="onLogin()">
-            <div class="form-group">
-              <label for="username">Nom de compte :</label>
-              <input type="text" id="username" class="form-control" [(ngModel)]="username" name="username" required>
-            </div>
-            <div class="form-group">
-              <label for="password">Mot de passe :</label>
-              <input type="password" id="password" class="form-control" [(ngModel)]="password" name="password" required>
-            </div>
-            <button type="submit" class="btn btn-primary w-100 mt-3">Se connecter</button>
-            <a class="d-flex justify-content-center mt-3 align-content-center" href="/register">Pas encore inscrit ?</a>
-          </form>
-        </div>
       </div>
-    </div>
-    </div>
+  </div>
+</div>
