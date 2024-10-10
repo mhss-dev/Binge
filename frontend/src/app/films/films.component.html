@@ -63,11 +63,11 @@
             <button class="btn btn-link" [ngClass]="{'text-info': movie.isWatched, 'text-light': !movie.isWatched}" (click)="toggleWatched(movie.id)">
               <i class="fa-solid fa-eye"></i>
             </button>
-            <button class="btn btn-link" [ngClass]="{'text-warning': movie.isWatchlist, 'text-light': !movie.isWatchlist}" (click)="toggleWatchlist(movie.id)">
-              <i class="fa-solid fa-clock"></i>
-            </button>
             <button class="btn btn-link" [ngClass]="{'text-danger': movie.isFavorite, 'text-light': !movie.isFavorite}" (click)="toggleFavorite(movie.id)">
               <i class="fa-solid fa-heart"></i>
+            </button>
+            <button class="btn btn-link" [ngClass]="{'text-warning': movie.isWatchlist, 'text-light': !movie.isWatchlist}" (click)="toggleWatchlist(movie.id)">
+              <i class="fa-solid fa-clock"></i>
             </button>
           </div>
           

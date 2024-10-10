@@ -38,15 +38,15 @@
         <button class="btn me-2 mb-2" [ngClass]="isWatched ? 'btn-outline-light' : 'btn-light'" (click)="toggleWatched()">
           <i class="fa-solid" [ngClass]="isWatched ? 'fa-solid fa-minus' : 'fa-solid fa-plus'"></i> {{ isWatched ? 'Retirer des films vus' : 'Ajouter  aux films vus' }}
         </button>    
+        <button class="btn me-2 mb-2" [ngClass]="isFavorite ? 'btn-outline-light' : 'btn-light'" (click)="toggleFavorite()">
+          <i class="fa-solid" [ngClass]="isFavorite ? 'fa-heart-crack' : 'fa-heart'"></i> {{ isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris' }}
+        </button>    
         <button class="btn me-2 mb-2" [ngClass]="isWatchlist ? 'btn-outline-light' : 'btn-light'"
           (click)="toggleWatchlist()">
           <i class="fa-solid fa-clock me-2"></i>{{ isWatchlist ? 'Retirer de la watchlist' : 'Ajouter à la watchlist'
           }}
         </button>
 
-        <button class="btn me-2 mb-2" [ngClass]="isFavorite ? 'btn-outline-light' : 'btn-light'" (click)="toggleFavorite()">
-          <i class="fa-solid" [ngClass]="isFavorite ? 'fa-heart-crack' : 'fa-heart'"></i> {{ isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris' }}
-        </button>    
         
 <button class="btn me-2 mb-2 btn-outline-light" data-bs-toggle="modal" data-bs-target="#trailerModal">
   <i class="fa-solid fa-play me-2"></i>Voir la bande annonce

@@ -23,6 +23,9 @@ export class DashboardComponent {
   nickname: string = '';
   movie: any = null;
   favorites: any[] = [];
+  followersList: any[] = [];
+  followingsList: any[] = [];
+
   watchlist: any[] = [];
   watched: any[] = [];
   profileImage: string | ArrayBuffer | null = null;
@@ -139,9 +142,14 @@ fetchFollowers(nickname: string): void {
   this.memberservice.getFollowers(nickname).subscribe({
       next: (followers: any[]) => {
           this.followersCount = Array.isArray(followers) ? followers.length : 0; 
+          this.followersList = followers;
+          this.cdr.detectChanges();        
+
       },
       error: (err) => {
           console.error('Erreur lors de la récupération des followers :', err);
+          this.followersList = [];
+
           this.followersCount = 0; 
       }
   });
@@ -150,10 +158,14 @@ fetchFollowers(nickname: string): void {
 fetchFollowings(nickname: string): void {
   this.memberservice.getFollowings(nickname).subscribe({
       next: (followings: any[]) => {
+        this.followingsList = followings;
+        this.cdr.detectChanges();        
+
           this.followingCount = Array.isArray(followings) ? followings.length : 0; 
       },
       error: (err) => {
-          console.error('Erreur lors de la récupération des following:', err);
+        console.error('Erreur lors de la récupération des following:', err);
+          this.followingsList = [];
           this.followingCount = 0; 
       }
   });
@@ -341,8 +353,12 @@ toggleFollow(): void {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Erreur de mise à jour du pseudo :', err);
-        this.errorMessage = 'Erreur lors de la mise à jour du pseudonyme. Veuillez réessayer plus tard.';
+        if (err.status === 409) {
+          this.errorMessage = 'Ce pseudonyme est déjà pris. Veuillez en choisir un autre.';
+        } else {
+          console.error('Erreur de mise à jour du pseudo :', err);
+          this.errorMessage = 'Erreur lors de la mise à jour du pseudonyme. Veuillez réessayer plus tard.';
+        }
         this.cdr.detectChanges();
       }
     });

@@ -47,6 +47,7 @@ export class CardsComponent implements OnInit {
     forkJoin([nowPlaying$, trending$, upcoming$, toprated$]).subscribe({
       next: ([nowPlayingData, trendingData, upcomingData, topratedData]) => {
         this.movies = nowPlayingData.results;
+        
         this.trendingMovies = trendingData.results;
         this.upcomingMovies = upcomingData.results;
         this.toprated = topratedData.results;

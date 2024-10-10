@@ -12,45 +12,46 @@
       
 
       <div class="row text-center p-0">
-        <div class="d-flex justify-content-center align-items-center gap-3">
-            <p class="small">Abonné{{ followersCount <= 2 ? '' : 's' }} : {{ followersCount }}</p>
-            <p class="small">Abonnement{{ followingCount <= 2 ? '' : 's' }} : {{ followingCount }}</p>
+        <div class="d-flex justify-content-center align-items-center">
+            <button class="btn btn-white text-white small"  data-bs-target="#followersModal" data-bs-toggle="modal">
+                Abonné{{ followersCount >= 2 ? 's' : '' }} : {{ followersCount }}
+            </button>
+            <button class="btn btn-white text-white small" data-bs-target="#followingsModal" data-bs-toggle="modal">
+                Abonnement{{ followingCount >= 2 ? 's' : '' }} : {{ followingCount }}
+            </button>
         </div>
         <hr class="text-white"> 
         
-        <button class="btn btn-primary" 
-        *ngIf="nickname && currentNickname && nickname !== currentNickname" 
-        (click)="toggleFollow()">
-    {{ isFollowing ? 'Ne plus suivre' : 'Suivre' }}
-</button>
-
-<div class="d-flex justify-content-center align-items-center gap-3">
-  <button class="btn btn-primary" data-bs-target="#changeNicknameModal" data-bs-toggle="modal" *ngIf="nickname === currentNickname">
-    <i class="fa-solid fa-pen"></i> Changez de pseudo
-  </button>
-
-  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#selectAvatarModal" *ngIf="nickname === currentNickname">
-    <i class="fa-solid fa-upload"></i> Changez votre avatar
-  </button>
-</div>
-
-
-      
-      
+        <button class="btn btn-outline-light" 
+            *ngIf="nickname && currentNickname && nickname !== currentNickname" 
+            (click)="toggleFollow()">
+            {{ isFollowing ? 'Ne plus suivre' : 'Suivre' }}
+        </button>
+    
+        <div class="d-flex justify-content-center align-items-center gap-3">
+            <button class="btn btn-outline-light" data-bs-target="#changeNicknameModal" data-bs-toggle="modal" *ngIf="nickname === currentNickname">
+                <i class="fa-solid fa-pen"></i> Mettre à jour votre pseudo
+            </button>
+    
+            <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#selectAvatarModal" *ngIf="nickname === currentNickname">
+                <i class="fa-solid fa-upload"></i> Mettre à jour votre avatar
+            </button>
+        </div>
     </div>
+    
     
     </div>
     </div>
 
   <ul class="nav nav-tabs mt-5" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
+      <a class="nav-link" id="watched-tab" data-bs-toggle="tab" href="#watched" role="tab" aria-controls="watched" aria-selected="false">Films vus ({{ watched.length }})</a>
+    </li>
+    <li class="nav-item text-center" role="presentation">
       <a class="nav-link active" id="favorites-tab" data-bs-toggle="tab" href="#favorites" role="tab" aria-controls="favorites" aria-selected="false">Favoris ({{ favorites.length }})</a>
     </li>
     <li class="nav-item" role="presentation">
       <a class="nav-link" id="watchlist-tab" data-bs-toggle="tab" href="#watchlist" role="tab" aria-controls="watchlist" aria-selected="false">Watchlist ({{ watchlist.length }})</a>
-    </li>
-    <li class="nav-item" role="presentation">
-      <a class="nav-link" id="watched-tab" data-bs-toggle="tab" href="#watched" role="tab" aria-controls="watched" aria-selected="false">Films vus ({{ watched.length }})</a>
     </li>
   </ul>
 
@@ -176,7 +177,92 @@
     </div>
 </div>
 
+<div class="modal fade" id="changeNicknameModal" tabindex="-1" aria-labelledby="changeNicknameModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header text-dark">
+        <h5 class="modal-title" id="changeNicknameModalLabel">Mise à jour du profil</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-dark">
+        <div class="mb-3">
+          <label for="nicknameInput" class="form-label">Nouveau pseudo</label>
+        <input type="text" class="form-control" id="nicknameInput" [(ngModel)]="newNickname" (keydown.enter)="onSaveNewNickname()">
+          <div *ngIf="errorMessage" class="text-danger mt-2">{{ errorMessage }}</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="onSaveNewNickname()">Sauvegarder</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="selectAvatarModal" tabindex="-1" aria-labelledby="selectAvatarModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header text-dark">
+          <h5 class="modal-title" id="selectAvatarModalLabel">Choisissez un avatar</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-dark">
+            <div class="avatar-container">
+                  <div *ngFor="let avatar of avatars" (click)="selectAvatar(avatar)" class="avatar-option">
+                      <img [src]="avatar" alt="Avatar" class="rounded-circle" style="width: 100px; height: 100px;">
+                  </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Sauvegarder</button>
+          </div>
+      </div>
+  </div>
+</div>
 
 
+</div>
 
+<div class="modal fade" id="followersModal" tabindex="-1" aria-labelledby="followersModal" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header text-dark">
+        <h5 class="modal-title" id="followersModal">Abonnés</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-dark">
+          <div class="avatar-container">
+                <div *ngFor="let follower of followersList" class="avatar-option">
+                  <img [src]="follower.follower_avatar_url" class="rounded-circle" style="width: 100px; height: 100px;">
+                  {{ follower.follower_nickname }}
+
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="modal fade" id="followingsModal" tabindex="-1" aria-labelledby="followingsModal" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header text-dark">
+        <h5 class="modal-title" id="followingsModal">Abonnements</h5>
+        </div>
+        <div class="modal-body text-dark">
+          <div class="avatar-container">
+                <div *ngFor="let following of followingsList" class="avatar-option">
+                  <img [src]="following.following_avatar_url" class="rounded-circle" style="width: 100px; height: 100px;">
+                  {{ following.following_nickname }}
+
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+</div>
 </div>

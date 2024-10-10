@@ -1,5 +1,5 @@
 <div class="container text-white my-5">
-    <div class="row justify-content-between">
+    <div class="row justify-content-start">
         <div class="text-center mb-5 pb-5" id="aucinema">
           <h1 class="display-4 font-weight-bold">Liste de nos membres</h1>
           <p class="lead text-secondary">
@@ -17,15 +17,15 @@
                         <hr class="text-white">
                         <div class="row justify-content-center">
                             <div class="col-auto text-center">
-                              <p class="text-danger small">
-                                <i class="fa-solid fa-heart" data-bs-toggle="tooltip" title="Nombre de favoris"></i> 
-                                <span class="fw-bold"> {{ member.favorites_count  }}</span>
-                              </p>
-                            </div>
-                            <div class="col-auto text-center">
                               <p class="text-info small">
                                 <i class="fa-solid fa-film" data-bs-toggle="tooltip" title="Films regardés"></i> 
                                 <span class="fw-bold"> {{ member.watched_count  }}</span>
+                              </p>
+                            </div>
+                            <div class="col-auto text-center">
+                              <p class="text-danger small">
+                                <i class="fa-solid fa-heart" data-bs-toggle="tooltip" title="Nombre de favoris"></i> 
+                                <span class="fw-bold"> {{ member.favorites_count  }}</span>
                               </p>
                             </div>
                             <div class="col-auto text-center">
