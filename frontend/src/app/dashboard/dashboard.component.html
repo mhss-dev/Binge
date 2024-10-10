@@ -30,7 +30,7 @@
     
         <div class="d-flex justify-content-center align-items-center gap-3">
             <button class="btn btn-outline-light" data-bs-target="#changeNicknameModal" data-bs-toggle="modal" *ngIf="nickname === currentNickname">
-                <i class="fa-solid fa-pen"></i> Mettre à jour votre pseudo
+                <i class="fa-solid fa-pen"></i> Mettre à jour votre de pseudo
             </button>
     
             <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#selectAvatarModal" *ngIf="nickname === currentNickname">
@@ -55,33 +55,32 @@
     </li>
   </ul>
 
-  <div class="tab-pane fade show active" id="watched" role="tabpanel" aria-labelledby="watched-tab">
-    <div class="movie-list">
-      <div *ngFor="let movie of paginatedWatched()" class="movie-card">
-        <a [routerLink]="['/film', movie.id]" class="d-block">
-          <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
-        </a>
-      </div>
-      <div *ngIf="watched.length === 0" class="text-center mt-3">
-        <p>Vous avez vu aucun film ? Impossible. Ajoutez des films <a href="https://binge-mhss.netlify.app/films">ici</a>.</p>
-      </div>
-    </div>
-    <nav *ngIf="watched.length > moviesPerPage" aria-label="Watched pagination">
-      <ul class="pagination justify-content-center">
-        <li class="page-item" [class.disabled]="currentWatchedPage === 1">
-          <a class="page-link" (click)="previousWatchedPage()">Précédent</a>
-        </li>
-        <li class="page-item" [class.active]="currentWatchedPage === pageNumber" *ngFor="let pageNumber of totalWatchedPages">
-          <a class="page-link" (click)="goToWatchedPage(pageNumber)">{{ pageNumber }}</a>
-        </li>
-        <li class="page-item" [class.disabled]="currentWatchedPage === totalWatchedPages.length">
-          <a class="page-link" (click)="nextWatchedPage()">Suivant</a>
-        </li>
-      </ul>
-    </nav>
-  </div>
-
   <div class="tab-content mt-3">
+    <div class="tab-pane fade show active" id="watched" role="tabpanel" aria-labelledby="watched-tab">
+      <div class="movie-list">
+        <div *ngFor="let movie of paginatedWatched()" class="movie-card">
+          <a [routerLink]="['/film', movie.id]" class="d-block">
+            <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
+          </a>
+        </div>
+        <div *ngIf="watched.length === 0" class="text-center mt-3">
+          <p>Vous avez vu aucun film ? Impossible. Ajoutez des films <a href="https://binge-mhss.netlify.app/films">ici</a>.</p>
+        </div>
+      </div>
+      <nav *ngIf="watched.length > moviesPerPage" aria-label="Watched pagination">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" [class.disabled]="currentWatchedPage === 1">
+            <a class="page-link" (click)="previousWatchedPage()">Précédent</a>
+          </li>
+          <li class="page-item" [class.active]="currentWatchedPage === pageNumber" *ngFor="let pageNumber of totalWatchedPages">
+            <a class="page-link" (click)="goToWatchedPage(pageNumber)">{{ pageNumber }}</a>
+          </li>
+          <li class="page-item" [class.disabled]="currentWatchedPage === totalWatchedPages.length">
+            <a class="page-link" (click)="nextWatchedPage()">Suivant</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
     <div class="tab-pane fade" id="favorites" role="tabpanel" aria-labelledby="favorites-tab">
       <div class="movie-list">
         <div *ngFor="let movie of paginatedFavorites()" class="movie-card">
@@ -254,7 +253,7 @@
         </div>
         <div class="modal-body text-dark">
           <div class="avatar-container">
-                <div *ngFor="let following of followingsList" class="avatar-option">
+                <div *ngFor="let following of followingsList" class="avatar-option" style="width: 100px; height: 100px;">
                   <img [src]="following.following_avatar_url" class="rounded-circle" style="width: 100px; height: 100px;">
                   {{ following.following_nickname }}
 
