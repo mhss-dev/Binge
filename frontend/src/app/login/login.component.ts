@@ -25,25 +25,30 @@ export class LoginComponent {
     this.authService.login(this.username, this.password).subscribe({
       next: (response) => {
 
+
+        const nickname = response.body.nickname;
+      
         if (response.status === 200) {
           this.loginMessage = 'Connexion réussie, redirection vers votre profil.';
           this.alertType = 'alert-success';
-          this.router.navigate(['/profil'])
+          this.router.navigate(['/profil', nickname]);
         } else if (response.status === 201) {
           this.loginMessage = 'Vous êtes déjà connecté, redirection en cours.';
           this.alertType = 'alert-warning';
-          setTimeout(() => this.router.navigate(['/profil']), 2000);
+          this.router.navigate(['/profil', nickname]);
         } else {
           this.loginMessage = 'Une erreur est survenue, veuillez réessayer.';
           this.alertType = 'alert-danger';
         }
-      },
-      error: (err) => {
+      },      
+      error: () => {
         this.loginMessage = 'Les identifiants ne sont pas valides, veuillez tenter à nouveau.';
         this.alertType = 'alert-danger';
       }
     });
   }
+  
+  
   
   
 }

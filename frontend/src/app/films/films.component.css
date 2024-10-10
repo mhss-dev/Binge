@@ -1,12 +1,6 @@
 h1 {
   padding-top: 10rem;
-}
-
-.card-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: space-between;
+  font-size: 2rem;
 }
 
 .card {
@@ -19,8 +13,17 @@ h1 {
 
 .card img {
   width: 100%;
-  height: 100%;
+  height: auto;
   object-fit: cover;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.custom-background {
+  background-color: rgba(0, 0, 0, 0.75);
+  padding: 0px;
 }
 
 .card:hover {
@@ -86,41 +89,41 @@ h1 {
   cursor: pointer;
   font-size: 24px;
 }
+
 .custom-width {
-  width: 150px;
-  padding: 10px 10px; 
+  width: 160px;
+  padding: 10px;
 }
 
 .back-to-top:hover {
   background-color: rgb(102, 100, 100);
 }
 
-
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-
-
 @media (max-width: 768px) {
-  .search-input {
-    padding: 10px 10px 10px 40px;
-  }
-
   .search-container {
     width: 100%;
   }
 
-  .form-control {
-    width: 100%;
+  i {
+    font-size: px;
+  }
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .custom-width {
+    width: 136px !important;
+    margin-bottom: 1px;
+  }
+
+  .custom-background, i {
+    padding: 1px !important;
+  }
+
+  .back-to-top {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
   }
 }
 
@@ -129,4 +132,3 @@ h1 {
     max-width: 300px;
   }
 }
-

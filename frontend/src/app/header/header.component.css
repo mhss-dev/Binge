@@ -41,18 +41,12 @@ header p {
 }
 
 
-.arrow-container {
-  display: flex;
-  justify-content: center;
-  animation: fadeInUp 1s ease-out;
-  margin-top: 3rem !important;
-}
-
 .arrow-container i {
   animation: fadeInUp 1s ease-out;
   font-size: 3rem; 
   color: #fff;     
   animation: blink 2s infinite;
+  margin-top: 3rem !important;
 }
 
 @keyframes blink {
@@ -107,9 +101,10 @@ header p {
   header {
     height: 80vh;
   }
-
+  
   header h1 {
     font-size: 2.5rem;
+    margin-top: 3rem !important;
   }
 
   header p {
@@ -117,9 +112,13 @@ header p {
   }
 
   .movie-name {
-    font-size: 1rem;
+    font-size: 1rem !important;
   }
-
+  .arrow-container i {
+    font-size: 1.8rem; 
+    color: #fff;     
+    margin-top: 1.5rem !important;
+  }
  
   .blink {
     font-size: 2.5rem;

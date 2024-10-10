@@ -49,6 +49,13 @@ unfollowUser(nickname: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/unfollow/${nickname}`, { headers: this.getAuthHeaders() });
 }
 
+updateAvatar(avatarUrl: string): Observable<any> {
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+  return this.http.patch<any>(`${this.apiUrl}/profil/avatar`, { avatarUrl }, { headers });
+}
+
 
   
 }

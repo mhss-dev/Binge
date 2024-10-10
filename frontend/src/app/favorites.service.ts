@@ -42,12 +42,11 @@ export class FavoritesService {
   
     if (nickname) {
         url += `/${nickname}`;
-        console.log('Fetching from URL:', url);
     }
   
     return this.http.get<any[]>(url, { headers: this.getAuthHeaders() }).pipe(
         catchError(error => {
-            console.error('Error during favorites retrieval:', error);
+            console.error('Favoris erreur :', error);
             return throwError(error);
         })
     );

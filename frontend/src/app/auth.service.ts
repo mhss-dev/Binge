@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 
 @Injectable({
@@ -15,8 +15,6 @@ export class AuthService {
 
   constructor(private http: HttpClient) {
     this.checkLoginStatus();
-
-    
   }
 
   checkLoginStatus(): void {
@@ -26,10 +24,10 @@ export class AuthService {
     });
   }
 
-  login(username: string, password: string): Observable<any> {
+  login(username: string, password: string, nickname?: string): Observable<any> {
     return this.http.post<{ token: string }>(
       `${this.apiUrl}/auth/login`,
-      { username, password },
+      { username, password, nickname },
       { observe: 'response', withCredentials: true }
     ).pipe(
       tap(response => {
@@ -41,7 +39,7 @@ export class AuthService {
           localStorage.setItem('token', token);
           this.setLoggedIn(true);
         } else {
-          console.warn('Aucun token sur ce login');
+          console.warn('Erreur aucun token');
         }
       }),
       catchError(error => {
@@ -49,7 +47,7 @@ export class AuthService {
         this.setLoggedIn(false);
   
         
-        console.error('Connexion échouée:', error);
+        console.error('Connexion echouée :', error);
   
         return throwError(() => new Error('Connexion échouée'));
       })
@@ -86,37 +84,29 @@ export class AuthService {
     }
   
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  
     const url = nickname ? `${this.apiUrl}/auth/profil/${nickname}` : `${this.apiUrl}/auth/profil`;
   
-    return this.http.get<any>(url, { headers }).pipe(
-      catchError((error) => {
-        return throwError(() => error);
-      })
-    );
-  }  
+    return this.http.get<any>(url, { headers });
+  }
   
   
-
   changeNickname(newNickname: string): Observable<any> {
     const token = localStorage.getItem('token');
     
-  
-    return this.http.put<any>(`${this.apiUrl}/auth/profil/update`, 
-      { newNickname }, 
-      { 
-        headers: new HttpHeaders({
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }),
-        withCredentials: true
-      }
-    ).pipe(
-      tap(
-        response => console.log('Réponse:', response),
-        error => console.error('Erreur:', error)
-      )
+    const headers = new HttpHeaders({
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+    });
+
+    return this.http.patch<any>(
+        `${this.apiUrl}/auth/profil/update`, 
+        { newNickname }, // This is the body of the request
+        { headers } // Headers set separately
     );
-  }
+}
+
+
    
 
   register(username: string, password: string, nickname: string): Observable<any> {

@@ -79,20 +79,18 @@ export class ActorComponent {
 
   @HostListener('window:scroll', ['$event'])
   onScroll(event: Event): void {
-    
-    if (this.isLoading || !this.hasMore || !this.actor || !this.actor.id) return;
-  
+    if (this.isLoading || !this.hasMore) return;
+
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
     const windowHeight = window.innerHeight || document.documentElement.clientHeight;
     const bodyHeight = document.documentElement.scrollHeight;
-  
-    
+
     if (scrollTop + windowHeight >= bodyHeight - 100) {
       this.loadFilms(this.currentPage + 1); 
     }
-  
-    
+
     const scrollPercentage = (scrollTop / (bodyHeight - windowHeight)) * 100;
+
     this.isButtonVisible.set(scrollPercentage > 70);
   }
   

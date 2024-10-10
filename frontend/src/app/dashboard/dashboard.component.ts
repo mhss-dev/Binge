@@ -23,9 +23,19 @@ export class DashboardComponent {
   nickname: string = '';
   movie: any = null;
   favorites: any[] = [];
+  followersList: any[] = [];
+  followingsList: any[] = [];
+
   watchlist: any[] = [];
   watched: any[] = [];
-  currentUserNickname: string = ''; 
+  profileImage: string | ArrayBuffer | null = null;
+  currentNickname: string = '';
+  currentProfile: any;
+
+  avatars: string[] = this.getAvatars();
+
+
+  selectedAvatar: string | null = null;
 
   moviesPerPage = 60;
   combinedMovies: any=[];
@@ -43,6 +53,7 @@ export class DashboardComponent {
   followersCount: number = 0;
   followingCount: number = 0;
 
+
   constructor(
     private router: Router, 
     private authService: AuthService, 
@@ -57,56 +68,61 @@ export class DashboardComponent {
   ) {}
   
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const routeNickname = params.get('nickname');
-  
-      if (routeNickname) {
-        this.authService.getProfil(routeNickname).pipe(
-          catchError((error) => {
-            console.error('Erreur lors de la récupération du profil:', error);
-            if (error.status === 404) {
-              // Redirect to the not-found page if profile is not found
-              this.router.navigate(['/not-found']);
-            }
-            return of(null); // Return a null observable to keep the subscription chain alive
-          })
-        ).subscribe((response: any) => {
-          if (response) {
-            this.nickname = response.nickname ?? '';
-            this.fetchFollowers(routeNickname);
-            this.fetchFavorites();
-            this.fetchWatched();
-            this.fetchWatchlist();
-            this.fetchFollowings(routeNickname);
-            this.checkFollowingStatus(routeNickname);
-          } else {
-            this.nickname = '';  
-          }
-        });
-      } else {
-        this.authService.getProfil().pipe(
-          catchError((error) => {
-            console.error('Erreur lors de la récupération du profil:', error);
-            if (error.status === 404) {
-              this.router.navigate([`/profil`]);
-            }
-            return of(null);
-          })
-        ).subscribe((response: any) => {
-          if (response) {
-            this.nickname = response.nickname ?? '';
-            this.fetchFollowers(this.nickname);
-            this.fetchFollowings(this.nickname);
-            this.checkFollowingStatus(this.nickname);
-            this.fetchFavorites();
-            this.fetchWatched();
-            this.fetchWatchlist();
-          } else {
-            this.nickname = ''; 
-          }
-        });
+    
+   this.loadProfile();
+}
+
+  loadProfile() : void {
+
+    this.authService.getProfil().pipe(
+      catchError((error) => {
+          console.error('Erreur lors de la récupération du profil de l\'utilisateur connecté:', error);
+          return of(null);
+      })
+  ).subscribe((response: any) => {
+      if (response) {
+          this.currentNickname = response.nickname;
       }
-    });
+      
+      this.route.paramMap.subscribe(params => {
+          const routeNickname = params.get('nickname');
+
+          if (routeNickname) {
+              
+              this.authService.getProfil(routeNickname).pipe(
+                  catchError((error) => {
+                      console.error('Erreur lors de la récupération du profil:', error);
+                      if (error.status === 404) {
+                          this.router.navigate(['/profil', this.currentNickname]);
+                      }
+                      return of(null);
+                  })
+              ).subscribe((profileResponse: any) => {
+                  if (profileResponse) {
+                      this.nickname = profileResponse.nickname; 
+                      this.currentProfile = profileResponse;
+                      
+                      this.fetchFollowers(routeNickname);
+                      this.fetchFavorites();
+                      this.fetchWatched();
+                      this.fetchWatchlist();
+                      this.fetchFollowings(routeNickname);
+                      this.checkFollowingStatus(routeNickname);
+                  } else {
+                      this.nickname = '';  
+                  }
+              });
+          } else {
+              this.nickname = this.currentNickname;
+              this.fetchFollowers(this.nickname);
+              this.fetchFollowings(this.nickname);
+              this.checkFollowingStatus(this.nickname);
+              this.fetchFavorites();
+              this.fetchWatched();
+              this.fetchWatchlist();
+          }
+      });
+  });
   }
 
   checkFollowingStatus(nickname: string): void {
@@ -120,16 +136,20 @@ export class DashboardComponent {
     });
 }
 
-
   
   
 fetchFollowers(nickname: string): void {
   this.memberservice.getFollowers(nickname).subscribe({
       next: (followers: any[]) => {
           this.followersCount = Array.isArray(followers) ? followers.length : 0; 
+          this.followersList = followers;
+          this.cdr.detectChanges();        
+
       },
       error: (err) => {
           console.error('Erreur lors de la récupération des followers :', err);
+          this.followersList = [];
+
           this.followersCount = 0; 
       }
   });
@@ -138,10 +158,14 @@ fetchFollowers(nickname: string): void {
 fetchFollowings(nickname: string): void {
   this.memberservice.getFollowings(nickname).subscribe({
       next: (followings: any[]) => {
+        this.followingsList = followings;
+        this.cdr.detectChanges();        
+
           this.followingCount = Array.isArray(followings) ? followings.length : 0; 
       },
       error: (err) => {
-          console.error('Erreur lors de la récupération des following:', err);
+        console.error('Erreur lors de la récupération des following:', err);
+          this.followingsList = [];
           this.followingCount = 0; 
       }
   });
@@ -176,9 +200,6 @@ toggleFollow(): void {
 }
 
 
-
-
-  
   fetchFavorites(): void {
     const routeNickname = this.route.snapshot.paramMap.get('nickname');
 
@@ -190,7 +211,10 @@ toggleFollow(): void {
         }
 
         favorites.reverse();
+<<<<<<< HEAD
 
+=======
+>>>>>>> ac6692c11f8fc9efa3b2488a282e9e8a5843ba70
     
         const movieIds = favorites.map(fav => fav.movie_id);
         const requests = movieIds.map(id => this.detailsService.getMovieByID(id));
@@ -213,13 +237,44 @@ toggleFollow(): void {
   }
   
 
+  selectAvatar(avatarUrl: string): void {
+    this.selectedAvatar = avatarUrl;
+  }
+  
+  saveAvatar(): void {
+    if (this.selectedAvatar) {
+      this.memberservice.updateAvatar(this.selectedAvatar).subscribe({
+        next: () => {          
+          this.currentProfile.avatar_url = this.selectedAvatar;
+          this.cdr.detectChanges(); 
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+    }
+  }
   
   
+  
+  getAvatars(): string[] {
+    const images: string[] = [];
+    for (let i = 1; i <= 13; i++) {
+        images.push(`assets/images/${i}.png`);
+    }
+    return images;
+}
+
   fetchWatchlist(): void {
     const routeNickname = this.route.snapshot.paramMap.get('nickname');
 
     this.watchlistService.getWatchlist(routeNickname|| undefined).subscribe({
       next: (watchlist: any[]) => {
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> ac6692c11f8fc9efa3b2488a282e9e8a5843ba70
         if (watchlist.length === 0) {
           this.watchlist = [];
           return;
@@ -227,7 +282,10 @@ toggleFollow(): void {
 
         watchlist.reverse();
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> ac6692c11f8fc9efa3b2488a282e9e8a5843ba70
         const movieIds = watchlist.map(item => item.movie_id);
         const requests = movieIds.map(id => this.detailsService.getMovieByID(id));
         
@@ -247,16 +305,24 @@ toggleFollow(): void {
     });
   }
 
-
   fetchWatched(): void {
     const routeNickname = this.route.snapshot.paramMap.get('nickname');
 
     this.watchedService.getWatched(routeNickname|| undefined).subscribe({
       next: (watched: any[]) => {
+<<<<<<< HEAD
         if (watched.length === 0) {
           this.watched = [];
           return;
         }
+=======
+
+        if (watched.length === 0) {
+          this.watchlist = [];
+          return;
+        }
+
+>>>>>>> ac6692c11f8fc9efa3b2488a282e9e8a5843ba70
         watched.reverse();
 
         const movieIds = watched.map(item => item.movie_id);
@@ -280,33 +346,43 @@ toggleFollow(): void {
   }
 
   handleEnter(event: KeyboardEvent): void {
-    this.onSaveNewNickname();
+    if (event.key === 'Enter') {
+      this.onSaveNewNickname();
+    }
   }
 
   onSaveNewNickname(): void {
+    if (!this.newNickname || this.newNickname.length > 20) {
+      this.errorMessage = 'Votre pseudonyme est invalide ou dépasse 20 caractères.';
+      this.cdr.detectChanges();
+      return;
+    }
+  
     this.authService.changeNickname(this.newNickname).subscribe({
       next: (response) => {
-        console.log('Pseudo mis à jour :', response);
-      
+  
+        this.nickname = this.newNickname;
+        this.currentNickname = this.newNickname; 
         this.userService.updateNickname(this.newNickname); 
-      
         this.errorMessage = null;
-        
+  
+        this.router.navigate(['/profil', this.newNickname]);
+
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Erreur de mise à jour du pseudo :', err); 
-        this.errorMessage = 'Votre pseudonyme est invalide ou dépasse 20 caractères.';
-        
-        
+        if (err.status === 409) {
+          this.errorMessage = 'Ce pseudonyme est déjà pris. Veuillez en choisir un autre.';
+        } else {
+          console.error('Erreur de mise à jour du pseudo :', err);
+          this.errorMessage = 'Erreur lors de la mise à jour du pseudonyme. Veuillez réessayer plus tard.';
+        }
         this.cdr.detectChanges();
       }
     });
   }
-
-
-
-
+  
+  
 
 
   @HostListener('window:scroll', ['$event'])

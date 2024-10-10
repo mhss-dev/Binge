@@ -6,15 +6,13 @@
 .nav-tabs .nav-link {
   border-radius: 0;
   font-weight: bold;
-  color: #333;
+  color: white;
   border: none;
-  background-color: #e9ecef;
 }
 
 .nav-tabs .nav-link.active {
-  background-color: #007bff;
-  color: white;
-  border-bottom: 2px solid #007bff;
+  background-color: transparent;
+  border-bottom: solid 3px;
 }
 
 .movie-list {
@@ -27,11 +25,10 @@
 .movie-card {
   display: flex;
   flex-direction: column;
-  width: 150px;
-  border: 1px solid #ddd;
+  flex: 1 1 150px;
+  max-width: 150px;
   border-radius: 8px;
   overflow: hidden;
-  background: #fff;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -68,30 +65,21 @@
   white-space: nowrap;
 }
 
-.btn-danger {
-  background-color: #dc3545;
-  border: none;
-  color: white;
+.btn-outline-light {
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 16px;
-}
-
-.btn-danger:hover {
-  background-color: #c82333;
+  font-size: 15px;
 }
 
 .avatar {
   width: 150px;
   height: 150px;
-  border: 3px solid #fff;
 }
 
 .pagination {
   margin-top: 5rem;
 }
-
 
 @media (max-width: 768px) {
   .dashboard-container {
@@ -105,7 +93,8 @@
   }
 
   .movie-card {
-    width: 120px;
+    flex: 1 1 120px; 
+    max-width: 120px;
   }
 
   .movie-title {
@@ -137,7 +126,8 @@
   }
 
   .movie-card {
-    width: 100px;
+    flex: 1 1 100px;
+    max-width: 100px;
   }
 
   .movie-title {
@@ -157,11 +147,53 @@
   }
 
   .nav-tabs .nav-link {
-    font-size: 12px;
+    font-size: 10px;
   }
 
-  .btn-danger, .btn-primary {
-    font-size: 14px;
-    padding: 8px 15px;
+  .btn-outline-light {
+    font-size: 15px;
   }
 }
+
+.avatar-container {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+
+.avatar-option {
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.avatar-option:hover {
+  transform: scale(1.1);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.avatar-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+}
+
+.avatar-option {
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.avatar-option:hover {
+  transform: scale(1.1);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+

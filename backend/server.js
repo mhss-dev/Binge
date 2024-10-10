@@ -24,8 +24,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const corsOptions = {
-  origin: "http://localhost:4200",
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  origin: ["http://localhost:4200",
+    "capacitor://localhost"
+  ],
+  methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"], 
   credentials: true,
 };
@@ -96,7 +98,7 @@ app.get("/api/upcoming", async (req, res) => {
         params: {
           api_key: TMDB_API_KEY,
           language: "fr-FR",
-          region: "FR",
+          region: "be",
           page: 1,
         },
       }
@@ -117,7 +119,7 @@ app.get('/api/nowplaying', async (req, res) => {
         params: {
           api_key: TMDB_API_KEY,
           language: 'fr-FR',
-          region: 'FR',
+          region: 'BE',
           page: 1,
         },
       }
@@ -351,7 +353,6 @@ app.get('/api/search', async (req, res) => {
     res.status(500).json({ error: 'Erreur lors de la recherche dans l\'API TMDb', details: error.message });
   }
 });
-
 
 app.use('/api/auth', authRoutes);
 app.use('/api/favorites', favoritesRoutes);

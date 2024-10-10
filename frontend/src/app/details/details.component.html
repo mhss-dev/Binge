@@ -6,10 +6,17 @@
     <div class="content container position-relative d-flex flex-column justify-content-end">
     <h1 class="display-3 display-md-2 text-truncate">{{ movie?.title }}</h1>
       <p class="lead">{{ movie?.tagline }}</p>
-      <div class="d-flex flex-wrap align-items-center mt-3">
-        <span class="badge bg-success me-3 fs-6">{{ movie?.vote_average | number: '1.0-0'}}/10</span>
-        <span *ngFor="let genre of movie?.genres" class="badge text-bg-dark me-2 fs-6">{{ genre.name }}</span>
+      <div class="d-flex flex-wrap align-items-center gap-2 mt-3">
+        <span class="badge bg-success fs-6 flex-shrink-0">
+          {{ movie?.vote_average | number: '1.0-0'}}/10
+        </span>
+        <div class="d-flex flex-wrap gap-2">
+          <span *ngFor="let genre of movie?.genres" class="badge text-bg-dark fs-6">
+            {{ genre.name }}
+          </span>
+        </div>
       </div>
+      
 
       <p class="text-secondary mt-4">
         {{ movie?.release_date | date: 'yyyy' }} • {{ formatRuntime(movie?.runtime) }} •
@@ -38,15 +45,15 @@
         <button class="btn me-2 mb-2" [ngClass]="isWatched ? 'btn-outline-light' : 'btn-light'" (click)="toggleWatched()">
           <i class="fa-solid" [ngClass]="isWatched ? 'fa-solid fa-minus' : 'fa-solid fa-plus'"></i> {{ isWatched ? 'Retirer des films vus' : 'Ajouter  aux films vus' }}
         </button>    
+        <button class="btn me-2 mb-2" [ngClass]="isFavorite ? 'btn-outline-light' : 'btn-light'" (click)="toggleFavorite()">
+          <i class="fa-solid" [ngClass]="isFavorite ? 'fa-heart-crack' : 'fa-heart'"></i> {{ isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris' }}
+        </button>    
         <button class="btn me-2 mb-2" [ngClass]="isWatchlist ? 'btn-outline-light' : 'btn-light'"
           (click)="toggleWatchlist()">
           <i class="fa-solid fa-clock me-2"></i>{{ isWatchlist ? 'Retirer de la watchlist' : 'Ajouter à la watchlist'
           }}
         </button>
 
-        <button class="btn me-2 mb-2" [ngClass]="isFavorite ? 'btn-outline-light' : 'btn-light'" (click)="toggleFavorite()">
-          <i class="fa-solid" [ngClass]="isFavorite ? 'fa-heart-crack' : 'fa-heart'"></i> {{ isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris' }}
-        </button>    
         
 <button class="btn me-2 mb-2 btn-outline-light" data-bs-toggle="modal" data-bs-target="#trailerModal">
   <i class="fa-solid fa-play me-2"></i>Voir la bande annonce
