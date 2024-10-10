@@ -6,10 +6,17 @@
     <div class="content container position-relative d-flex flex-column justify-content-end">
     <h1 class="display-3 display-md-2 text-truncate">{{ movie?.title }}</h1>
       <p class="lead">{{ movie?.tagline }}</p>
-      <div class="d-flex flex-wrap align-items-center mt-3">
-        <span class="badge bg-success me-3 fs-6">{{ movie?.vote_average | number: '1.0-0'}}/10</span>
-        <span *ngFor="let genre of movie?.genres" class="badge text-bg-dark me-2 fs-6">{{ genre.name }}</span>
+      <div class="d-flex flex-wrap align-items-center gap-2 mt-3">
+        <span class="badge bg-success fs-6 flex-shrink-0">
+          {{ movie?.vote_average | number: '1.0-0'}}/10
+        </span>
+        <div class="d-flex flex-wrap gap-2">
+          <span *ngFor="let genre of movie?.genres" class="badge text-bg-dark fs-6">
+            {{ genre.name }}
+          </span>
+        </div>
       </div>
+      
 
       <p class="text-secondary mt-4">
         {{ movie?.release_date | date: 'yyyy' }} • {{ formatRuntime(movie?.runtime) }} •
