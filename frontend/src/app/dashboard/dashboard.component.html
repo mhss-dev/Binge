@@ -10,15 +10,6 @@
         }}
       </h1>
       
-<<<<<<< HEAD
-      <div class="row text-center p-0">
-        <div class="d-flex justify-content-center align-items-center gap-3">
-          <p class="small">Abonnés : {{ followersCount }}</p>
-          <p class="small">Abonnements : {{ followingCount }}</p>
-        </div>
-        <hr class="text-white">        
-=======
->>>>>>> ac6692c11f8fc9efa3b2488a282e9e8a5843ba70
 
       <div class="row text-center p-0">
         <div class="d-flex justify-content-center align-items-center">
@@ -232,46 +223,50 @@
 </div>
 
 <div class="modal fade" id="followersModal" tabindex="-1" aria-labelledby="followersModal" aria-hidden="true">
-<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header text-dark">
-        <h5 class="modal-title" id="followersModal">Abonnés</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body text-dark">
+        <h5 class="modal-title" id="followersModal">Abonné{{ followersCount >= 2 ? 's' : '' }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-dark">
+        <div *ngIf="followersList && followersList.length > 0; else noFollowers">
           <div class="avatar-container">
-                <div *ngFor="let follower of followersList" class="avatar-option">
-                  <img [src]="follower.follower_avatar_url" class="rounded-circle" style="width: 100px; height: 100px;">
-                  {{ follower.follower_nickname }}
-
-                </div>
+            <div *ngFor="let follower of followersList" class="avatar-option">
+              <img [src]="follower.follower_avatar_url" class="rounded-circle" style="width: 100px; height: 100px;" />
+              {{ follower.follower_nickname }}
             </div>
+          </div>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
-        </div>
-    </div>
-</div>
-</div>
-
-<div class="modal fade" id="followingsModal" tabindex="-1" aria-labelledby="followingsModal" aria-hidden="true">
-<div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header text-dark">
-        <h5 class="modal-title" id="followingsModal">Abonnements</h5>
-        </div>
-        <div class="modal-body text-dark">
-          <div class="avatar-container">
-                <div *ngFor="let following of followingsList" class="avatar-option" style="width: 100px; height: 100px;">
-                  <img [src]="following.following_avatar_url" class="rounded-circle" style="width: 100px; height: 100px;">
-                  {{ following.following_nickname }}
-
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
+        <ng-template #noFollowers>
+          <p class="text-center">Aucun abonné pour le moment.</p>
+        </ng-template>
       </div>
     </div>
+  </div>
 </div>
+
+
+<div class="modal fade" id="followingsModal" tabindex="-1" aria-labelledby="followingsModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header text-dark">
+        <h5 class="modal-title" id="followingsModal">Abonnement{{ followingCount >= 2 ? 's' : '' }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-dark">
+        <div *ngIf="followingsList && followingsList.length > 0; else noFollowers">
+          <div class="avatar-container">
+            <div *ngFor="let following of followingsList" class="avatar-option">
+              <img [src]="following.following_avatar_url" class="rounded-circle" style="width: 100px; height: 100px;" />
+              {{ following.following_nickname }}
+            </div>
+          </div>
+        </div>
+        <ng-template #noFollowers>
+          <p class="text-center">Aucun abonnement pour le moment.</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
 </div>
