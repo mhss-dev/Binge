@@ -181,21 +181,19 @@ export class FilmsComponent {
 
 
   saveScrollPosition(): void {
-    // Save the current scroll position in sessionStorage
     sessionStorage.setItem('scrollPosition', window.scrollY.toString());
-    console.log('Saved scroll position:', window.scrollY); // Debugging log
+    console.log('Saved scroll position:', window.scrollY);
   }
 
   restoreScrollPosition(): void {
     const scrollPosition = sessionStorage.getItem('scrollPosition');
     if (scrollPosition) {
       window.scrollTo(0, +scrollPosition);
-      console.log('Restored scroll position:', scrollPosition); // Debugging log
+      console.log('Restored scroll position:', scrollPosition);
     }
   }
 
   ngOnDestroy(): void {
-    // Save scroll position when the component is destroyed
     this.saveScrollPosition();
   }
 
