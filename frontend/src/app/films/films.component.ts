@@ -4,7 +4,7 @@ import { DiscoverService } from '../discover.service';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router, RouterLink } from '@angular/router';
 import { FavoritesService } from '../favorites.service';
 import { WatchlistService } from '../watchlist.service';
 import { WatchedService } from '../watched.service';
@@ -53,12 +53,23 @@ export class FilmsComponent {
   ) {}
 
   ngOnInit(): void {
-
     
+    // this.restoreScrollPosition();
+
+        // this.router.events.subscribe((event) => {
+        //   if (event instanceof NavigationStart) {
+        //     this.saveScrollPosition();
+        //   }
+        // });
+        
     this.route.params.subscribe(params => {
+      
       this.movieId = +params['id'];
       this.loadFilms(1); 
-    });
+      
+
+  })
+
 
     
     
@@ -77,6 +88,8 @@ export class FilmsComponent {
     if (this.isLoading || !this.hasMore) return;
     
     this.isLoading = true;
+
+    
     
     this.discoverService.getFilms(page, false, this.sortOption, this.selectedGenre).subscribe({
       next: (data) => {
@@ -145,12 +158,6 @@ export class FilmsComponent {
     });
   }
 
-  restoreScrollPosition(): void {
-    const scrollPosition = sessionStorage.getItem('scrollPosition');
-    if (scrollPosition) {
-      window.scrollTo(0, +scrollPosition);
-    }
-  }
   @HostListener('window:scroll', ['$event'])
   onScroll(event: Event): void {
     if (this.isLoading || !this.hasMore) return;
@@ -171,6 +178,27 @@ export class FilmsComponent {
   scrollToTop(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+
+  saveScrollPosition(): void {
+    // Save the current scroll position in sessionStorage
+    sessionStorage.setItem('scrollPosition', window.scrollY.toString());
+    console.log('Saved scroll position:', window.scrollY); // Debugging log
+  }
+
+  restoreScrollPosition(): void {
+    const scrollPosition = sessionStorage.getItem('scrollPosition');
+    if (scrollPosition) {
+      window.scrollTo(0, +scrollPosition);
+      console.log('Restored scroll position:', scrollPosition); // Debugging log
+    }
+  }
+
+  ngOnDestroy(): void {
+    // Save scroll position when the component is destroyed
+    this.saveScrollPosition();
+  }
+
 
 
   private shuffle(array: any[]): any[] {

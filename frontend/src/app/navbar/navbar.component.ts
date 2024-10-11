@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
 import { Router, RouterLink, RouterOutlet, NavigationEnd } from '@angular/router';
 import { AuthService } from '../auth.service';
 
@@ -14,6 +14,7 @@ export class NavbarComponent {
   isLoggedIn = false;
   nickname: string | null = null;
   isLogoVisible: boolean = true; 
+  isScrolled = false;
 
 
   constructor(private authService: AuthService, private router: Router, private cdr: ChangeDetectorRef) {}
@@ -47,6 +48,11 @@ export class NavbarComponent {
       }
     })
     
+  }
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.isScrolled = window.scrollY > 50;
   }
   
   toggleLogo() {

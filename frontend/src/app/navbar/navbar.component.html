@@ -1,5 +1,5 @@
 <div class="container-fluid p-0">
-  <nav class="navbar navbar-expand-md py-2 navbar-bg">
+  <nav class="navbar navbar-expand-md py-2 navbar-bg" [ngClass]="{ 'navbar-scroll': isScrolled }">
     <div class="container-fluid">
       <a
         href="/"
@@ -9,17 +9,16 @@
       </a>
 
       <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNav"
-      aria-controls="navbarNav"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-      (click)="toggleLogo()"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+        (click)="toggleLogo()">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
       <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
         <ul class="navbar-nav me-auto d-flex justify-content-center flex-grow-1">

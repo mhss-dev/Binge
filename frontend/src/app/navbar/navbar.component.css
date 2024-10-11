@@ -2,6 +2,18 @@
 .navbar-bg {
   width: 100%;
   background-color: #14181d !important;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.navbar-scroll {
+  background-color: rgba(20, 24, 29, 0.95) !important;
+}
+
+.navbar-scroll {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 li {
