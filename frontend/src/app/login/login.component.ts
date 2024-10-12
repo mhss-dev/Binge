@@ -26,9 +26,7 @@ export class LoginComponent {
       next: (response) => {
 
 
-        const nickname = response.body.nickname;
-        console.log(nickname);
-        
+        const nickname = response.body.nickname;        
       
         if (response.status === 200) {
           this.loginMessage = 'Connexion réussie, redirection vers votre profil.';

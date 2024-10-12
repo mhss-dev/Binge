@@ -9,11 +9,13 @@ import { AuthGuard } from './authguard.service';
 import { noAuthGuard } from './no-auth.guard';
 import { ActorComponent } from './actor/actor.component';
 import { MembersComponent } from './members/members.component';
+import { CardsComponent } from './cards/cards.component';
 
 
 export const routes: Routes = [
     { path: 'home', component: HomeComponent },
     { path: 'films', component: FilmsComponent },
+    { path: 'actuellement-cinema', component: CardsComponent },
     { path: 'membres', component: MembersComponent, canActivate:[AuthGuard] },
     { path: 'film/:id', component: DetailsComponent },
     { path: 'acteur/:id', component: ActorComponent },

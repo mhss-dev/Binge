@@ -63,6 +63,7 @@
             <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
           </a>
         </div>
+        
         <div *ngIf="watched.length === 0" class="text-center mt-3">
           <p>Vous avez vu aucun film ? Impossible. Ajoutez des films <a href="https://binge-mhss.netlify.app/films">ici</a>.</p>
         </div>

@@ -18,6 +18,10 @@ h1 {
   height: 100%;
 }
 
+.form-select {
+  width: 8rem !important;
+}
+
 .card-body {
   flex: 1;
   display: flex;
@@ -180,9 +184,11 @@ h1 {
     font-size: 18px;
   }
 
-  .section {
-    margin-top: 1rem;
+  .form-select {
+    width: 7rem !important;
+    font-size: 12px;
   }
+
 }
 
 @media (min-width: 768px) {

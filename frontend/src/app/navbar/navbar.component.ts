@@ -14,7 +14,8 @@ export class NavbarComponent {
   isLoggedIn = false;
   nickname: string | null = null;
   isLogoVisible: boolean = true; 
-  isScrolled = false;
+  isScrolled: boolean = false;
+  isNavbarCollapsed: boolean = true;
 
 
   constructor(private authService: AuthService, private router: Router, private cdr: ChangeDetectorRef) {}
@@ -49,11 +50,17 @@ export class NavbarComponent {
     })
     
   }
+  
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
     this.isScrolled = window.scrollY > 50;
   }
+
+  toggleNavbar(): void {
+    this.isNavbarCollapsed = !this.isNavbarCollapsed;
+  }
+  
   
   toggleLogo() {
     this.isLogoVisible = !this.isLogoVisible;

@@ -65,7 +65,7 @@ export class DetailsComponent {
         this.loadMovieDetails(movieId);
         this.loadSimilarMovies(movieId);
         this.loadWatchProviders(movieId);
-        this.loadTrailers(movieId); 
+        this.loadTrailers(movieId);         
       } else {
         console.error("L'ID du film n'a pas été trouvé?");
       }
@@ -84,6 +84,7 @@ export class DetailsComponent {
     this.detailsService.getMovieByID(id).subscribe({
       next: (data) => {
         this.movie = data;
+        
         this.chunkActors();
         this.checkIfFavorite();
         this.checkIfWatchlist();

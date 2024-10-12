@@ -40,6 +40,7 @@ export class FilmsComponent {
   isButtonVisible = signal(false);
   selectedGenre: string = ''; 
 
+
   
 
   constructor(private discoverService: DiscoverService,
@@ -54,13 +55,6 @@ export class FilmsComponent {
 
   ngOnInit(): void {
     
-    // this.restoreScrollPosition();
-
-        // this.router.events.subscribe((event) => {
-        //   if (event instanceof NavigationStart) {
-        //     this.saveScrollPosition();
-        //   }
-        // });
         
     this.route.params.subscribe(params => {
       
@@ -88,13 +82,13 @@ export class FilmsComponent {
     if (this.isLoading || !this.hasMore) return;
     
     this.isLoading = true;
+
+    
     
     this.discoverService.getFilms(page, false, this.sortOption, this.selectedGenre).subscribe({
       next: (data) => {
         if (data.items && Array.isArray(data.items)) {
-          const newFilms = data.items.filter((film : any) => !this.films.some(existingFilm => existingFilm.id === film.id));
-          this.films = page === 1 ? [...newFilms] : [...this.films, ...newFilms];
-          
+          this.films = page === 1 ? [...data.items] : [...this.films, ...data.items];
           this.totalPages = data.totalPages;
           this.currentPage = page; 
           this.hasMore = this.currentPage < this.totalPages;
@@ -102,12 +96,13 @@ export class FilmsComponent {
           this.checkIfWatched(); 
           this.checkIfWatchlist(); 
           this.cdr.detectChanges();
-          
         } else {
           console.error(data);
         }
         this.cdr.detectChanges();
         this.isLoading = false;
+
+
       },
       error: (err) => {
         console.error(err);
@@ -115,6 +110,7 @@ export class FilmsComponent {
       }
     });
   }
+  
   
 
   
