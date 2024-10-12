@@ -25,8 +25,8 @@ export class MovieService {
     return this.http.get<any>(`${this.apiUrl}/top`);
   }
 
-  getUpcoming(): Observable<any> {    
-    return this.http.get<any>(`${this.apiUrl}/upcoming`);
+  getUpcoming(region: string = 'BE', page: number = 1): Observable<any> {    
+    return this.http.get<any>(`${this.apiUrl}/upcoming`, { params: { region, page } });
   }
 
 }

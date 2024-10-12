@@ -30,8 +30,8 @@ export class CardsComponent implements OnInit {
   hasMore: boolean = true; 
   isButtonVisible = signal(false);
 
-  selectedRegion = 'BE'; // Valeur par défaut
-currentPage = 1; // Valeur de page par défaut
+  selectedRegion = 'BE';
+  currentPage = 1;
 
 
 
@@ -46,7 +46,7 @@ currentPage = 1; // Valeur de page par défaut
   fetchMovieData(): void {
     const nowPlaying$ = this.movieService.getNowPlayingMovies(this.selectedRegion, this.currentPage);
     const trending$ = this.movieService.getTrending();
-    const upcoming$ = this.movieService.getUpcoming();
+    const upcoming$ = this.movieService.getUpcoming(this.selectedRegion, this.currentPage);
     const toprated$ = this.movieService.getTopRated();
 
     forkJoin([nowPlaying$, trending$, upcoming$, toprated$]).subscribe({

@@ -92,14 +92,16 @@ app.get("/api/top", async (req, res) => {
 
 app.get("/api/upcoming", async (req, res) => {
   try {
+    const { region = 'BE', page = 1 } = req.query;
+
     const response = await axios.get(
       "https://api.themoviedb.org/3/movie/upcoming",
       {
         params: {
           api_key: TMDB_API_KEY,
           language: "fr-FR",
-          region: "be",
-          page: 1,
+          region,
+          page,
         },
       }
     );
