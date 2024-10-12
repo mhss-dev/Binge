@@ -22,8 +22,7 @@ h1 {
 }
 
 .custom-background {
-  background-color: rgba(0, 0, 0, 0.75);
-  padding: 0px;
+  padding: 0px !important;
 }
 
 .card:hover {
@@ -34,10 +33,6 @@ h1 {
   margin-right: 20px;
 }
 
-.custom-background {
-  background-color: rgba(0, 0, 0, 0.75);
-  padding: 0px !important;
-}
 
 .search-container {
   position: relative;
@@ -102,23 +97,18 @@ h1 {
 @media (max-width: 768px) {
   .search-container {
     width: 100%;
+    flex: 1;
   }
 
-  i {
-    font-size: px;
-  }
   h1 {
     font-size: 1.5rem;
   }
 
   .custom-width {
-    width: 136px !important;
-    margin-bottom: 1px;
+    width: 100%;
+    max-width: 136px;
   }
-
-  .custom-background, i {
-    padding: 1px !important;
-  }
+  
 
   .back-to-top {
     width: 40px;

@@ -19,7 +19,7 @@ export class DiscoverService {
     let params = new HttpParams()
       .set('page', validPage.toString())
       .set('sort_by', sortOption)
-      .set('include_adult', adult);
+      .set('include_adult', adult ? 'true' : 'false');
     
     if (genreId) {
       params = params.set('genre', genreId);

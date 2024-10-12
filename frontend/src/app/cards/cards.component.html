@@ -16,8 +16,17 @@
   </div>
   
   
+
   <div [ngClass]="{'active': currentTab === 'nowPlaying'}" class="section">
+        <div class="d-flex justify-content-end">
+          <select class="form-select w-0" [(ngModel)]="selectedRegion" (change)="fetchMovieData()">
+            <option value="BE">Belgique</option>
+            <option value="FR">France</option>
+            <option value="US">États-Unis</option>
+          </select>
+        </div>
     <div class="row mt-5">
+      
       <div *ngFor="let movie of movies" class="col-6 col-md-4 col-lg-3 mb-4">
         <div class="card bg-dark text-white border-0 shadow-sm h-100">
           <a [routerLink]="['/film', movie?.id]" class="d-block">
@@ -26,11 +35,15 @@
               class="card-img-top img-fluid rounded"
               alt="{{ movie?.title || 'Inconnu' }}">
           </a>
-
         </div>
       </div>
     </div>
-  </div>
+      </div>
+  
+  
+  
+  
+  
 
   <div [ngClass]="{'active': currentTab === 'trending'}" class="section">
     <div class="row mt-5">

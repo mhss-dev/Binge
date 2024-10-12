@@ -20,12 +20,7 @@ export class MembersService {
   }
   
   getMembers(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}`, { headers: this.getAuthHeaders() }).pipe(
-        catchError(error => {
-            console.error(error);
-            return throwError(error);
-        })
-    );
+    return this.http.get<any[]>(`${this.apiUrl}`, { headers: this.getAuthHeaders() })
   }
 
 getFollowers(nickname: string): Observable<any[]> {

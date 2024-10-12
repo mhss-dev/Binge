@@ -81,6 +81,14 @@
   margin-top: 5rem;
 }
 
+.custom-background {
+  background-color: rgba(0, 0, 0, 0.75);
+  padding: 0px !important;
+}
+
+
+
+
 @media (max-width: 768px) {
   .dashboard-container {
     padding: 30px;

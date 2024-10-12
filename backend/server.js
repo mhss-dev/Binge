@@ -110,8 +110,9 @@ app.get("/api/upcoming", async (req, res) => {
   }
 });
 
-
 app.get('/api/nowplaying', async (req, res) => {
+  const { region = 'BE', page = 1 } = req.query;
+
   try {
     const response = await axios.get(
       'https://api.themoviedb.org/3/movie/now_playing',
@@ -119,8 +120,8 @@ app.get('/api/nowplaying', async (req, res) => {
         params: {
           api_key: TMDB_API_KEY,
           language: 'fr-FR',
-          region: 'BE',
-          page: 1,
+          region,
+          page, 
         },
       }
     );
@@ -130,6 +131,8 @@ app.get('/api/nowplaying', async (req, res) => {
     res.status(500).send('Erreur lors de la récupération des films');
   }
 });
+
+
 
 app.get("/api/logo/:id", async (req, res) => {
   const movieId = req.params.id;
@@ -170,7 +173,7 @@ app.get("/api/films", async (req, res) => {
           language: "fr-FR",
           page: page,
           with_genres: genre,
-          include_adult: false,
+          include_adult: 'false',
           sort_by: sort_by,
           with_people: actorId,
         },

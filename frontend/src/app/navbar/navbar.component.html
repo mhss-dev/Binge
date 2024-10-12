@@ -11,29 +11,24 @@
       <button
         class="navbar-toggler"
         type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-        (click)="toggleLogo()">
+        (click)="toggleNavbar()">
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
-        <ul class="navbar-nav me-auto d-flex justify-content-center flex-grow-1">
+      <div [ngClass]="{'collapse': isNavbarCollapsed, 'collapse.show': !isNavbarCollapsed}" class="collapse navbar-collapse justify-content-center" id="navbarNav">
+        <ul class="navbar-nav d-flex justify-content-center flex-grow-1">
           <li class="nav-item me-3">
-            <a href="/" class="nav-link text-white">
+            <a href="/" class="nav-link text-white" (click)="isNavbarCollapsed = true">
               <i class="fa-solid fa-house"></i> Accueil
             </a>
           </li>
           <li class="nav-item me-3">
-            <a routerLink="/films" class="nav-link text-white">
+            <a routerLink="/films" class="nav-link text-white" (click)="isNavbarCollapsed = true">
               <i class="fa-solid fa-film"></i> Découverte
             </a>
           </li>
           <li class="nav-item me-3">
-            <a routerLink="/membres" class="nav-link text-white">
+            <a routerLink="/membres" class="nav-link text-white" (click)="isNavbarCollapsed = true">
               <i class="fa-solid fa-user-friends"></i> Membres
             </a>
           </li>
@@ -41,19 +36,19 @@
 
         <div class="d-flex">
           <ng-container *ngIf="!isLoggedIn; else loggedInTemplate">
-            <a routerLink="/login" class="btn btn-dark m-2">
+            <a routerLink="/login" class="btn btn-dark m-2" (click)="isNavbarCollapsed = true">
               <i class="fa-solid fa-sign-in-alt"></i>
             </a>
-            <a routerLink="/register" class="btn btn-dark">
+            <a routerLink="/register" class="btn btn-dark" (click)="isNavbarCollapsed = true">
               <i class="fa-solid fa-user-plus"></i>
             </a>
           </ng-container>
 
           <ng-template #loggedInTemplate>
-            <a [routerLink]="['/profil', nickname]" class="btn btn-dark m-2">
+            <a [routerLink]="['/profil', nickname]" class="btn btn-dark m-2" (click)="isNavbarCollapsed = true">
               <i class="fa-solid fa-user"></i>
             </a>
-            <a (click)="logout()" class="btn btn-danger">
+            <a (click)="logout(); isNavbarCollapsed = true" class="btn btn-danger">
               <i class="fa-solid fa-right-from-bracket"></i>
             </a>
           </ng-template>

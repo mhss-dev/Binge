@@ -3,11 +3,12 @@ import { MovieService } from '../movie.service';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Route } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-cards',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './cards.component.html',
   styleUrl: './cards.component.css',
 })
@@ -29,6 +30,10 @@ export class CardsComponent implements OnInit {
   hasMore: boolean = true; 
   isButtonVisible = signal(false);
 
+  selectedRegion = 'BE'; // Valeur par défaut
+currentPage = 1; // Valeur de page par défaut
+
+
 
   constructor(private movieService: MovieService) {}
 
@@ -39,7 +44,7 @@ export class CardsComponent implements OnInit {
   }
 
   fetchMovieData(): void {
-    const nowPlaying$ = this.movieService.getNowPlayingMovies();
+    const nowPlaying$ = this.movieService.getNowPlayingMovies(this.selectedRegion, this.currentPage);
     const trending$ = this.movieService.getTrending();
     const upcoming$ = this.movieService.getUpcoming();
     const toprated$ = this.movieService.getTopRated();
@@ -90,6 +95,9 @@ export class CardsComponent implements OnInit {
   isTabActive(tab: string): boolean {
     return this.currentTab === tab;
   }
+
+  
+
 
   updateTitle() {
     switch (this.currentTab) {
