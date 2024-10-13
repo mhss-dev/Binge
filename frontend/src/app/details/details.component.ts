@@ -24,6 +24,8 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 })
 export class DetailsComponent {
   movie: any = null;
+  collection: any;
+
   error: string | null = null;
   lastSearch: string | null = '';
   isFavorite: boolean = false;
@@ -39,6 +41,8 @@ export class DetailsComponent {
   watchProviders: any | null = null;
   trailerKey: string | null = null;
   trailerUrl: SafeResourceUrl | null = null;
+  movies: any[] = []; // Initialize as an empty array
+
 
   @ViewChild('trailerModal') trailerModal!: ElementRef;
 
@@ -211,6 +215,7 @@ export class DetailsComponent {
   }
 
   chunkedSimilarMovies: any[][] = [];
+  chunkedCollectionsMovies: any[][] = [];
 
   private chunkArray(arr: any[], chunkSize: number): any[][] {
     let result = [];
@@ -219,6 +224,14 @@ export class DetailsComponent {
     }
     return result;
   }
+
+  // Utility method to chunk movies (reuse as needed)
+private chunkMovies(movies: any[]): any[][] {
+  const chunkSize = 6; // Adjust as needed
+  return Array.from({ length: Math.ceil(movies.length / chunkSize) }, (_, i) =>
+    movies.slice(i * chunkSize, i * chunkSize + chunkSize)
+  );
+}
 
   getReal() {
     return (

@@ -22,7 +22,7 @@ h1 {
 }
 
 .custom-background {
-  padding: 0px !important;
+  background-color: #14181d !important;
 }
 
 .card:hover {

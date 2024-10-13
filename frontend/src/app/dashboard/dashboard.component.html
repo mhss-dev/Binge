@@ -59,7 +59,7 @@
     <div class="tab-pane fade show active" id="watched" role="tabpanel" aria-labelledby="watched-tab">
       <div class="movie-list">
         <div *ngFor="let movie of paginatedWatched()" class="movie-card">
-          <a [routerLink]="['/film', movie.id]" class="d-block">
+          <a [routerLink]="['/film', movie.id]" class="d-block" target="_blank">
             <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
           </a>
         </div>
@@ -85,7 +85,7 @@
     <div class="tab-pane fade" id="favorites" role="tabpanel" aria-labelledby="favorites-tab">
       <div class="movie-list">
         <div *ngFor="let movie of paginatedFavorites()" class="movie-card">
-          <a [routerLink]="['/film', movie.id]" class="d-block">
+          <a [routerLink]="['/film', movie.id]" class="d-block" target="_blank">
             <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
           </a>
         </div>
@@ -110,7 +110,7 @@
 
     <div class="tab-pane fade" id="watchlist" role="tabpanel" aria-labelledby="watchlist-tab">
       <div class="movie-list">
-        <div *ngFor="let movie of paginatedWatchlist()" class="movie-card">
+        <div *ngFor="let movie of paginatedWatchlist()" class="movie-card" target="_blank">
           <a [routerLink]="['/film', movie.id]" class="d-block">
             <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
           </a>

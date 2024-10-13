@@ -25,7 +25,7 @@ export class DashboardComponent {
   favorites: any[] = [];
   followersList: any[] = [];
   followingsList: any[] = [];
-    isLoading: boolean = true;
+  isLoading: boolean = true;
 
 
   watchlist: any[] = [];
@@ -39,7 +39,7 @@ export class DashboardComponent {
 
   selectedAvatar: string | null = null;
 
-  moviesPerPage = 100;
+  moviesPerPage = 50;
   combinedMovies: any=[];
   isFollowing: boolean = false;
 

@@ -101,8 +101,8 @@ export class AuthService {
 
     return this.http.patch<any>(
         `${this.apiUrl}/auth/profil/update`, 
-        { newNickname }, // This is the body of the request
-        { headers } // Headers set separately
+        { newNickname },
+        { headers }
     );
 }
 
