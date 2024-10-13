@@ -60,7 +60,6 @@ export class FilmsComponent {
       
       this.movieId = +params['id'];
       this.loadFilms(1); 
-      
 
   })
 
