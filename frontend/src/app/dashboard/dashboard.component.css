@@ -175,9 +175,22 @@
   transition: transform 0.2s;
 }
 
-.avatar-option:hover {
-  transform: scale(1.1);
+.avatar-option {
+  display: inline-block;
+  cursor: pointer;
+  transition: transform 0.2s, border 0.2s;
 }
+
+.avatar-option.selected {
+  transform: scale(1.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.avatar-container {
+  display: flex;
+  gap: 10px;
+}
+
 
 img {
   max-width: 100%;

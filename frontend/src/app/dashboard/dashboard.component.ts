@@ -74,36 +74,40 @@ export class DashboardComponent {
    this.loadProfile();
 }
 
-  loadProfile() : void {
+loadProfile(): void {
+  this.isLoading = true; 
 
-    this.authService.getProfil().pipe(
+  this.authService.getProfil().pipe(
       catchError((error) => {
           console.error('Erreur lors de la récupération du profil de l\'utilisateur connecté:', error);
+          this.isLoading = false; 
           return of(null);
       })
   ).subscribe((response: any) => {
       if (response) {
           this.currentNickname = response.nickname;
       }
-      
+
       this.route.paramMap.subscribe(params => {
           const routeNickname = params.get('nickname');
 
           if (routeNickname) {
-              
               this.authService.getProfil(routeNickname).pipe(
                   catchError((error) => {
                       console.error('Erreur lors de la récupération du profil:', error);
                       if (error.status === 404) {
                           this.router.navigate(['/profil', this.currentNickname]);
                       }
+                      this.isLoading = false; 
                       return of(null);
                   })
               ).subscribe((profileResponse: any) => {
+                  this.isLoading = false; 
+
                   if (profileResponse) {
-                      this.nickname = profileResponse.nickname; 
+                      this.nickname = profileResponse.nickname;
                       this.currentProfile = profileResponse;
-                      
+
                       this.fetchFollowers(routeNickname);
                       this.fetchFavorites();
                       this.fetchWatched();
@@ -111,7 +115,7 @@ export class DashboardComponent {
                       this.fetchFollowings(routeNickname);
                       this.checkFollowingStatus(routeNickname);
                   } else {
-                      this.nickname = '';  
+                      this.nickname = '';
                   }
               });
           } else {
@@ -122,10 +126,12 @@ export class DashboardComponent {
               this.fetchFavorites();
               this.fetchWatched();
               this.fetchWatchlist();
+              this.isLoading = false; 
           }
       });
   });
-  }
+}
+
 
   checkFollowingStatus(nickname: string): void {
     this.memberservice.isFollowing(nickname).subscribe({
@@ -235,8 +241,16 @@ toggleFollow(): void {
   }
   
 
-  selectAvatar(avatarUrl: string): void {
+  selectAvatar(avatarUrl: string, event: MouseEvent): void {
     this.selectedAvatar = avatarUrl;
+
+    const avatarOptions = document.querySelectorAll('.avatar-option');
+    avatarOptions.forEach(option => {
+        option.classList.remove('selected'); 
+    });
+
+    const target = event.currentTarget as HTMLElement;
+    target.classList.add('selected');
   }
   
   saveAvatar(): void {
