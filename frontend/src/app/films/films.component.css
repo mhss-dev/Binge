@@ -33,7 +33,6 @@ h1 {
   margin-right: 20px;
 }
 
-
 .search-container {
   position: relative;
   display: flex;
@@ -108,7 +107,6 @@ h1 {
     width: 100%;
     max-width: 200px;
   }
-  
 
   .back-to-top {
     width: 40px;

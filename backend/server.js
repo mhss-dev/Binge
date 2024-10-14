@@ -54,7 +54,7 @@ const TMDB_API_KEY = process.env.TMDB_API_KEY;
 app.get("/api/trending", async (req, res) => {
   try {
     const response = await axios.get(
-      "https://api.themoviedb.org/3/trending/movie/week",
+      "https://api.themoviedb.org/3/trending/movie/daily",
       {
         params: {
           api_key: TMDB_API_KEY,

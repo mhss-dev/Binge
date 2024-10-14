@@ -89,7 +89,6 @@ export class DetailsComponent {
     this.detailsService.getMovieByID(id).subscribe({
       next: (data) => {
         this.movie = data;
-        
         this.chunkActors();
         this.checkIfFavorite();
         this.checkIfWatchlist();
