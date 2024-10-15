@@ -259,6 +259,7 @@ fetchFavorites(): void {
 
       favorites.reverse();
       
+      
 
       const movieIds = favorites.map(item => item.movie_id);
       const requests = movieIds.map(id => this.detailsService.getMovieByID(id));
