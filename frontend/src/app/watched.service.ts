@@ -19,20 +19,17 @@ export class WatchedService {
   }
   
   
-  addWatched(movieId: number): Observable<any> {
+  addWatched(movieId: number): Observable<any> {  
     return this.http.post<any>(`${this.apiUrl}/${movieId}/add`, {}, { headers: this.getAuthHeaders() }).pipe(
       tap(response => {
-        console.log(response);
+
         if (response.message) {
           console.log(response.message);
         }
-      }),
-      catchError(error => {
-        console.error('Erreur lors de l’ajout du film aux favoris:', error.message);
-        return throwError(() => new Error('Erreur lors de l’ajout du film aux favoris'));
       })
     );
   }
+
   
   removeWatched(movieId: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${movieId}/delete`, { headers: this.getAuthHeaders() }).pipe(
@@ -43,8 +40,8 @@ export class WatchedService {
         }
       }),
       catchError(error => {
-        console.error('Erreur lors de la suppression du film des favoris:', error.message);
-        return throwError(() => new Error('Erreur lors de la suppression du film des favoris'));
+        console.error('Erreur lors de la suppression du film à la watched :', error.message);
+        return throwError(() => new Error('Erreur lors de la suppression du film des à la watched'));
       })
     );
   }

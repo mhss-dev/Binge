@@ -39,7 +39,7 @@ export class DashboardComponent {
 
   selectedAvatar: string | null = null;
 
-  moviesPerPage = 50;
+  moviesPerPage = 100;
   combinedMovies: any=[];
   isFollowing: boolean = false;
 
@@ -207,38 +207,6 @@ toggleFollow(): void {
   }
 }
 
-
-  fetchFavorites(): void {
-    const routeNickname = this.route.snapshot.paramMap.get('nickname');
-
-    this.favoritesService.getFavorites(routeNickname || undefined).subscribe({
-      next: (favorites: any[]) => {
-        if (favorites.length === 0) {
-          this.favorites = [];
-          return;
-        }
-
-        favorites.reverse();
-    
-        const movieIds = favorites.map(fav => fav.movie_id);
-        const requests = movieIds.map(id => this.detailsService.getMovieByID(id));
-    
-        forkJoin(requests).subscribe({
-          next: (movies) => {
-            this.favorites = movies;
-            this.cdr.detectChanges();
-          },
-          error: (err) => {
-            console.error('Fetch favoris :', err);
-          }
-        });
-      },
-      error: (err) => {
-        console.error('Fetch favoris :', err);
-      }
-    });
-    
-  }
   
 
   selectAvatar(avatarUrl: string, event: MouseEvent): void {
@@ -275,6 +243,40 @@ toggleFollow(): void {
         images.push(`assets/images/${i}.png`);
     }
     return images;
+}
+
+fetchFavorites(): void {
+  const routeNickname = this.route.snapshot.paramMap.get('nickname');
+
+  this.favoritesService.getFavorites(routeNickname|| undefined).subscribe({
+    next: (favorites: any[]) => {
+
+
+      if (favorites.length === 0) {
+        this.favorites = [];
+        return;
+      }
+
+      favorites.reverse();
+      
+
+      const movieIds = favorites.map(item => item.movie_id);
+      const requests = movieIds.map(id => this.detailsService.getMovieByID(id));
+      
+      forkJoin(requests).subscribe({
+        next: (movies) => {
+          this.favorites = movies;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Erreur lors de la récupération des détails du film :', err);
+        }
+      });
+    },
+    error: (err) => {
+      console.error('Erreur lors de la récupération des favoris :', err);
+    }
+  });
 }
 
   fetchWatchlist(): void {

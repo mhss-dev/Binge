@@ -175,22 +175,22 @@ export class FilmsComponent {
   }
 
 
-  saveScrollPosition(): void {
-    sessionStorage.setItem('scrollPosition', window.scrollY.toString());
-    console.log('Saved scroll position:', window.scrollY);
-  }
+  // saveScrollPosition(): void {
+  //   sessionStorage.setItem('scrollPosition', window.scrollY.toString());
+  //   console.log('Saved scroll position:', window.scrollY);
+  // }
 
-  restoreScrollPosition(): void {
-    const scrollPosition = sessionStorage.getItem('scrollPosition');
-    if (scrollPosition) {
-      window.scrollTo(0, +scrollPosition);
-      console.log('Restored scroll position:', scrollPosition);
-    }
-  }
+  // restoreScrollPosition(): void {
+  //   const scrollPosition = sessionStorage.getItem('scrollPosition');
+  //   if (scrollPosition) {
+  //     window.scrollTo(0, +scrollPosition);
+  //     console.log('Restored scroll position:', scrollPosition);
+  //   }
+  // }
 
-  ngOnDestroy(): void {
-    this.saveScrollPosition();
-  }
+  // ngOnDestroy(): void {
+  //   this.saveScrollPosition();
+  // }
 
 
 
@@ -419,22 +419,27 @@ checkIfWatched(): void {
 
 addWatched(movieId: number): void {
 
-  const isCurrentlyWatched = this.films.find(movie => movie.id === movieId)?.isWatched; 
-
+  const isCurrentlyWatched = this.films.find(movie => movie.id === movieId)?.isWatched;
+  
   if (isCurrentlyWatched) {
-      return; 
+    return;
   }
 
   this.watched.addWatched(movieId).subscribe({
-      next: () => {
-          const movie = this.films.find(m => m.id === movieId);
-          if (movie) {
-              movie.isWatched = true; 
-          }
-          this.cdr.detectChanges();
-      },
-      error: (err) => {
+    next: () => {
+      const movie = this.films.find(m => m.id === movieId);
+      if (movie) {
+        movie.isWatched = true;
+        this.cdr.detectChanges();
       }
+    },
+    error: (err) => {
+      if (err.status === 400) {
+        console.log(`Erreur: Le film ${movieId} est déjà dans les films vus.`);
+      } else {
+        console.error('Erreur ajout aux films vus ', err);
+      }
+    }
   });
 }
 
