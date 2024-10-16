@@ -167,7 +167,7 @@
             <div class="modal-body text-dark">
               <div class="avatar-container">
                     <div *ngFor="let avatar of avatars" (click)="selectAvatar(avatar, $event)" class="avatar-option">
-                        <img [src]="avatar" alt="Avatar" class="rounded-circle" style="width: 100px; height: 100px;">
+                        <img [src]="avatar" class="rounded-circle">
                     </div>
                 </div>
             </div>
@@ -234,7 +234,7 @@
         <div *ngIf="followersList && followersList.length > 0; else noFollowers">
           <div class="avatar-container">
             <div *ngFor="let follower of followersList" class="avatar-option">
-              <img [src]="follower.follower_avatar_url" class="rounded-circle" style="width: 100px; height: 100px;" />
+              <img [src]="follower.follower_avatar_url" class="rounded-circle" />
               {{ follower.follower_nickname }}
             </div>
           </div>
@@ -259,7 +259,7 @@
         <div *ngIf="followingsList && followingsList.length > 0; else noFollowers">
           <div class="avatar-container">
             <div *ngFor="let following of followingsList" class="avatar-option">
-              <img [src]="following.following_avatar_url" class="rounded-circle" style="width: 100px; height: 100px;" />
+              <img [src]="following.following_avatar_url" class="rounded-circle" />
               {{ following.following_nickname }}
             </div>
           </div>
