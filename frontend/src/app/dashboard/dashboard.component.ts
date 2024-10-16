@@ -39,7 +39,7 @@ export class DashboardComponent {
 
   selectedAvatar: string | null = null;
 
-  moviesPerPage = 100;
+  moviesPerPage = 60;
   combinedMovies: any=[];
   isFollowing: boolean = false;
 
