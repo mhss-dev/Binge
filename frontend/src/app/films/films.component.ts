@@ -430,6 +430,7 @@ addWatched(movieId: number): void {
       const movie = this.films.find(m => m.id === movieId);
       if (movie) {
         movie.isWatched = true;
+        this.removeFromWatchlist(movieId);
         this.cdr.detectChanges();
       }
     },
