@@ -17,17 +17,17 @@
 
       <div [ngClass]="{'collapse': isNavbarCollapsed, 'collapse.show': !isNavbarCollapsed}" class="collapse navbar-collapse justify-content-center" id="navbarNav">
         <ul class="navbar-nav d-flex justify-content-center flex-grow-1">
-          <li class="nav-item me-3">
+          <li class="nav-item">
             <a href="/" class="nav-link text-white" (click)="isNavbarCollapsed = true">
               <i class="fa-solid fa-house"></i> Accueil
             </a>
           </li>
-          <li class="nav-item me-3">
+          <li class="nav-item">
             <a routerLink="/films" class="nav-link text-white" (click)="isNavbarCollapsed = true">
               <i class="fa-solid fa-film"></i> Découverte
             </a>
           </li>
-          <li class="nav-item me-3">
+          <li class="nav-item">
             <a routerLink="/membres" class="nav-link text-white" (click)="isNavbarCollapsed = true">
               <i class="fa-solid fa-user-friends"></i> Membres
             </a>
