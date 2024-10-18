@@ -10,6 +10,7 @@ import { noAuthGuard } from './no-auth.guard';
 import { ActorComponent } from './actor/actor.component';
 import { MembersComponent } from './members/members.component';
 import { CardsComponent } from './cards/cards.component';
+import { SearchComponent } from './search/search.component';
 
 
 export const routes: Routes = [
@@ -22,6 +23,7 @@ export const routes: Routes = [
     { path: 'realisateur/:id', component: ActorComponent },
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
+    { path: 'search', component: SearchComponent },
     { path: 'logout', component: DashboardComponent },
     { path: 'profil/:nickname', component: DashboardComponent, canActivate: [AuthGuard] },  
     { path: '**', redirectTo: 'home', pathMatch: 'full' }

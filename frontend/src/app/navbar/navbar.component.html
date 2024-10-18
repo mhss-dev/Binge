@@ -15,7 +15,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div [ngClass]="{'collapse': isNavbarCollapsed, 'collapse.show': !isNavbarCollapsed}" class="collapse navbar-collapse justify-content-center" id="navbarNav">
+      <div [ngClass]="{'collapse': isNavbarCollapsed, 'collapse.show': !isNavbarCollapsed}" class="collapse navbar-collapse justify-content-between" id="navbarNav">
         <ul class="navbar-nav d-flex justify-content-center flex-grow-1">
           <li class="nav-item">
             <a href="/" class="nav-link text-white" (click)="isNavbarCollapsed = true">
@@ -34,7 +34,7 @@
           </li>
         </ul>
 
-        <div class="d-flex">
+        <div class="d-flex align-items-center">
           <ng-container *ngIf="!isLoggedIn; else loggedInTemplate">
             <a routerLink="/login" class="btn btn-dark m-2" (click)="isNavbarCollapsed = true">
               <i class="fa-solid fa-sign-in-alt"></i>
@@ -43,7 +43,7 @@
               <i class="fa-solid fa-user-plus"></i>
             </a>
           </ng-container>
-
+          
           <ng-template #loggedInTemplate>
             <a [routerLink]="['/profil', nickname]" class="btn btn-dark m-2" (click)="isNavbarCollapsed = true">
               <i class="fa-solid fa-user"></i>
@@ -53,6 +53,19 @@
             </a>
           </ng-template>
         </div>
+        
+        <form class="d-flex shadow-none me-auto" (ngSubmit)="searchFilms()">
+          <div class="search-container">
+            <input 
+              class="form-control search-input" 
+              type="search" 
+              [(ngModel)]="searchQuery" 
+              name="searchQuery" 
+              required
+            >
+          </div>
+        </form>
+
       </div>
     </div>
   </nav>

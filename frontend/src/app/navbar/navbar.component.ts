@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
-import { Router, RouterLink, RouterOutlet, NavigationEnd } from '@angular/router';
+import { Router, RouterLink, RouterOutlet, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../auth.service';
+import { FormsModule, NgModel } from '@angular/forms';
+import { DiscoverService } from 'app/discover.service';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, CommonModule],
+  imports: [RouterOutlet, RouterLink, CommonModule, FormsModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
@@ -16,9 +18,12 @@ export class NavbarComponent {
   isLogoVisible: boolean = true; 
   isScrolled: boolean = false;
   isNavbarCollapsed: boolean = true;
+  isLoading: boolean = false;
+  films: any[] = [];
+  searchQuery: string = ''; 
 
 
-  constructor(private authService: AuthService, private router: Router, private cdr: ChangeDetectorRef) {}
+  constructor(private route: ActivatedRoute, private authService: AuthService, private router: Router, private cdr: ChangeDetectorRef, private discoverService: DiscoverService) {}
 
   ngAfterViewInit() {
     const navbarCollapse = document.getElementById('navbarNav');
@@ -48,9 +53,16 @@ export class NavbarComponent {
         console.error("Erreur lors de la  récupération du status de connexion :", error);
       }
     })
-    
   }
-  
+    
+  searchFilms(): void {
+    if (!this.searchQuery) return;
+
+    // Navigate to the search route with the query parameter
+    this.router.navigate(['/search'], { queryParams: { query: this.searchQuery } });
+  }
+
+
 
   @HostListener('window:scroll', [])
   onWindowScroll() {

@@ -16,7 +16,29 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
 
+.search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #aaa;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.search-input {
+  width: 60%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
 .collapse {
   display: none;
 }
