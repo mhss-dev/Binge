@@ -58,7 +58,6 @@ export class NavbarComponent {
   searchFilms(): void {
     if (!this.searchQuery) return;
 
-    // Navigate to the search route with the query parameter
     this.router.navigate(['/search'], { queryParams: { query: this.searchQuery } });
   }
 
