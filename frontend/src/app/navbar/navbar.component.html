@@ -15,7 +15,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div [ngClass]="{'collapse': isNavbarCollapsed, 'collapse.show': !isNavbarCollapsed}" class="collapse navbar-collapse justify-content-between" id="navbarNav">
+      <div [ngClass]="{'collapse': isNavbarCollapsed, 'collapse.show': !isNavbarCollapsed}" class="collapse navbar-collapse justify-content-center" id="navbarNav">
         <ul class="navbar-nav d-flex justify-content-center flex-grow-1">
           <li class="nav-item">
             <a href="/" class="nav-link text-white" (click)="isNavbarCollapsed = true">
@@ -34,18 +34,24 @@
           </li>
         </ul>
 
-        <div class="d-flex align-items-center">
+        <div class="d-flex">
           <ng-container *ngIf="!isLoggedIn; else loggedInTemplate">
-            <a routerLink="/login" class="btn btn-dark m-2" (click)="isNavbarCollapsed = true">
+            <a class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#searchModal">
+              <i class="fa-solid fa-search"></i>
+            </a>
+            <a routerLink="/login" class="btn btn-dark" (click)="isNavbarCollapsed = true">
               <i class="fa-solid fa-sign-in-alt"></i>
             </a>
             <a routerLink="/register" class="btn btn-dark" (click)="isNavbarCollapsed = true">
               <i class="fa-solid fa-user-plus"></i>
             </a>
           </ng-container>
-          
+
           <ng-template #loggedInTemplate>
-            <a [routerLink]="['/profil', nickname]" class="btn btn-dark m-2" (click)="isNavbarCollapsed = true">
+            <a class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#searchModal">
+              <i class="fa-solid fa-search"></i>
+            </a>
+            <a [routerLink]="['/profil', nickname]" class="btn btn-dark" (click)="isNavbarCollapsed = true">
               <i class="fa-solid fa-user"></i>
             </a>
             <a (click)="logout(); isNavbarCollapsed = true" class="btn btn-danger">
@@ -53,21 +59,26 @@
             </a>
           </ng-template>
         </div>
-        
-        <form class="d-flex shadow-none me-auto" (ngSubmit)="searchFilms()">
-          <div class="search-container">
-            <input 
-              class="form-control search-input" 
-              type="search" 
-              [(ngModel)]="searchQuery" 
-              name="searchQuery" 
-              required
-            >
-          </div>
-        </form>
-
       </div>
     </div>
   </nav>
+
+  <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="searchModalLabel">À la recherche d'un film ?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" [(ngModel)]="searchQuery" placeholder="Insérez le nom du film ici" class="form-control" />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary"  data-bs-dismiss="modal" (click)="searchFilms()">Recherche</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <router-outlet></router-outlet>
 </div>
