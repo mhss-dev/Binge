@@ -308,6 +308,8 @@ addWatchlist(movieId: number): void {
       next: () => {
           const movie = this.films.find(m => m.id === movieId);
           if (movie) {
+            this.removeWatched(movieId);
+
               movie.isWatchlist = true; 
           }
           this.cdr.detectChanges();
