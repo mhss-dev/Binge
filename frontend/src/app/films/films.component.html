@@ -54,7 +54,7 @@
         <div class="position-relative">
           <div class="card bg-dark text-white border-0 shadow-sm h-100">
             
-            <a [routerLink]="['/film', movie?.id]" class="d-block" target="_blank" rel="noopener noreferrer">
+            <a [routerLink]="['/film', movie?.id]" class="d-block">
               <img
               
                 [src]="movie?.poster_path ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path : 'https://via.placeholder.com/500x750?text=Aucun+poster+disponible'"
@@ -80,6 +80,6 @@
       </div>
     </div>
   
-    <button *ngIf="isButtonVisible()" class="btn btn-dark back-to-top shadow" (click)="scrollToTop()">↑</button>
+    <button *ngIf="isButtonVisible()" class="btn btn-dark back-to-top shadow" (click)="scrollToTop()"><i class="fas fa-arrow-up"></i></button>
   </div>
   </div>

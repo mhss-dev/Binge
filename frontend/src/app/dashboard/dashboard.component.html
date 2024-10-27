@@ -67,19 +67,6 @@
           <p>Vous n'avez pas encore ajouter des films. Commencez à explorer et ajoutez des films <a href="https://binge-mhss.netlify.app/films">ici</a>.</p>        
         </div>
       </div>
-      <nav *ngIf="watched.length > moviesPerPage" aria-label="Watched pagination">
-        <ul class="pagination justify-content-center">
-          <li class="page-item" [class.disabled]="currentWatchedPage === 1">
-            <a class="page-link" (click)="previousWatchedPage()">Précédent</a>
-          </li>
-          <li class="page-item" [class.active]="currentWatchedPage === pageNumber" *ngFor="let pageNumber of totalWatchedPages">
-            <a class="page-link" (click)="goToWatchedPage(pageNumber)">{{ pageNumber }}</a>
-          </li>
-          <li class="page-item" [class.disabled]="currentWatchedPage === totalWatchedPages.length">
-            <a class="page-link" (click)="nextWatchedPage()">Suivant</a>
-          </li>
-        </ul>
-      </nav>
     </div>
     <div class="tab-pane fade" id="favorites" role="tabpanel" aria-labelledby="favorites-tab">
       <div class="movie-list">
@@ -92,19 +79,6 @@
           <p>Aucun favori enregistré pour l'instant. Découvrez des films et ajoutez vos coups de cœur <a href="https://binge-mhss.netlify.app/films">ici</a>.</p>
         </div>
       </div>
-      <nav *ngIf="favorites.length > moviesPerPage" aria-label="Favorites pagination">
-        <ul class="pagination justify-content-center">
-          <li class="page-item" [class.disabled]="currentFavoritesPage === 1">
-            <a class="page-link" (click)="previousFavoritesPage()">Précédent</a>
-          </li>
-          <li class="page-item" [class.active]="currentFavoritesPage === pageNumber" *ngFor="let pageNumber of totalFavoritesPages">
-            <a class="page-link" (click)="goToFavoritesPage(pageNumber)">{{ pageNumber }}</a>
-          </li>
-          <li class="page-item" [class.disabled]="currentFavoritesPage === totalFavoritesPages.length">
-            <a class="page-link" (click)="nextFavoritesPage()">Suivant</a>
-          </li>
-        </ul>
-      </nav>
     </div>
 
     <div class="tab-pane fade" id="watchlist" role="tabpanel" aria-labelledby="watchlist-tab">
@@ -118,19 +92,6 @@
           <p>Votre liste de films à regarder est vide. Trouvez de nouveaux films à ajouter <a href="https://binge-mhss.netlify.app/films">ici</a>.
           </p>
       </div>
-      <nav *ngIf="watchlist.length > moviesPerPage" aria-label="Watchlist pagination">
-        <ul class="pagination justify-content-center">
-          <li class="page-item" [class.disabled]="currentWatchlistPage === 1">
-            <a class="page-link" (click)="previousWatchlistPage()">Précédent</a>
-          </li>
-          <li class="page-item" [class.active]="currentWatchlistPage === pageNumber" *ngFor="let pageNumber of totalWatchlistPages">
-            <a class="page-link" (click)="goToWatchlistPage(pageNumber)">{{ pageNumber }}</a>
-          </li>
-          <li class="page-item" [class.disabled]="currentWatchlistPage === totalWatchlistPages.length">
-            <a class="page-link" (click)="nextWatchlistPage()">Suivant</a>
-          </li>
-        </ul>
-      </nav>
     </div>
 
   </div>
@@ -150,7 +111,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="onSaveNewNickname()">Sauvegarder</button>
+          <button type="button" class="btn btn-primary w-100" data-bs-dismiss="modal" (click)="onSaveNewNickname()">Sauvegarder</button>
         </div>
       </div>
     </div>
@@ -171,7 +132,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="saveAvatar()">Sauvegarder</button>
+                <button type="button" class="btn btn-primary w-100" data-bs-dismiss="modal" (click)="saveAvatar()">Sauvegarder</button>
             </div>
         </div>
     </div>
@@ -192,7 +153,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="onSaveNewNickname()">Sauvegarder</button>
+        <button type="button" class="btn btn-primary w-100" data-bs-dismiss="modal" (click)="onSaveNewNickname()">Sauvegarder</button>
       </div>
     </div>
   </div>
@@ -213,7 +174,7 @@
               </div>
           </div>
           <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Sauvegarder</button>
+              <button type="button" class="btn btn-primary w-100" data-bs-dismiss="modal">Sauvegarder</button>
           </div>
       </div>
   </div>
@@ -270,3 +231,5 @@
     </div>
   </div>
 </div>
+<button *ngIf="isButtonVisible()" class="btn btn-dark back-to-top shadow" (click)="scrollToTop()"><i class="fas fa-arrow-up"></i></button>
+

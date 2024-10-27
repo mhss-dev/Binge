@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit, signal } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FavoritesService } from '../favorites.service';
@@ -33,13 +33,15 @@ export class DashboardComponent {
   profileImage: string | ArrayBuffer | null = null;
   currentNickname: string = '';
   currentProfile: any;
+  isButtonVisible = signal(false);
+
 
   avatars: string[] = this.getAvatars();
 
 
   selectedAvatar: string | null = null;
 
-  moviesPerPage = 60;
+  moviesPerPage = 300;
   combinedMovies: any=[];
   isFollowing: boolean = false;
 
@@ -387,20 +389,20 @@ fetchFavorites(): void {
 
 
   @HostListener('window:scroll', ['$event'])
-  onScroll(event: any): void {
-    const button = document.getElementById('back-to-top');
-    if (button) {
-      if (window.scrollY > 300) {
-        button.classList.add('show');
-      } else {
-        button.classList.remove('show');
-      }
-    }
-  }
+  onScroll(event: Event): void {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+    const bodyHeight = document.documentElement.scrollHeight;
 
+    const scrollPercentage = (scrollTop / (bodyHeight - windowHeight)) * 100;
+
+    this.isButtonVisible.set(scrollPercentage > 10);
+  }
+  
   scrollToTop(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
 onLogout(): void {
   this.authService.logout().subscribe({
     next: () => {
@@ -426,17 +428,6 @@ getTotalPages(arrayLength: number): number[] {
     .map((_, i) => i + 1);
 }
 
-get totalFavoritesPages(): number[] {
-  return this.getTotalPages(this.favorites.length);
-}
-
-get totalWatchlistPages(): number[] {
-  return this.getTotalPages(this.watchlist.length);
-}
-
-get totalWatchedPages(): number[] {
-  return this.getTotalPages(this.watched.length);
-}
 
 paginatedFavorites() {
   const startIndex = (this.currentFavoritesPage - 1) * this.moviesPerPage;
@@ -453,51 +444,4 @@ paginatedWatched() {
   return this.watched.slice(startIndex, startIndex + this.moviesPerPage);
 }
 
-previousFavoritesPage() {
-  if (this.currentFavoritesPage > 1) {
-    this.currentFavoritesPage--;
-  }
-}
-
-nextFavoritesPage() {
-  if (this.currentFavoritesPage < this.totalFavoritesPages.length) {
-    this.currentFavoritesPage++;
-  }
-}
-
-goToFavoritesPage(pageNumber: number) {
-  this.currentFavoritesPage = pageNumber;
-}
-
-previousWatchlistPage() {
-  if (this.currentWatchlistPage > 1) {
-    this.currentWatchlistPage--;
-  }
-}
-
-nextWatchlistPage() {
-  if (this.currentWatchlistPage < this.totalWatchlistPages.length) {
-    this.currentWatchlistPage++;
-  }
-}
-
-goToWatchlistPage(pageNumber: number) {
-  this.currentWatchlistPage = pageNumber;
-}
-
-previousWatchedPage() {
-  if (this.currentWatchedPage > 1) {
-    this.currentWatchedPage--;
-  }
-}
-
-nextWatchedPage() {
-  if (this.currentWatchedPage < this.totalWatchedPages.length) {
-    this.currentWatchedPage++;
-  }
-}
-
-goToWatchedPage(pageNumber: number) {
-  this.currentWatchedPage = pageNumber;
-}
 }

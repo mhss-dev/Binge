@@ -1,3 +1,4 @@
+
 .navbar-bg {
   width: 100%;
   background-color: #14181d !important;
@@ -5,16 +6,39 @@
   top: 0;
   z-index: 1000;
   transition: background-color 0.3s ease-in-out;
-  backdrop-filter: blur(10px);
 }
 
 .navbar-scroll {
   background-color: rgba(20, 24, 29, 0.95) !important;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(3px);
 }
 
+.navbar-scroll {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #aaa;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.search-input {
+  width: 60%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
 .collapse {
   display: none;
 }
@@ -84,7 +108,7 @@ li:hover {
 
 
 .navbar .btn {
-  margin: 0.3rem;
+  margin: 0.2rem;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 

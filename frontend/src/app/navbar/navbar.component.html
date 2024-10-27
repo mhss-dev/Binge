@@ -64,21 +64,22 @@
   </nav>
 
   <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="searchModalLabel">À la recherche d'un film ?</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
-          <input type="text" [(ngModel)]="searchQuery" placeholder="Insérez le nom du film ici" class="form-control" />
+        <div class="modal-body p-3">
+          <input type="text" [(ngModel)]="searchQuery" placeholder="Insérez le nom du film ici" class="form-control w-100" />
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary"  data-bs-dismiss="modal" (click)="searchFilms()">Recherche</button>
+        <div class="modal-footer p-3">
+          <button type="button" class="btn btn-primary w-100" data-bs-dismiss="modal" (click)="searchFilms()">Recherche</button>
         </div>
       </div>
     </div>
   </div>
+  
 
   <router-outlet></router-outlet>
 </div>
