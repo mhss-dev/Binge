@@ -67,11 +67,12 @@ h1 {
   box-shadow: none;
 }
 
+
 .back-to-top {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: #505050;
+  background-color: rgba(255, 255, 255, 0.2);
   color: white;
   border: none;
   border-radius: 50%;
@@ -82,16 +83,20 @@ h1 {
   justify-content: center;
   cursor: pointer;
   font-size: 19px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  transition: background-color 0.3s, box-shadow 0.3s;
 }
 
+.back-to-top:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
 .custom-width {
   width: 160px;
   padding: 10px;
 }
 
-.back-to-top:hover {
-  background-color: rgb(102, 100, 100);
-}
 
 @media (max-width: 768px) {
   .search-container {

@@ -51,13 +51,4 @@ export class FavoritesService {
         })
     );
   }
-  
-
-
-
-  
-  
-  
-  
-
 }

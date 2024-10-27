@@ -51,6 +51,13 @@ updateAvatar(avatarUrl: string): Observable<any> {
   return this.http.patch<any>(`${this.apiUrl}/profil/avatar`, { avatarUrl }, { headers });
 }
 
+getProfileData(nickname?: string): Observable<any> {
+  const url = nickname 
+    ? `${this.apiUrl}/profile-data/${nickname}` 
+    : `${this.apiUrl}/profile-data`;
+  
+  return this.http.get<any>(url);
+}
 
   
 }

@@ -77,60 +77,54 @@ export class DashboardComponent {
 }
 
 loadProfile(): void {
-  this.isLoading = true; 
+  this.isLoading = true;
 
   this.authService.getProfil().pipe(
-      catchError((error) => {
-          console.error('Erreur lors de la récupération du profil de l\'utilisateur connecté:', error);
-          this.isLoading = false; 
-          return of(null);
-      })
+    catchError((error) => {
+      console.error('Erreur lors de la récupération du profil de l\'utilisateur connecté:', error);
+      this.isLoading = false;
+      return of(null);
+    })
   ).subscribe((response: any) => {
-      if (response) {
-          this.currentNickname = response.nickname;
-      }
+    if (response) {
+      this.currentNickname = response.nickname;
+    }
 
-      this.route.paramMap.subscribe(params => {
-          const routeNickname = params.get('nickname');
+    this.route.paramMap.subscribe(params => {
+      const routeNickname = params.get('nickname');
 
-          if (routeNickname) {
-              this.authService.getProfil(routeNickname).pipe(
-                  catchError((error) => {
-                      console.error('Erreur lors de la récupération du profil:', error);
-                      if (error.status === 404) {
-                          this.router.navigate(['/profil', this.currentNickname]);
-                      }
-                      this.isLoading = false; 
-                      return of(null);
-                  })
-              ).subscribe((profileResponse: any) => {
-                  this.isLoading = false; 
-
-                  if (profileResponse) {
-                      this.nickname = profileResponse.nickname;
-                      this.currentProfile = profileResponse;
-
-                      this.fetchFollowers(routeNickname);
-                      this.fetchFavorites();
-                      this.fetchWatched();
-                      this.fetchWatchlist();
-                      this.fetchFollowings(routeNickname);
-                      this.checkFollowingStatus(routeNickname);
-                  } else {
-                      this.nickname = '';
-                  }
-              });
+      if (routeNickname) {
+        this.authService.getProfil(routeNickname).pipe(
+          catchError((error) => {
+            console.error('Erreur lors de la récupération du profil:', error);
+            if (error.status === 404) {
+              this.router.navigate(['/profil', this.currentNickname]);
+            }
+            this.isLoading = false;
+            return of(null);
+          })
+        ).subscribe((profileResponse: any) => {
+          if (profileResponse) {
+            this.nickname = profileResponse.nickname;
+            this.currentProfile = profileResponse;
+            this.fetchProfileData(); // Combined fetch method
+            this.fetchFollowers(routeNickname);
+            this.fetchFollowings(routeNickname);
+            this.checkFollowingStatus(routeNickname);
           } else {
-              this.nickname = this.currentNickname;
-              this.fetchFollowers(this.nickname);
-              this.fetchFollowings(this.nickname);
-              this.checkFollowingStatus(this.nickname);
-              this.fetchFavorites();
-              this.fetchWatched();
-              this.fetchWatchlist();
-              this.isLoading = false; 
+            this.nickname = '';
           }
-      });
+          this.isLoading = false;
+        });
+      } else {
+        this.nickname = this.currentNickname;
+        this.fetchProfileData(); // Combined fetch method
+        this.fetchFollowers(this.nickname);
+        this.fetchFollowings(this.nickname);
+        this.checkFollowingStatus(this.nickname);
+        this.isLoading = false;
+      }
+    });
   });
 }
 
@@ -247,106 +241,72 @@ toggleFollow(): void {
     return images;
 }
 
-fetchFavorites(): void {
+fetchProfileData(): void {
   const routeNickname = this.route.snapshot.paramMap.get('nickname');
 
-  this.favoritesService.getFavorites(routeNickname|| undefined).subscribe({
-    next: (favorites: any[]) => {
-
-
-      if (favorites.length === 0) {
-        this.favorites = [];
-        return;
-      }
-
-      favorites.reverse();
-      
-      
-
-      const movieIds = favorites.map(item => item.movie_id);
-      const requests = movieIds.map(id => this.detailsService.getMovieByID(id));
-      
-      forkJoin(requests).subscribe({
-        next: (movies) => {
-          this.favorites = movies;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error('Erreur lors de la récupération des détails du film :', err);
-        }
-      });
+  this.memberservice.getProfileData(routeNickname || undefined).subscribe({
+    next: (data: any) => {
+      this.processProfileData(data);
     },
     error: (err) => {
-      console.error('Erreur lors de la récupération des favoris :', err);
+      console.error('Erreur lors de la récupération des données du profil :', err);
     }
   });
 }
 
-  fetchWatchlist(): void {
-    const routeNickname = this.route.snapshot.paramMap.get('nickname');
+processProfileData(data: any): void {
+  if (data.favorites && data.favorites.length) {
+    const favoriteMovieIds = data.favorites.map((item: any) => item.movie_id);
+    const favoriteRequests = favoriteMovieIds.map((id: any) => this.detailsService.getMovieByID(id));
 
-    this.watchlistService.getWatchlist(routeNickname|| undefined).subscribe({
-      next: (watchlist: any[]) => {
-
-
-        if (watchlist.length === 0) {
-          this.watchlist = [];
-          return;
-        }
-
-        watchlist.reverse();
-
-        const movieIds = watchlist.map(item => item.movie_id);
-        const requests = movieIds.map(id => this.detailsService.getMovieByID(id));
-        
-        forkJoin(requests).subscribe({
-          next: (movies) => {
-            this.watchlist = movies;
-            this.cdr.detectChanges();
-          },
-          error: (err) => {
-            console.error('Erreur lors de la récupération des détails du film :', err);
-          }
-        });
+    forkJoin(favoriteRequests).subscribe({
+      next: (movies: any) => {
+        this.favorites = movies;
+        this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Erreur lors de la récupération de la watchlist :', err);
+        console.error('Erreur lors de la récupération des détails des films favoris :', err);
       }
     });
+  } else {
+    this.favorites = [];
   }
 
-  fetchWatched(): void {
-    const routeNickname = this.route.snapshot.paramMap.get('nickname');
+  if (data.watchlist && data.watchlist.length) {
+    const watchlistMovieIds = data.watchlist.map((item: any) => item.movie_id);
+    const watchlistRequests = watchlistMovieIds.map((id: any) => this.detailsService.getMovieByID(id));
 
-    this.watchedService.getWatched(routeNickname|| undefined).subscribe({
-      next: (watched: any[]) => {
-
-        if (watched.length === 0) {
-          this.watchlist = [];
-          return;
-        }
-
-        watched.reverse();
-
-        const movieIds = watched.map(item => item.movie_id);
-        const requests = movieIds.map(id => this.detailsService.getMovieByID(id));
-        
-        forkJoin(requests).subscribe({
-          next: (movies) => {
-            this.watched = movies;
-            this.cdr.detectChanges();
-          },
-          error: (err) => {
-            console.error('Erreur lors de la récupération des détails du film :', err);
-          }
-        });
+    forkJoin(watchlistRequests).subscribe({
+      next: (movies: any) => {
+        this.watchlist = movies;
+        this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Erreur lors de la récupération des films regardés :', err);
+        console.error('Erreur lors de la récupération des détails de la watchlist :', err);
       }
-
     });
+  } else {
+    this.watchlist = [];
   }
+
+  if (data.watched && data.watched.length) {
+    const watchedMovieIds = data.watched.map((item: any) => item.movie_id);
+    const watchedRequests = watchedMovieIds.map((id: any)=> this.detailsService.getMovieByID(id));
+
+    forkJoin(watchedRequests).subscribe({
+      next: (movies: any) => {
+        this.watched = movies;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération des détails des films regardés :', err);
+      }
+    });
+  } else {
+    this.watched = [];
+  }
+}
+
 
   handleEnter(event: KeyboardEvent): void {
     if (event.key === 'Enter') {

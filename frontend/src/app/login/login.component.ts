@@ -17,6 +17,7 @@ export class LoginComponent {
   password: string = '';
   loginMessage: string = '';
   alertType: string = '';
+  passwordType: string = 'password';
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -46,6 +47,10 @@ export class LoginComponent {
         this.alertType = 'alert-danger';
       }
     });
+  }
+
+  togglePassword() {
+    this.passwordType = this.passwordType === 'password' ? 'text' : 'password';
   }
   
   

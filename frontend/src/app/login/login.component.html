@@ -15,9 +15,13 @@
                           <label for="username" class="form-label">Nom de compte :</label>
                           <input type="text" id="username" class="form-control" [(ngModel)]="username" name="username" required placeholder="Entrez votre nom de compte">
                       </div>
-                      <div class="mb-4">
-                          <label for="password" class="form-label mt-3">Mot de passe :</label>
-                          <input type="password" id="password" class="form-control" [(ngModel)]="password" name="password" required placeholder="Entrez votre mot de passe">
+                      <div class="mb-4 position-relative">
+                        <label for="password" class="form-label">Mot de passe :</label>
+                        <input [type]="passwordType" id="password" class="form-control" [(ngModel)]="password" name="password" required placeholder="Votre mot de passe">
+                        <i class="fa" [ngClass]="passwordType === 'password' ? 'fa-eye-slash' : 'fa-eye'" 
+                           (click)="togglePassword()" 
+                           style="position: absolute; right: 10px; top: 60%;  cursor: pointer;">
+                        </i>
                       </div>
                       <button type="submit" class="btn btn-primary w-100 py-2">Se connecter</button>
                       <div class="text-center mt-4">

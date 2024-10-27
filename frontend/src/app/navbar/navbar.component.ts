@@ -26,6 +26,7 @@ export class NavbarComponent {
   constructor(private route: ActivatedRoute, private authService: AuthService, private router: Router, private cdr: ChangeDetectorRef, private discoverService: DiscoverService) {}
 
   ngAfterViewInit() {
+
     const navbarCollapse = document.getElementById('navbarNav');
     if (navbarCollapse) {
       navbarCollapse.addEventListener('show.bs.collapse', () => {
@@ -54,14 +55,15 @@ export class NavbarComponent {
       }
     })
   }
-    
+  
   searchFilms(): void {
     if (!this.searchQuery) return;
-
+  
+    // Navigate to the search results page
     this.router.navigate(['/search'], { queryParams: { query: this.searchQuery } });
   }
-
-
+  
+  
 
   @HostListener('window:scroll', [])
   onWindowScroll() {

@@ -17,6 +17,7 @@ export class RegisterComponent {
   nickname: string = '';
   registerMessage: string = '';
   alertType: string = '';
+  passwordType: string = 'password';
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -41,6 +42,10 @@ export class RegisterComponent {
         }
       }
     });
+  }
+
+  togglePassword() {
+    this.passwordType = this.passwordType === 'password' ? 'text' : 'password';
   }
   
 }
