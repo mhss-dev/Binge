@@ -396,7 +396,7 @@ fetchFavorites(): void {
 
     const scrollPercentage = (scrollTop / (bodyHeight - windowHeight)) * 100;
 
-    this.isButtonVisible.set(scrollPercentage > 10);
+    this.isButtonVisible.set(scrollPercentage > 40);
   }
   
   scrollToTop(): void {
