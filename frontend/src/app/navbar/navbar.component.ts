@@ -55,11 +55,10 @@ export class NavbarComponent {
       }
     })
   }
-  
+
   searchFilms(): void {
     if (!this.searchQuery) return;
-  
-    // Navigate to the search results page
+    
     this.router.navigate(['/search'], { queryParams: { query: this.searchQuery } });
   }
   

@@ -2,7 +2,7 @@
   <nav class="navbar navbar-expand-md py-2 navbar-bg" [ngClass]="{ 'navbar-scroll': isScrolled }">
     <div class="container-fluid">
       <a
-        href="/"
+      routerLink="/"
         class="fs-2 ms-4 text-white d-flex align-items-center text-dark text-decoration-none"
         *ngIf="isLogoVisible">
         Binge
@@ -18,7 +18,7 @@
       <div [ngClass]="{'collapse': isNavbarCollapsed, 'collapse.show': !isNavbarCollapsed}" class="collapse navbar-collapse justify-content-center" id="navbarNav">
         <ul class="navbar-nav d-flex justify-content-center flex-grow-1">
           <li class="nav-item">
-            <a href="/" class="nav-link text-white" (click)="isNavbarCollapsed = true">
+            <a routerLink="/" class="nav-link text-white" (click)="isNavbarCollapsed = true">
               <i class="fa-solid fa-house"></i> Accueil
             </a>
           </li>
