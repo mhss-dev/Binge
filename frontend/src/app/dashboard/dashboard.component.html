@@ -58,7 +58,7 @@
     <div class="tab-pane fade show active" id="watched" role="tabpanel" aria-labelledby="watched-tab">
       <div class="movie-list">
         <div *ngFor="let movie of paginatedWatched()" class="movie-card">
-          <a [routerLink]="['/film', movie.id]" target="_blank" rel="noopener noreferrer" class="d-block">
+          <a [routerLink]="['/film', movie.id]" class="d-block">
             <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
           </a>
         </div>

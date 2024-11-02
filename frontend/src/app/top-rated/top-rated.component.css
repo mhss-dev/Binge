@@ -1,0 +1,128 @@
+h1 {
+    padding-top: 10rem;
+    font-size: 2rem;
+  }
+  
+  .card {
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    height: 100%;
+  }
+  
+  .card img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  
+  .card:hover {
+    transform: scale(1.05);
+  }
+  
+  .custom-background {
+    background-color: #14181d !important;
+  }
+  
+  .card:hover {
+    transform: scale(1.05);
+  }
+  
+  .card-body .btn {
+    margin-right: 20px;
+  }
+  
+  .search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #aaa;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 10px 10px 10px 40px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: width 0.5s ease-in-out;
+  }
+  
+  .form-control {
+    border-radius: 5px;
+  }
+  
+  .form-control:focus {
+    box-shadow: none;
+  }
+  
+  
+  .back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 19px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+  
+  .back-to-top:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  }
+  .custom-width {
+    width: 160px;
+    padding: 10px;
+  }
+  
+  
+  @media (max-width: 768px) {
+    .search-container {
+      width: 100%;
+      flex: 1;
+    }
+  
+    h1 {
+      font-size: 1.5rem;
+    }
+  
+    .custom-width {
+      width: 100%;
+      max-width: 200px;
+    }
+  
+    .back-to-top {
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+    }
+  }
+  
+  @media (min-width: 769px) {
+    .search-input {
+      max-width: 300px;
+    }
+  }
+  

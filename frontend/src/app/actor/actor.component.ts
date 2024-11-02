@@ -105,7 +105,7 @@ export class ActorComponent {
   }
 
   getAge(birthday: string | null): number | string {
-    if (!birthday) return 'Date de naissance non disponible';
+    if (!birthday) return 'Inconnue';
     
     const birthDate = new Date(birthday);
     const timeDiff = Math.abs(Date.now() - birthDate.getTime()); 

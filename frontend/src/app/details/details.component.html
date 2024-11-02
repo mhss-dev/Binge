@@ -8,7 +8,7 @@
       <p class="lead">{{ movie?.tagline }}</p>
       <div class="d-flex flex-wrap align-items-center gap-2 mt-3">
         <span class="badge bg-success fs-6 flex-shrink-0">
-          {{ movie?.vote_average | number: '1.0-0'}}/10
+          {{ movie?.vote_average | number: '1.0-0'}}/10 | {{ (movie?.vote_count) | number: '1.0-0' }} avis
         </span>
         <div class="d-flex flex-wrap gap-2">
           <span *ngFor="let genre of movie?.genres" class="badge text-bg-dark fs-6">

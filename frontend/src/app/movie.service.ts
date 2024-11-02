@@ -21,8 +21,8 @@ export class MovieService {
     return this.http.get<any>(`${this.apiUrl}/trending`);
   }
 
-  getTopRated(): Observable<any> {    
-    return this.http.get<any>(`${this.apiUrl}/top`);
+  getTopRated(page: number = 1): Observable<any> {    
+    return this.http.get<any>(`${this.apiUrl}/top`, { params: { page } });
   }
 
   getUpcoming(region: string = 'BE', page: number = 1): Observable<any> {    

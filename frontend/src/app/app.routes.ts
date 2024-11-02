@@ -11,11 +11,13 @@ import { ActorComponent } from './actor/actor.component';
 import { MembersComponent } from './members/members.component';
 import { CardsComponent } from './cards/cards.component';
 import { SearchComponent } from './search/search.component';
+import { TopRatedComponent } from './top-rated/top-rated.component';
 
 
 export const routes: Routes = [
     { path: 'home', component: HomeComponent },
     { path: 'films', component: FilmsComponent },
+    { path: 'top-rated', component: TopRatedComponent },
     { path: 'actuellement-cinema', component: CardsComponent },
     { path: 'membres', component: MembersComponent, canActivate:[AuthGuard] },
     { path: 'film/:id', component: DetailsComponent },

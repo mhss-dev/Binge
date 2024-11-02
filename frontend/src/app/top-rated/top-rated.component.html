@@ -1,0 +1,86 @@
+<div class="container text-white pt-5 px-3">
+    <div class="text-center mb-5">
+      <h1 class="display-5 font-weight-bold">
+        Les films les mieux évalués
+      </h1>
+    </div>
+  
+    <div class="row mb-4 align-items-end">
+      <div class="col-12 col-md-6 mb-3 mb-md-0">
+        <form class="d-flex shadow-none" (keydown.enter)="searchFilms(searchQuery)" (input)="searchFilms(searchQuery)">
+          <div class="search-container w-100 me-2">
+            <i class="fa fa-search search-icon"></i>
+            <input class="form-control search-input" type="search" placeholder="Trouvez un film" aria-label="Search" [(ngModel)]="searchQuery" name="searchQuery">
+          </div>
+        </form>
+      </div>
+  
+      <div class="col-12 col-md-6 d-flex justify-content-md-end mb-3 mb-md-0">
+        <select class="form-control custom-width me-2" [(ngModel)]="sortOption" name="sortOption" (change)="loadFilms(1)">
+          <option value="popularity.desc">Popularité (+/-)</option>
+          <option value="popularity.asc">Popularité (-/+)</option>
+          <option value="primary_release_date.desc">Date de sortie (+/-)</option>
+          <option value="primary_release_date.asc">Date de sortie (-/+)</option>
+        </select>
+  
+        <select class="form-control custom-width me-2" [(ngModel)]="selectedGenre" name="genreOption" (change)="loadFilms(1)">
+          <option value="">Tous les genres</option>
+          <option value="28">Action</option>
+          <option value="12">Aventure</option>
+          <option value="16">Animation</option>
+          <option value="35">Comédie</option>
+          <option value="80">Crime</option>
+          <option value="99">Documentaire</option>
+          <option value="18">Drame</option>
+          <option value="10751">Famille</option>
+          <option value="14">Fantastique</option>
+          <option value="36">Histoire</option>
+          <option value="27">Horreur</option>
+          <option value="10402">Musique</option>
+          <option value="9648">Mystère</option>
+          <option value="10749">Romance</option>
+          <option value="878">Science-fiction</option>
+          <option value="10770">Téléfilm</option>
+          <option value="53">Thriller</option>
+          <option value="10752">Guerre</option>
+          <option value="37">Western</option>
+        </select>
+      </div>
+    </div>
+  
+    <div>
+      <div class="row mt-5">
+        <div *ngFor="let movie of films" class="col-6 col-md-4 col-lg-3 mb-4">
+          <div class="position-relative">
+            <div class="card bg-dark text-white border-0 shadow-sm h-100">
+              
+              <a [routerLink]="['/film', movie?.id]" class="d-block">
+                <img
+                
+                  [src]="movie?.poster_path ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path : 'https://via.placeholder.com/500x750?text=Aucun+poster+disponible'"
+                  class="card-img-top img-fluid rounded"
+                  alt="{{ movie?.title || 'Inconnu' }}">
+              </a>
+              <div class="d-flex justify-content-center custom-background">
+                <button class="btn btn-link" [ngClass]="{'text-success': movie.isWatched, 'text-light': !movie.isWatched}" (click)="toggleWatched(movie.id)">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+                <button class="btn btn-link" [ngClass]="{'text-danger': movie.isFavorite, 'text-light': !movie.isFavorite}" (click)="toggleFavorite(movie.id)">
+                  <i class="fa-solid fa-heart"></i>
+                </button>
+                <button class="btn btn-link" [ngClass]="{'text-warning': movie.isWatchlist, 'text-light': !movie.isWatchlist}" (click)="toggleWatchlist(movie.id)">
+                  <i class="fa-solid fa-clock"></i>
+                </button>
+              </div>
+          
+             
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    
+      <button *ngIf="isButtonVisible()" class="btn btn-dark back-to-top shadow" (click)="scrollToTop()"><i class="fas fa-arrow-up"></i></button>
+    </div>
+    </div>
+  

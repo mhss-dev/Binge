@@ -224,9 +224,8 @@ export class DetailsComponent {
     return result;
   }
 
-  // Utility method to chunk movies (reuse as needed)
 private chunkMovies(movies: any[]): any[][] {
-  const chunkSize = 6; // Adjust as needed
+  const chunkSize = 6; 
   return Array.from({ length: Math.ceil(movies.length / chunkSize) }, (_, i) =>
     movies.slice(i * chunkSize, i * chunkSize + chunkSize)
   );
