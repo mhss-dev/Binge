@@ -105,12 +105,12 @@ export class ActorComponent {
   }
 
   getAge(birthday: string | null): number | string {
-    if (!birthday) return 'Inconnue';
+    if (!birthday) return '???';
     
     const birthDate = new Date(birthday);
     const timeDiff = Math.abs(Date.now() - birthDate.getTime()); 
     const age = Math.floor((timeDiff / (1000 * 3600 * 24)) / 365.25);
-    return age;
+    return age + ' ans';
   }
   
 
