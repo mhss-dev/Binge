@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, Observable, tap, throwError } from 'rxjs';
+import { catchError, Observable, of, tap, throwError } from 'rxjs';
 import { environment } from '../environments/environment';
 
 @Injectable({
@@ -41,17 +41,27 @@ export class WatchlistService {
   }
 
   getWatchlist(nickname?: string): Observable<any[]> {
-    let url = `${this.apiUrl}/watchlist`;
-    
-    if (nickname) {
-      url += `/${nickname}`; 
+    const cacheKey = `watchlist_${nickname || 'self'}`;
+    const localData = localStorage.getItem(cacheKey);
+
+    if (localData) {
+        return of(JSON.parse(localData));
     }
-  
+
+    let url = `${this.apiUrl}/watchlist`;
+    if (nickname) {
+        url += `/${nickname}`;
+    }
+
     return this.http.get<any[]>(url, { headers: this.getAuthHeaders() }).pipe(
-      catchError(error => {
-        console.error(error);
-        return throwError(error);
-      })
+        tap((data: any[]) => {
+            localStorage.setItem(cacheKey, JSON.stringify(data));
+        }),
+        catchError(error => {
+            console.error('Erreur lors de la récupération de la watchlist:', error);
+            return throwError(error);
+        })
     );
-  }
 }
+}
+

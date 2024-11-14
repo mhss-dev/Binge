@@ -129,68 +129,48 @@ loadProfile(): void {
 }
 
 
-checkFollowingStatus(nickname: string): void {
-  const localData = localStorage.getItem(`isFollowing_${nickname}`);
-  if (localData !== null) {
-      this.isFollowing = JSON.parse(localData);
-      return;
-  }
-
-  this.memberservice.isFollowing(nickname).subscribe({
-      next: (response: any) => {
-          this.isFollowing = response.isFollowing;
-          localStorage.setItem(`isFollowing_${nickname}`, JSON.stringify(this.isFollowing));
-      },
-      error: (err) => {
-          this.isFollowing = false;
-      }
-  });
+  checkFollowingStatus(nickname: string): void {
+    this.memberservice.isFollowing(nickname).subscribe({
+        next: (response: any) => {
+            this.isFollowing = response.isFollowing; 
+        },
+        error: (err) => {
+            this.isFollowing = false; 
+        }
+    });
 }
 
+  
+  
 fetchFollowers(nickname: string): void {
-  const localData = localStorage.getItem(`followers_${nickname}`);
-  if (localData) {
-      const followers = JSON.parse(localData);
-      this.followersCount = followers.length;
-      this.followersList = followers;
-      this.cdr.detectChanges();
-      return;
-  }
-
   this.memberservice.getFollowers(nickname).subscribe({
       next: (followers: any[]) => {
-          this.followersCount = followers.length;
+          this.followersCount = Array.isArray(followers) ? followers.length : 0; 
           this.followersList = followers;
-          localStorage.setItem(`followers_${nickname}`, JSON.stringify(followers));
-          this.cdr.detectChanges();
+          this.cdr.detectChanges();        
+
       },
       error: (err) => {
+          console.error('Erreur lors de la récupération des followers :', err);
           this.followersList = [];
-          this.followersCount = 0;
+
+          this.followersCount = 0; 
       }
   });
 }
 
 fetchFollowings(nickname: string): void {
-  const localData = localStorage.getItem(`followings_${nickname}`);
-  if (localData) {
-      const followings = JSON.parse(localData);
-      this.followingCount = followings.length;
-      this.followingsList = followings;
-      this.cdr.detectChanges();
-      return;
-  }
-
   this.memberservice.getFollowings(nickname).subscribe({
       next: (followings: any[]) => {
-          this.followingCount = followings.length;
-          this.followingsList = followings;
-          localStorage.setItem(`followings_${nickname}`, JSON.stringify(followings));
-          this.cdr.detectChanges();
+        this.followingsList = followings;
+        this.cdr.detectChanges();        
+
+          this.followingCount = Array.isArray(followings) ? followings.length : 0; 
       },
       error: (err) => {
+        console.error('Erreur lors de la récupération des following:', err);
           this.followingsList = [];
-          this.followingCount = 0;
+          this.followingCount = 0; 
       }
   });
 }
@@ -200,10 +180,10 @@ toggleFollow(): void {
   if (this.isFollowing) {
       this.memberservice.unfollowUser(this.nickname).subscribe({
           next: () => {
-              this.isFollowing = false;
-              this.followersCount--;
-              localStorage.setItem(`isFollowing_${this.nickname}`, JSON.stringify(this.isFollowing));
-              this.cdr.detectChanges();
+              this.isFollowing = false; 
+              this.followersCount--; 
+              this.cdr.detectChanges(); 
+
           },
           error: (err) => {
               console.error('Erreur unfollowing:', err);
@@ -212,10 +192,9 @@ toggleFollow(): void {
   } else {
       this.memberservice.followUser(this.nickname).subscribe({
           next: () => {
-              this.isFollowing = true;
-              this.followersCount++;
-              localStorage.setItem(`isFollowing_${this.nickname}`, JSON.stringify(this.isFollowing));
-              this.cdr.detectChanges();
+              this.isFollowing = true; 
+              this.followersCount++; 
+              this.cdr.detectChanges(); 
           },
           error: (err) => {
               console.error('Erreur following :', err);
@@ -223,7 +202,6 @@ toggleFollow(): void {
       });
   }
 }
-
 
   
 
@@ -275,7 +253,6 @@ fetchProfileData(): void {
     }
   });
 }
-
 processProfileData(data: any): void {
   if (data.favorites && data.favorites.length) {
       const favoriteMovieIds = data.favorites.map((item: any) => item.movie_id);
@@ -331,7 +308,6 @@ processProfileData(data: any): void {
       this.watched = [];
   }
 }
-
 
 
   handleEnter(event: KeyboardEvent): void {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, Observable, tap, throwError } from 'rxjs';
+import { catchError, Observable, of, tap, throwError } from 'rxjs';
 import { environment } from '../environments/environment';
 
 @Injectable({
@@ -47,18 +47,26 @@ export class WatchedService {
   }
   
   getWatched(nickname?: string): Observable<any[]> {
-    let url = `${this.apiUrl}/watched`;
+    const cacheKey = `watched_${nickname || 'self'}`;
+    const localData = localStorage.getItem(cacheKey);
 
+    if (localData) {
+        return of(JSON.parse(localData));
+    }
+
+    let url = `${this.apiUrl}/watched`;
     if (nickname) {
-        url += `/${nickname}`; 
+        url += `/${nickname}`;
     }
 
     return this.http.get<any[]>(url, { headers: this.getAuthHeaders() }).pipe(
+        tap((data: any[]) => {
+            localStorage.setItem(cacheKey, JSON.stringify(data));
+        }),
         catchError(error => {
-            console.error(error);
+            console.error('Erreur lors de la récupération des films regardés:', error);
             return throwError(error);
         })
     );
 }
-
 }
