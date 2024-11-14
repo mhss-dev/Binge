@@ -70,8 +70,7 @@ export class LoginComponent {
         if (response.status === 200) {
           this.loginMessage = 'Connexion réussie, redirection vers votre profil.';
           this.alertType = 'alert-success';
-          // this.router.navigate(['/profil', nickname]);
-          this.router.navigate(['/films']);
+          this.router.navigate(['/profil', nickname]);
         } else if (response.status === 201) {
           this.loginMessage = 'Vous êtes déjà connecté, redirection en cours.';
           this.alertType = 'alert-warning';

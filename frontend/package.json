@@ -2,7 +2,6 @@
   "name": "binge",
   "version": "0.0.0",
   "productName": "Binge",
-
   "main": "src/main.js",
   "scripts": {
     "ng": "ng",
@@ -13,27 +12,26 @@
     "electron": "electron .",
     "electron:build": "electron-builder --win"
   },
-"build": {
-  "appId": "com.example.binge",
-  "files": [
-    "./dist/binge/browser/**/*",
-    "src/main.js"
-  ],
-  "mac": {
-    "target": [
-      "dmg",
-      "zip"
-    ]
+  "build": {
+    "appId": "com.example.binge",
+    "files": [
+      "./dist/binge/browser/**/*",
+      "src/main.js"
+    ],
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "zip"
+      ]
+    },
+    "icon": "./assets/icon-only.png"
   },
-  "win": {
-    "target": [
-      "nsis",
-      "zip"
-    ]
-  },
-  "icon": "./assets/icon-only.png"
-
-},
   "private": true,
   "dependencies": {
     "@angular/animations": "^18.1.0",
@@ -46,6 +44,7 @@
     "@angular/platform-browser": "^18.1.0",
     "@angular/platform-browser-dynamic": "^18.1.0",
     "@angular/router": "^18.1.0",
+    "@capacitor/android": "^6.1.2",
     "@capacitor/cli": "^6.1.2",
     "@capacitor/core": "^6.1.2",
     "@capacitor/ios": "^6.1.2",
