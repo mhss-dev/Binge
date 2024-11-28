@@ -41,12 +41,6 @@ export class WatchlistService {
   }
 
   getWatchlist(nickname?: string): Observable<any[]> {
-    const cacheKey = `watchlist_${nickname || 'self'}`;
-    const localData = localStorage.getItem(cacheKey);
-
-    if (localData) {
-        return of(JSON.parse(localData));
-    }
 
     let url = `${this.apiUrl}/watchlist`;
     if (nickname) {
@@ -54,9 +48,6 @@ export class WatchlistService {
     }
 
     return this.http.get<any[]>(url, { headers: this.getAuthHeaders() }).pipe(
-        tap((data: any[]) => {
-            localStorage.setItem(cacheKey, JSON.stringify(data));
-        }),
         catchError(error => {
             console.error('Erreur lors de la récupération de la watchlist:', error);
             return throwError(error);

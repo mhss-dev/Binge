@@ -38,15 +38,7 @@ export class FavoritesService {
     );
   }
   getFavorites(nickname?: string): Observable<any[]> {
-    
-    const localFavorites = localStorage.getItem('favorites');
 
-    if (!nickname && localFavorites) {
-        
-        return of(JSON.parse(localFavorites));
-    }
-
-    
     let url = `${this.apiUrl}/favorites`;
     if (nickname) {
         url += `/${nickname}`;
@@ -54,12 +46,6 @@ export class FavoritesService {
 
     
     return this.http.get<any[]>(url, { headers: this.getAuthHeaders() }).pipe(
-        tap(favorites => {
-            
-            if (!nickname) {
-                localStorage.setItem('favorites', JSON.stringify(favorites));
-            }
-        }),
         catchError(error => {
             console.error('Favoris erreur :', error);
             return throwError(error);

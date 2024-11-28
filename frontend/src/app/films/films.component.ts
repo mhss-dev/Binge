@@ -167,7 +167,7 @@ export class FilmsComponent {
 
     const scrollPercentage = (scrollTop / (bodyHeight - windowHeight)) * 100;
 
-    this.isButtonVisible.set(scrollPercentage > 45);
+    this.isButtonVisible.set(scrollPercentage > 30);
   }
   
   scrollToTop(): void {

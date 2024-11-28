@@ -15,6 +15,7 @@ import { DiscoverService } from 'app/discover.service';
 export class NavbarComponent {
   isLoggedIn = false;
   nickname: string | null = null;
+  avatar_url: string | null = null;
   isLogoVisible: boolean = true; 
   isScrolled: boolean = false;
   isNavbarCollapsed: boolean = true;
@@ -83,6 +84,9 @@ export class NavbarComponent {
       this.authService.getProfil().subscribe({
         next: (response: any) => {
           this.nickname = response.nickname;
+          this.avatar_url = response.avatar_url;
+          console.log(response);
+          
           this.cdr.detectChanges(); 
         },
         error: (error: any) => {
