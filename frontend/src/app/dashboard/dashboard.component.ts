@@ -261,7 +261,6 @@ processProfileData(data: any): void {
       forkJoin(favoriteRequests).subscribe({
           next: (movies: any) => {
               this.favorites = movies;
-              localStorage.setItem(`favorites_${this.nickname}`, JSON.stringify(movies));
               this.cdr.detectChanges();
           },
           error: (err) => {
@@ -279,7 +278,6 @@ processProfileData(data: any): void {
       forkJoin(watchlistRequests).subscribe({
           next: (movies: any) => {
               this.watchlist = movies;
-              localStorage.setItem(`watchlist_${this.nickname}`, JSON.stringify(movies));
               this.cdr.detectChanges();
           },
           error: (err) => {
@@ -297,7 +295,6 @@ processProfileData(data: any): void {
       forkJoin(watchedRequests).subscribe({
           next: (movies: any) => {
               this.watched = movies;
-              localStorage.setItem(`watched_${this.nickname}`, JSON.stringify(movies));
               this.cdr.detectChanges();
           },
           error: (err) => {

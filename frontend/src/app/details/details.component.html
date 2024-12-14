@@ -21,11 +21,13 @@
       <p class="text-secondary mt-4">
         {{ movie?.release_date | date: 'yyyy' }} • {{ formatRuntime(movie?.runtime) }} •
       
-        <ng-container *ngFor="let director of getReal()">
+        <ng-container *ngFor="let director of getReal(); let i = index">
           <a [routerLink]="['/realisateur', director.id]" class="text-secondary">
             {{ director.name }}
           </a>
+          <span *ngIf="i < getReal().length - 1">, </span>
         </ng-container>
+        
       </p>
 
       <div *ngIf="watchProviders">

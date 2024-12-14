@@ -47,26 +47,17 @@ export class WatchedService {
   }
   
   getWatched(nickname?: string): Observable<any[]> {
-    const cacheKey = `watched_${nickname || 'self'}`;
-    const localData = localStorage.getItem(cacheKey);
-
-    if (localData) {
-        return of(JSON.parse(localData));
-    }
-
     let url = `${this.apiUrl}/watched`;
+  
     if (nickname) {
         url += `/${nickname}`;
     }
-
+  
     return this.http.get<any[]>(url, { headers: this.getAuthHeaders() }).pipe(
-        tap((data: any[]) => {
-            localStorage.setItem(cacheKey, JSON.stringify(data));
-        }),
         catchError(error => {
-            console.error('Erreur lors de la récupération des films regardés:', error);
+            console.error('Watched erreur :', error);
             return throwError(error);
         })
     );
-}
+  }
 }
