@@ -12,7 +12,7 @@ export class MovieService {
 
   constructor(private http: HttpClient) { }
 
-  getNowPlayingMovies(region: string = 'BE', page: number = 1): Observable<any> {    
+  getNowPlayingMovies(region: string = 'FR', page: number = 1): Observable<any> {    
     return this.http.get<any>(`${this.apiUrl}/nowplaying`, { params: { region, page } });
   }
   
