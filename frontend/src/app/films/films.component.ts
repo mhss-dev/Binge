@@ -9,6 +9,7 @@ import { FavoritesService } from '../favorites.service';
 import { WatchlistService } from '../watchlist.service';
 import { WatchedService } from '../watched.service';
 import { AuthService } from '../auth.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-films',
@@ -51,6 +52,8 @@ export class FilmsComponent {
     private watched : WatchedService,
     private router: Router,
     private authService : AuthService,
+    private titleService: Title
+    
   ) {}
 
   ngOnInit(): void {
@@ -60,6 +63,7 @@ export class FilmsComponent {
       
       this.movieId = +params['id'];
       this.loadFilms(1); 
+      this.titleService.setTitle('Binge • social & découverte de films');
 
   })
 
