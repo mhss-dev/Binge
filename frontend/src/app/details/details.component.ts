@@ -13,8 +13,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { WatchlistService } from '../watchlist.service';
 import { WatchedService } from '../watched.service';
 import { AuthService } from '../auth.service';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-
+import { DomSanitizer, SafeResourceUrl, Title, Meta } from '@angular/platform-browser';
 @Component({
   selector: 'app-details',
   standalone: true,
@@ -41,7 +40,7 @@ export class DetailsComponent {
   watchProviders: any | null = null;
   trailerKey: string | null = null;
   trailerUrl: SafeResourceUrl | null = null;
-  movies: any[] = []; // Initialize as an empty array
+  movies: any[] = [];
 
 
   @ViewChild('trailerModal') trailerModal!: ElementRef;
@@ -53,9 +52,10 @@ export class DetailsComponent {
     private watched: WatchedService,
     private watchlist: WatchlistService,
     private detailsService: DetailsService,
-    private discoverService: DiscoverService,
     private favoritesService: FavoritesService,
     private sanitizer: DomSanitizer,
+    private titleService: Title,
+    private metaService: Meta,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -80,10 +80,7 @@ export class DetailsComponent {
       this.isLoggedIn = status;
     });
 
-    
-
   }
-  
   
   private loadMovieDetails(id: number): void {
     this.detailsService.getMovieByID(id).subscribe({
@@ -94,6 +91,8 @@ export class DetailsComponent {
         this.checkIfWatchlist();
         this.checkIfWatched();
         this.loadMovieLogo(id);
+        this.updateMetaTags();
+
       },
       error: (error) => {
         this.error = 'Erreur lors de la récupération des détails du film';
@@ -101,6 +100,19 @@ export class DetailsComponent {
       },
     });
   }
+
+  private updateMetaTags(): void {
+    if (!this.movie) return;
+  
+    this.titleService.setTitle(this.movie.title || 'Détails du film');
+  
+    this.metaService.updateTag({ name: 'description', content: this.movie.overview || 'Aucune description disponible.' });
+    this.metaService.updateTag({ name: 'keywords', content: this.movie.genres?.map((g: any) => g.name).join(', ') || '' });
+    this.metaService.updateTag({ property: 'og:title', content: this.movie.title || '' });
+    this.metaService.updateTag({ property: 'og:description', content: this.movie.overview || '' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://image.tmdb.org/t/p/original/' + this.movie.backdrop_path });
+  }
+  
 
   combinedProviders(): { provider_name: string; logo_path?: string }[] {
     const providers: { provider_name: string; logo_path?: string }[] = [];

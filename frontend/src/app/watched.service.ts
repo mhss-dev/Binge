@@ -46,12 +46,14 @@ export class WatchedService {
     );
   }
   
-  getWatched(nickname?: string): Observable<any[]> {
+  getWatched(nickname?: string, limit: number = 50, offset: number = 0): Observable<any[]> {
     let url = `${this.apiUrl}/watched`;
   
     if (nickname) {
         url += `/${nickname}`;
     }
+  
+    url += `?limit=${limit}&offset=${offset}`; // Ajout des paramètres de pagination
   
     return this.http.get<any[]>(url, { headers: this.getAuthHeaders() }).pipe(
         catchError(error => {
@@ -59,5 +61,5 @@ export class WatchedService {
             return throwError(error);
         })
     );
-  }
+}
 }
