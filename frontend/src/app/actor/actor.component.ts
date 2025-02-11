@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, HostListener, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DiscoverService } from 'app/discover.service';
+import { DomSanitizer, SafeResourceUrl, Title, Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-actor',
@@ -23,12 +24,13 @@ export class ActorComponent {
   maxBiographyLength: number = 500;
   isButtonVisible = signal(false);
 
-  constructor(private route: ActivatedRoute, private discoverService : DiscoverService, private cdr: ChangeDetectorRef) {}
+  constructor(private route: ActivatedRoute, private discoverService : DiscoverService, private cdr: ChangeDetectorRef, private titleService: Title, private metaService: Meta,) {}
 
   ngOnInit(): void {
     
     this.route.paramMap.subscribe((paramMap) => {
       const actorId = +paramMap.get('id')!;
+      this.updateMetaTags();
       if (actorId) {
         this.getMoviesByActor(actorId, 1);
       }
@@ -98,6 +100,16 @@ export class ActorComponent {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  private updateMetaTags(): void {
+    if (!this.actor) return;
+  
+    this.titleService.setTitle(this.actor.name ? 'Binge - ' + this.actor.name : 'Binge');
+  
+    this.metaService.updateTag({ name: 'description', content: this.actor.biography || 'Aucune description disponible.' });
+    this.metaService.updateTag({ property: 'og:title', content: this.actor.name || '' });
+    this.metaService.updateTag({ property: 'og:description', content: this.actor.biography || '' });
+    this.metaService.updateTag({ property: 'og:image', content: 'https://image.tmdb.org/t/p/original/' + this.actor.profile_path });
+  }
 
   private filterDuplicates(newMovies: any[]): any[] {
     const existingIds = new Set(this.movies.map((movie:any) => movie.id));

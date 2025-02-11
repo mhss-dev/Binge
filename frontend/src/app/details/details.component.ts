@@ -104,7 +104,7 @@ export class DetailsComponent {
   private updateMetaTags(): void {
     if (!this.movie) return;
   
-    this.titleService.setTitle(this.movie.title || 'Détails du film');
+    this.titleService.setTitle(this.movie.title ? 'Binge - ' + this.movie.title : 'Binge');
   
     this.metaService.updateTag({ name: 'description', content: this.movie.overview || 'Aucune description disponible.' });
     this.metaService.updateTag({ name: 'keywords', content: this.movie.genres?.map((g: any) => g.name).join(', ') || '' });
