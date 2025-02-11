@@ -30,7 +30,6 @@ export class ActorComponent {
     
     this.route.paramMap.subscribe((paramMap) => {
       const actorId = +paramMap.get('id')!;
-      this.updateMetaTags();
       if (actorId) {
         this.getMoviesByActor(actorId, 1);
       }
@@ -46,6 +45,9 @@ export class ActorComponent {
           this.totalPages = data.totalPages; 
           this.currentPage = data.currentPage;
           this.hasMore = this.currentPage < this.totalPages;
+          if (this.actor) {
+            this.updateMetaTags();
+          }
         }
       },
       error: (err) => {
