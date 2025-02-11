@@ -108,7 +108,7 @@ export class DetailsComponent {
   
     this.metaService.updateTag({ name: 'description', content: this.movie.overview || 'Aucune description disponible.' });
     this.metaService.updateTag({ name: 'keywords', content: this.movie.genres?.map((g: any) => g.name).join(', ') || '' });
-    this.metaService.updateTag({ property: 'og:title', content: this.movie.title || '' });
+    this.metaService.updateTag({ property: 'og:title', content: 'Binge - ' + this.movie.title });
     this.metaService.updateTag({ property: 'og:description', content: this.movie.overview || '' });
     this.metaService.updateTag({ property: 'og:image', content: 'https://image.tmdb.org/t/p/original/' + this.movie.backdrop_path });
   }

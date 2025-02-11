@@ -108,7 +108,7 @@ export class ActorComponent {
     this.titleService.setTitle(this.actor.name ? 'Binge - ' + this.actor.name : 'Binge');
   
     this.metaService.updateTag({ name: 'description', content: this.actor.biography || 'Aucune description disponible.' });
-    this.metaService.updateTag({ property: 'og:title', content: this.actor.name || '' });
+    this.metaService.updateTag({ property: 'og:title', content: 'Binge - ' + this.actor.name });
     this.metaService.updateTag({ property: 'og:description', content: this.actor.biography || '' });
     this.metaService.updateTag({ property: 'og:image', content: 'https://image.tmdb.org/t/p/original/' + this.actor.profile_path });
   }
