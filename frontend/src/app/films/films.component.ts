@@ -5,6 +5,8 @@ import {
   HostListener,
   ChangeDetectorRef,
   signal,
+  ViewChild,
+  ElementRef,
 } from '@angular/core';
 import { DiscoverService } from '../discover.service';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -21,6 +23,7 @@ import { WatchlistService } from '../watchlist.service';
 import { WatchedService } from '../watched.service';
 import { AuthService } from '../auth.service';
 import { Title } from '@angular/platform-browser';
+import { Toast } from 'bootstrap'; // Import de Bootstrap Toast
 
 @Component({
   selector: 'app-films',
@@ -30,6 +33,9 @@ import { Title } from '@angular/platform-browser';
   styleUrl: './films.component.css',
 })
 export class FilmsComponent {
+  @ViewChild('toastElement', { static: false }) toastElement!: ElementRef;
+
+  toastMessage: string = '';
   films: any[] = [];
   imageRevealed: boolean = false;
 
@@ -233,6 +239,8 @@ export class FilmsComponent {
     )?.isFavorite;
 
     if (isCurrentlyFavorite) {
+      const movie = this.films.find((m) => m.id === movieId);
+      this.showToast(movie.title + ` est déjà dans vos favoris`);
       return;
     }
 
@@ -241,25 +249,34 @@ export class FilmsComponent {
         const movie = this.films.find((m) => m.id === movieId);
         if (movie) {
           movie.isFavorite = true;
+          this.showToast(movie.title + ` a été ajouté dans vos favoris`);
           this.cdr.detectChanges();
         }
       },
       error: (err) => {
         if (err.status === 400) {
-          console.log(`Erreur: Le film ${movieId} est déjà dans les favoris.`);
+          this.showToast(`Erreur: Le film est déjà dans les favoris.`);
         } else {
-          console.error('Erreur ajout aux favoris ', err);
+          this.showToast(`Erreur lors de l'ajout aux favoris.`);
+          console.error('Erreur ajout aux favoris', err);
         }
       },
     });
+  }
+
+  showToast(message: string): void {
+    this.toastMessage = message;
+    this.cdr.detectChanges();
+    const toast = new Toast(this.toastElement.nativeElement);
+    toast.show();
   }
 
   removeFromFavorites(movieId: number): void {
     const isCurrentlyFavorite = this.films.find(
       (movie) => movie.id === movieId
     )?.isFavorite;
-
     if (!isCurrentlyFavorite) {
+      this.showToast("Le film n'est pas dans vos favoris !");
       return;
     }
 
@@ -268,10 +285,12 @@ export class FilmsComponent {
         const movie = this.films.find((m) => m.id === movieId);
         if (movie) {
           movie.isFavorite = false;
+          this.showToast(movie.title + ` a été retiré de vos favoris`);
         }
         this.cdr.detectChanges();
       },
       error: (err) => {
+        this.showToast('Erreur lors de la suppression des favoris.');
         console.error('Erreur lors de la suppression des favoris:', err);
       },
     });
@@ -296,8 +315,8 @@ export class FilmsComponent {
     const isCurrentlyInWatchlist = this.films.find(
       (movie) => movie.id === movieId
     )?.isWatchlist;
-
     if (isCurrentlyInWatchlist) {
+      this.showToast('Le film est déjà dans votre watchlist !');
       return;
     }
 
@@ -306,12 +325,14 @@ export class FilmsComponent {
         const movie = this.films.find((m) => m.id === movieId);
         if (movie) {
           this.removeWatched(movieId);
-
           movie.isWatchlist = true;
+          this.showToast(movie.title + ` a été ajouté dans votre watchlist`);
         }
         this.cdr.detectChanges();
       },
-      error: (err) => {},
+      error: (err) => {
+        this.showToast("Erreur lors de l'ajout à la watchlist.");
+      },
     });
   }
 
@@ -319,8 +340,8 @@ export class FilmsComponent {
     const isCurrentlyInWatchlist = this.films.find(
       (movie) => movie.id === movieId
     )?.isWatchlist;
-
     if (!isCurrentlyInWatchlist) {
+      this.showToast("Le film n'est pas dans votre watchlist !");
       return;
     }
 
@@ -329,10 +350,13 @@ export class FilmsComponent {
         const movie = this.films.find((m) => m.id === movieId);
         if (movie) {
           movie.isWatchlist = false;
+          this.showToast(movie.title + ` a été retiré de votre watchlist`);
         }
         this.cdr.detectChanges();
       },
-      error: (err) => {},
+      error: (err) => {
+        this.showToast('Erreur lors de la suppression de la watchlist.');
+      },
     });
   }
 
@@ -407,8 +431,8 @@ export class FilmsComponent {
     const isCurrentlyWatched = this.films.find(
       (movie) => movie.id === movieId
     )?.isWatched;
-
     if (isCurrentlyWatched) {
+      this.showToast('Le film est déjà marqué comme vu !');
       return;
     }
 
@@ -418,16 +442,16 @@ export class FilmsComponent {
         if (movie) {
           movie.isWatched = true;
           this.removeFromWatchlist(movieId);
+          this.showToast(movie.title + ` a été ajouté dans vos films vus !`);
           this.cdr.detectChanges();
         }
       },
       error: (err) => {
         if (err.status === 400) {
-          console.log(
-            `Erreur: Le film ${movieId} est déjà dans les films vus.`
-          );
+          this.showToast(`Erreur : Le film est déjà dans les films vus.`);
         } else {
-          console.error('Erreur ajout aux films vus ', err);
+          this.showToast("Erreur lors de l'ajout aux films vus.");
+          console.error('Erreur ajout aux films vus', err);
         }
       },
     });
@@ -437,8 +461,8 @@ export class FilmsComponent {
     const isCurrentlyWatched = this.films.find(
       (movie) => movie.id === movieId
     )?.isWatched;
-
     if (!isCurrentlyWatched) {
+      this.showToast("Le film n'est pas marqué comme vu !");
       return;
     }
 
@@ -447,10 +471,13 @@ export class FilmsComponent {
         const movie = this.films.find((m) => m.id === movieId);
         if (movie) {
           movie.isWatched = false;
+          this.showToast(movie.title + ` a été retiré de vos films vus !`);
         }
         this.cdr.detectChanges();
       },
-      error: (err) => {},
+      error: (err) => {
+        this.showToast('Erreur lors de la suppression des films vus.');
+      },
     });
   }
 }

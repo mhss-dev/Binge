@@ -67,7 +67,6 @@ h1 {
   box-shadow: none;
 }
 
-
 .back-to-top {
   position: fixed;
   bottom: 20px;
@@ -96,7 +95,6 @@ h1 {
   width: 160px;
   padding: 10px;
 }
-
 
 @media (max-width: 768px) {
   .search-container {
