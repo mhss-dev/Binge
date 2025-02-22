@@ -48,14 +48,14 @@
           </ng-container>
 
           <ng-template #loggedInTemplate>
-            <a class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#searchModal">
+            <a class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#searchModal"  data-bs-toggle="tooltip" data-bs-placement="bottom" title="Recherchez un film">
               <i class="fa-solid fa-search"></i>
             </a>
-            <a [routerLink]="['/profil', nickname]" class="btn btn-dark" (click)="isNavbarCollapsed = true">
+            <a [routerLink]="['/profil', nickname]" class="btn btn-dark" (click)="isNavbarCollapsed = true" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Profil de {{ nickname }}">
               <i class="fa-solid fa-user"></i>
             </a>
-            <a (click)="logout(); isNavbarCollapsed = true" class="btn btn-danger">
-              <i class="fa-solid fa-right-from-bracket"></i>
+            <a (click)="logout(); isNavbarCollapsed = true" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Déconnexion">
+              <i class="fa-solid fa-right-from-bracket" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Déconnexion"></i>
             </a>
           </ng-template>
         </div>
