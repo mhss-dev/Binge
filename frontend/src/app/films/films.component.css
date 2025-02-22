@@ -22,11 +22,8 @@ h1 {
 }
 
 .custom-background {
-  background-color: #14181d !important;
-}
-
-.card:hover {
-  transform: scale(1.05);
+  background-color: rgba(20, 24, 29, 0.95) !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .card-body .btn {

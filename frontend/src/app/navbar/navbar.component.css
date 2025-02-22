@@ -10,9 +10,6 @@
 
 .navbar-scroll {
   background-color: rgba(20, 24, 29, 0.95) !important;
-}
-
-.navbar-scroll {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
