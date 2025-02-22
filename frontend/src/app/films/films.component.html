@@ -79,7 +79,7 @@
         
       </div>
     </div>
-    <div class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3 text-center">
+    <div class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3 text-center" *ngIf="toastMessage">
       <div 
         class="toast align-items-center text-white custom-background border-0 d-flex justify-content-center" 
         role="alert" 
@@ -92,8 +92,7 @@
           </div>
         </div>
       </div>
-    </div>
-    
+    </div>    
   
     <button *ngIf="isButtonVisible()" class="btn btn-dark back-to-top shadow" (click)="scrollToTop()"><i class="fas fa-arrow-up"></i></button>
   </div>
