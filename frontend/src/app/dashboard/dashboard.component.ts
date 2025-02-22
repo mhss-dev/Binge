@@ -107,7 +107,7 @@ loadProfile(): void {
           if (profileResponse) {
             this.nickname = profileResponse.nickname;
             this.currentProfile = profileResponse;
-            this.fetchProfileData(); // Combined fetch method
+            this.fetchProfileData();
             this.fetchFollowers(routeNickname);
             this.fetchFollowings(routeNickname);
             this.checkFollowingStatus(routeNickname);
@@ -118,7 +118,7 @@ loadProfile(): void {
         });
       } else {
         this.nickname = this.currentNickname;
-        this.fetchProfileData(); // Combined fetch method
+        this.fetchProfileData();
         this.fetchFollowers(this.nickname);
         this.fetchFollowings(this.nickname);
         this.checkFollowingStatus(this.nickname);
@@ -254,55 +254,52 @@ fetchProfileData(): void {
   });
 }
 processProfileData(data: any): void {
-  if (data.favorites && data.favorites.length) {
-      const favoriteMovieIds = data.favorites.map((item: any) => item.movie_id);
-      const favoriteRequests = favoriteMovieIds.map((id: any) => this.detailsService.getMovieByID(id));
-
-      forkJoin(favoriteRequests).subscribe({
-          next: (movies: any) => {
-              this.favorites = movies;
-              this.cdr.detectChanges();
-          },
-          error: (err) => {
-              this.favorites = [];
-          }
-      });
+  if (data.favorites?.length) {
+    const favoriteMovieIds = data.favorites.map((item: any) => item.movie_id);
+    this.detailsService.loadBatchMovies(favoriteMovieIds, 5).subscribe({
+      next: (movies: any[]) => {
+        this.favorites = movies;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error(err);
+        this.favorites = [];
+      }
+    });
   } else {
-      this.favorites = [];
+    this.favorites = [];
   }
 
-  if (data.watchlist && data.watchlist.length) {
-      const watchlistMovieIds = data.watchlist.map((item: any) => item.movie_id);
-      const watchlistRequests = watchlistMovieIds.map((id: any) => this.detailsService.getMovieByID(id));
-
-      forkJoin(watchlistRequests).subscribe({
-          next: (movies: any) => {
-              this.watchlist = movies;
-              this.cdr.detectChanges();
-          },
-          error: (err) => {
-              this.watchlist = [];
-          }
-      });
+  if (data.watchlist?.length) {
+    const watchlistMovieIds = data.watchlist.map((item: any) => item.movie_id);
+    this.detailsService.loadBatchMovies(watchlistMovieIds, 5).subscribe({
+      next: (movies: any[]) => {
+        this.watchlist = movies;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error(err);
+        this.watchlist = [];
+      }
+    });
   } else {
-      this.watchlist = [];
+    this.watchlist = [];
   }
 
-  if (data.watched && data.watched.length) {
-      const watchedMovieIds = data.watched.map((item: any) => item.movie_id);
-      const watchedRequests = watchedMovieIds.map((id: any) => this.detailsService.getMovieByID(id));
-
-      forkJoin(watchedRequests).subscribe({
-          next: (movies: any) => {
-              this.watched = movies;
-              this.cdr.detectChanges();
-          },
-          error: (err) => {
-              this.watched = [];
-          }
-      });
+  if (data.watched?.length) {
+    const watchedMovieIds = data.watched.map((item: any) => item.movie_id);
+    this.detailsService.loadBatchMovies(watchedMovieIds, 5).subscribe({
+      next: (movies: any[]) => {
+        this.watched = movies;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error(err);
+        this.watched = [];
+      }
+    });
   } else {
-      this.watched = [];
+    this.watched = [];
   }
 }
 
