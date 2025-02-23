@@ -257,7 +257,7 @@ export class FilmsComponent {
         if (err.status === 400) {
           this.showToast(`Erreur: Le film est déjà dans les favoris.`);
         } else {
-          this.showToast(`Erreur lors de l'ajout aux favoris.`);
+          this.showToast(`Erreur lors de l'ajout aux favoris. Êtes-vous connecté(e) ?`);
           console.error('Erreur ajout aux favoris', err);
         }
       },
@@ -290,7 +290,7 @@ export class FilmsComponent {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        this.showToast('Erreur lors de la suppression des favoris.');
+        this.showToast('Erreur lors de la suppression des favoris. Êtes-vous connecté(e) ?');
         console.error('Erreur lors de la suppression des favoris:', err);
       },
     });
@@ -331,7 +331,7 @@ export class FilmsComponent {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        this.showToast("Erreur lors de l'ajout à la watchlist.");
+        this.showToast("Erreur lors de l'ajout à la watchlist. Êtes-vous connecté(e) ?");
       },
     });
   }
@@ -350,12 +350,12 @@ export class FilmsComponent {
         const movie = this.films.find((m) => m.id === movieId);
         if (movie) {
           movie.isWatchlist = false;
-          this.showToast(movie.title + ` a été retiré de votre watchlist`);
+          this.showToast(movie.title + ` a été retiré de votre watchlist.`);
         }
         this.cdr.detectChanges();
       },
       error: (err) => {
-        this.showToast('Erreur lors de la suppression de la watchlist.');
+        this.showToast("Erreur lors de la suppression de la watchlist. Êtes-vous connecté(e) ?");
       },
     });
   }
@@ -450,7 +450,7 @@ export class FilmsComponent {
         if (err.status === 400) {
           this.showToast(`Erreur : Le film est déjà dans les films vus.`);
         } else {
-          this.showToast("Erreur lors de l'ajout aux films vus.");
+          this.showToast("Erreur lors de l'ajout aux films vus. Êtes-vous connecté(e) ?");
           console.error('Erreur ajout aux films vus', err);
         }
       },
