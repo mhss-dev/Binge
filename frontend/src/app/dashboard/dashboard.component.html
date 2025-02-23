@@ -1,56 +1,63 @@
 <div class="container mt-5 dashboard-container text-white">
+  <!-- Header Profil -->
   <div class="text-center pb-5">
-    <div class="d-flex flex-column align-items-center">
+    <div class="d-flex flex-column align-items-center position-relative">
+      <span *ngIf="nickname && currentNickname && nickname === currentNickname" 
+      class="position-absolute top-0 start-50 translate-middle badge bg-white text-dark" 
+      style="cursor: pointer;" 
+      data-bs-toggle="modal" 
+      data-bs-target="#profileUpdateModal">
+        Cliquez ici pour modifier votre profil
+      </span>
       <img [src]="currentProfile?.avatar_url" 
-      class="avatar rounded-circle mb-2" />      
+      class="avatar rounded-circle mb-2" 
+      alt="Avatar"
+      *ngIf="nickname && currentNickname && nickname === currentNickname"
+      data-bs-toggle="modal" 
+      data-bs-target="#profileUpdateModal"
+      style="cursor: pointer;" />
+ 
+      <img [src]="currentProfile?.avatar_url" 
+      class="avatar rounded-circle mb-2 unclickable" 
+      alt="Avatar"
+      *ngIf="nickname && currentNickname && nickname !== currentNickname" />
+ 
       <h1 class="mt-3">
-        {{ nickname && currentNickname && nickname === currentNickname 
-            ? nickname 
-            : 'Profil de ' + nickname 
-        }}
+        {{ nickname && currentNickname && nickname === currentNickname ? nickname : 'Profil de ' + nickname }}
       </h1>
 
       <div class="row text-center p-0">
         <div class="d-flex justify-content-center align-items-center">
-            <button class="btn btn-white text-white small"  data-bs-target="#followersModal" data-bs-toggle="modal">
-                Abonné{{ followersCount >= 2 ? 's' : '' }} : {{ followersCount }}
-            </button>
-            <button class="btn btn-white text-white small" data-bs-target="#followingsModal" data-bs-toggle="modal">
-                Abonnement{{ followingCount >= 2 ? 's' : '' }} : {{ followingCount }}
-            </button>
+          <button class="btn btn-white text-white small" data-bs-toggle="modal" data-bs-target="#followersModal">
+            Abonné{{ followersCount >= 2 ? 's' : '' }} : {{ followersCount }}
+          </button>
+          <button class="btn btn-white text-white small" data-bs-toggle="modal" data-bs-target="#followingsModal">
+            Abonnement{{ followingCount >= 2 ? 's' : '' }} : {{ followingCount }}
+          </button>
         </div>
-        <hr class="text-white"> 
-        
-        <button class="btn btn-outline-light" 
-            *ngIf="nickname && currentNickname && nickname !== currentNickname" 
-            (click)="toggleFollow()">
-            {{ isFollowing ? 'Ne plus suivre' : 'Suivre' }}
+        <hr class="text-white">
+        <button class="btn btn-outline-light" *ngIf="nickname && currentNickname && nickname !== currentNickname" (click)="toggleFollow()">
+          {{ isFollowing ? 'Ne plus suivre' : 'Suivre' }}
         </button>
-    
-        <div class="d-flex justify-content-center align-items-center gap-3">
-            <button class="btn btn-outline-light" data-bs-target="#changeNicknameModal" data-bs-toggle="modal" *ngIf="nickname === currentNickname">
-                <i class="fa-solid fa-pen"></i> Mettre à jour votre de pseudo
-            </button>
-    
-            <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#selectAvatarModal" *ngIf="nickname === currentNickname">
-                <i class="fa-solid fa-upload"></i> Mettre à jour votre avatar
-            </button>
-        </div>
+      </div>
     </div>
-    
-    
-    </div>
-    </div>
+  </div>
 
   <ul class="nav nav-tabs mt-5" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
-      <a class="nav-link active" id="watched-tab" data-bs-toggle="tab" href="#watched" role="tab" aria-controls="watched" aria-selected="false">Films vus ({{ watched.length }})</a>
-    </li>
-    <li class="nav-item text-center" role="presentation">
-      <a class="nav-link" id="favorites-tab" data-bs-toggle="tab" href="#favorites" role="tab" aria-controls="favorites" aria-selected="false">Favoris ({{ favorites.length }})</a>
+      <a class="nav-link active" id="watched-tab" data-bs-toggle="tab" href="#watched" role="tab" aria-controls="watched" aria-selected="true">
+        Films vus ({{ watched.length }})
+      </a>
     </li>
     <li class="nav-item" role="presentation">
-      <a class="nav-link" id="watchlist-tab" data-bs-toggle="tab" href="#watchlist" role="tab" aria-controls="watchlist" aria-selected="false">Watchlist ({{ watchlist.length }})</a>
+      <a class="nav-link" id="favorites-tab" data-bs-toggle="tab" href="#favorites" role="tab" aria-controls="favorites" aria-selected="false">
+        Favoris ({{ favorites.length }})
+      </a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link" id="watchlist-tab" data-bs-toggle="tab" href="#watchlist" role="tab" aria-controls="watchlist" aria-selected="false">
+        Watchlist ({{ watchlist.length }})
+      </a>
     </li>
   </ul>
 
@@ -62,12 +69,15 @@
             <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
           </a>
         </div>
-        
         <div *ngIf="watched.length === 0" class="text-center mt-3">
-          <p>Vous n'avez pas encore ajouter des films. Commencez à explorer et ajoutez des films <a href="https://binge-mhss.netlify.app/films">ici</a>.</p>        
+          <p>
+            Vous n'avez pas encore ajouté de films. Commencez à explorer et ajoutez des films 
+            <a href="https://binge-mhss.netlify.app/films">ici</a>.
+          </p>        
         </div>
       </div>
     </div>
+
     <div class="tab-pane fade" id="favorites" role="tabpanel" aria-labelledby="favorites-tab">
       <div class="movie-list">
         <div *ngFor="let movie of paginatedFavorites()" class="movie-card">
@@ -76,7 +86,10 @@
           </a>
         </div>
         <div *ngIf="favorites.length === 0" class="text-center mt-3">
-          <p>Aucun favori enregistré pour l'instant. Découvrez des films et ajoutez vos coups de cœur <a href="https://binge-mhss.netlify.app/films">ici</a>.</p>
+          <p>
+            Aucun favori enregistré pour l'instant. Découvrez des films et ajoutez vos coups de cœur 
+            <a href="https://binge-mhss.netlify.app/films">ici</a>.
+          </p>
         </div>
       </div>
     </div>
@@ -89,147 +102,109 @@
           </a>
         </div>
         <div *ngIf="watchlist.length === 0" class="text-center mt-3">
-          <p>Votre liste de films à regarder est vide. Trouvez de nouveaux films à ajouter <a href="https://binge-mhss.netlify.app/films">ici</a>.
+          <p>
+            Votre liste de films à regarder est vide. Trouvez de nouveaux films à ajouter 
+            <a href="https://binge-mhss.netlify.app/films">ici</a>.
           </p>
+        </div>
       </div>
     </div>
-
   </div>
 
-  <div class="modal fade" id="changeNicknameModal" tabindex="-1" aria-labelledby="changeNicknameModalLabel" aria-hidden="true">
+  <div class="modal fade text-dark" id="profileUpdateModal" tabindex="-1" aria-labelledby="profileUpdateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-dark p-0">
+          <ul class="nav nav-tabs text-dark" id="updateTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active text-dark" id="nickname-tab" data-bs-toggle="tab" data-bs-target="#nicknameTabContent" type="button" role="tab" aria-controls="nicknameTabContent" aria-selected="true">
+                Modifier le pseudo
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link text-dark" id="avatar-tab" data-bs-toggle="tab" data-bs-target="#avatarTabContent" type="button" role="tab" aria-controls="avatarTabContent" aria-selected="false">
+                Modifier l'avatar
+              </button>
+            </li>
+          </ul>
+          <div class="tab-content text-dark p-3" id="updateTabContent">
+            <div class="tab-pane fade show active" id="nicknameTabContent" role="tabpanel" aria-labelledby="nickname-tab">
+              <div class="mb-3">
+                <input type="text" class="form-control" id="nicknameInputModal" [(ngModel)]="newNickname" (keydown.enter)="onSaveNewNickname()">
+                <div *ngIf="errorMessage" class="text-danger mt-2">{{ errorMessage }}</div>
+              </div>
+              <button type="button" class="btn btn-primary w-100" data-bs-dismiss="modal" (click)="onSaveNewNickname()">Sauvegarder</button>
+            </div>
+            <div class="tab-pane fade" id="avatarTabContent" role="tabpanel" aria-labelledby="avatar-tab">
+              <div class="avatar-container d-flex flex-wrap gap-2">
+                <div *ngFor="let avatar of avatars" (click)="selectAvatar(avatar, $event)" class="avatar-option" style="cursor: pointer;">
+                  <img [src]="avatar" class="rounded-circle" style="width: 50px; height: 50px;">
+                </div>
+              </div>
+              <button type="button" class="btn btn-primary w-100 mt-3" data-bs-dismiss="modal" (click)="saveAvatar()">Sauvegarder</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="followersModal" tabindex="-1" aria-labelledby="followersModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header text-dark">
-          <h5 class="modal-title" id="changeNicknameModalLabel">Mise à jour du profil</h5>
+          <h5 class="modal-title" id="followersModalLabel">
+            Abonné{{ followersCount >= 2 ? 's' : '' }}
+          </h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body text-dark">
-          <div class="mb-3">
-            <label for="nicknameInput" class="form-label">Nouveau pseudo</label>
-          <input type="text" class="form-control" id="nicknameInput" [(ngModel)]="newNickname" (keydown.enter)="onSaveNewNickname()">
-            <div *ngIf="errorMessage" class="text-danger mt-2">{{ errorMessage }}</div>
+          <div *ngIf="followersList && followersList.length > 0; else noFollowers">
+            <div class="avatar-container">
+              <div *ngFor="let follower of followersList" class="avatar-option">
+                <img [src]="follower.follower_avatar_url" class="rounded-circle" />
+                {{ follower.follower_nickname }}
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary w-100" data-bs-dismiss="modal" (click)="onSaveNewNickname()">Sauvegarder</button>
+          <ng-template #noFollowers>
+            <p class="text-center">Aucun abonné pour le moment.</p>
+          </ng-template>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="modal fade" id="selectAvatarModal" tabindex="-1" aria-labelledby="selectAvatarModalLabel" aria-hidden="true">
+  <div class="modal fade" id="followingsModal" tabindex="-1" aria-labelledby="followingsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header text-dark">
-            <h5 class="modal-title" id="selectAvatarModalLabel">Choisissez un avatar</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body text-dark">
-              <div class="avatar-container">
-                    <div *ngFor="let avatar of avatars" (click)="selectAvatar(avatar, $event)" class="avatar-option">
-                        <img [src]="avatar" class="rounded-circle">
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary w-100" data-bs-dismiss="modal" (click)="saveAvatar()">Sauvegarder</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="changeNicknameModal" tabindex="-1" aria-labelledby="changeNicknameModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header text-dark">
-        <h5 class="modal-title" id="changeNicknameModalLabel">Mise à jour du profil</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body text-dark">
-        <div class="mb-3">
-          <label for="nicknameInput" class="form-label">Nouveau pseudo</label>
-        <input type="text" class="form-control" id="nicknameInput" [(ngModel)]="newNickname" (keydown.enter)="onSaveNewNickname()">
-          <div *ngIf="errorMessage" class="text-danger mt-2">{{ errorMessage }}</div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary w-100" data-bs-dismiss="modal" (click)="onSaveNewNickname()">Sauvegarder</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="selectAvatarModal" tabindex="-1" aria-labelledby="selectAvatarModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header text-dark">
-          <h5 class="modal-title" id="selectAvatarModalLabel">Choisissez un avatar</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body text-dark">
+          <h5 class="modal-title" id="followingsModalLabel">
+            Abonnement{{ followingCount >= 2 ? 's' : '' }}
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-dark">
+          <div *ngIf="followingsList && followingsList.length > 0; else noFollowings">
             <div class="avatar-container">
-                  <div *ngFor="let avatar of avatars" (click)="selectAvatar(avatar, $event)" class="avatar-option">
-                      <img [src]="avatar" class="rounded-circle">
-                  </div>
+              <div *ngFor="let following of followingsList" class="avatar-option">
+                <img [src]="following.following_avatar_url" class="rounded-circle" />
+                {{ following.following_nickname }}
               </div>
-          </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-primary w-100" data-bs-dismiss="modal">Sauvegarder</button>
-          </div>
-      </div>
-  </div>
-</div>
-
-
-</div>
-
-<div class="modal fade" id="followersModal" tabindex="-1" aria-labelledby="followersModal" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header text-dark">
-        <h5 class="modal-title" id="followersModal">Abonné{{ followersCount >= 2 ? 's' : '' }}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body text-dark">
-        <div *ngIf="followersList && followersList.length > 0; else noFollowers">
-          <div class="avatar-container">
-            <div *ngFor="let follower of followersList" class="avatar-option">
-              <img [src]="follower.follower_avatar_url" class="rounded-circle" />
-              {{ follower.follower_nickname }}
             </div>
           </div>
+          <ng-template #noFollowings>
+            <p class="text-center">Aucun abonnement pour le moment.</p>
+          </ng-template>
         </div>
-        <ng-template #noFollowers>
-          <p class="text-center">Aucun abonné pour le moment.</p>
-        </ng-template>
       </div>
     </div>
   </div>
+
+  <button *ngIf="isButtonVisible()" class="btn btn-dark back-to-top shadow" (click)="scrollToTop()">
+    <i class="fas fa-arrow-up"></i>
+  </button>
 </div>
-
-
-<div class="modal fade" id="followingsModal" tabindex="-1" aria-labelledby="followingsModal" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header text-dark">
-        <h5 class="modal-title" id="followingsModal">Abonnement{{ followingCount >= 2 ? 's' : '' }}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body text-dark">
-        <div *ngIf="followingsList && followingsList.length > 0; else noFollowers">
-          <div class="avatar-container">
-            <div *ngFor="let following of followingsList" class="avatar-option">
-              <img [src]="following.following_avatar_url" class="rounded-circle" />
-              {{ following.following_nickname }}
-            </div>
-          </div>
-        </div>
-        <ng-template #noFollowers>
-          <p class="text-center">Aucun abonnement pour le moment.</p>
-        </ng-template>
-      </div>
-    </div>
-  </div>
-</div>
-<button *ngIf="isButtonVisible()" class="btn btn-dark back-to-top shadow" (click)="scrollToTop()"><i class="fas fa-arrow-up"></i></button>
-

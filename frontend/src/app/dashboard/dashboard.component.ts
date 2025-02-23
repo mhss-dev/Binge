@@ -342,6 +342,18 @@ processProfileData(data: any): void {
   }
   
   
+  toggleWatched(movieId: number): void {
+    const movie = this.movie.find((m: any) => m.id === movieId);
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/login']);
+      return;
+    }
+    if (!movie) {
+      return;
+    }
+
+  }
 
 
   @HostListener('window:scroll', ['$event'])
