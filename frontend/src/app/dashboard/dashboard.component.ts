@@ -56,6 +56,7 @@ export class DashboardComponent {
 
   followersCount: number = 0;
   followingCount: number = 0;
+  showEditIcon: boolean = false;
 
 
   constructor(

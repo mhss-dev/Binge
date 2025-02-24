@@ -1,52 +1,52 @@
-import { HttpClient, HttpParams  } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { environment } from '../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DiscoverService {
-
-  
-
   private apiUrl = `${environment.apiUrl}`;
 
-  constructor(private http: HttpClient) { }
-  getFilms(page: number = 1, adult: boolean = false, sortOption: string = 'popularity.desc', genreId: string = ''): Observable<any> {
+  constructor(private http: HttpClient) {}
+  getFilms(
+    page: number = 1,
+    adult: boolean = false,
+    sortOption: string = 'popularity.desc',
+    genreId: string = ''
+  ): Observable<any> {
     const validPage = Math.max(1, Math.min(page, 500));
-  
+
     let params = new HttpParams()
       .set('page', validPage.toString())
       .set('sort_by', sortOption)
       .set('include_adult', adult ? 'true' : 'false');
-    
+
     if (genreId) {
       params = params.set('genre', genreId);
     }
-  
+
     const url = `${this.apiUrl}/films`;
-  
+
     return this.http.get<any>(url, { params }).pipe(
       map((response: any) => {
         return response;
       })
     );
   }
-  
-  
+
   getMoviesByActor(id: number, page: number = 1): Observable<any> {
     const validPage = Math.max(1, Math.min(page, 500));
 
     let params = new HttpParams()
       .set('with_people', id.toString())
-      .set('page', validPage.toString())
+      .set('page', validPage.toString());
 
-    const url = `${this.apiUrl}/actorid`; 
+    const url = `${this.apiUrl}/actorid`;
 
     return this.http.get<any>(url, { params });
   }
-
 
   searchFilms(query: string): Observable<any> {
     if (!query) {
@@ -60,9 +60,9 @@ export class DiscoverService {
 
     return this.http.get<any>(url, { params });
   }
-  
+
   getMovieByID(id: number): Observable<any> {
-    const url = `${this.apiUrl}`; 
+    const url = `${this.apiUrl}`;
     return this.http.get<any>(url);
   }
 }
