@@ -17,7 +17,7 @@ import { TopRatedComponent } from './top-rated/top-rated.component';
 export const routes: Routes = [
     { path: 'home', component: HomeComponent },
     { path: 'films', component: FilmsComponent },
-    { path: 'top-rated', component: TopRatedComponent },
+    { path: 'films/toprated', component: TopRatedComponent },
     { path: 'actuellement-cinema', component: CardsComponent },
     { path: 'membres', component: MembersComponent, canActivate:[AuthGuard] },
     { path: 'film/:id', component: DetailsComponent },

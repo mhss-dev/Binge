@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
   Component,
-  OnInit,
   HostListener,
   ChangeDetectorRef,
   signal,
@@ -9,12 +8,11 @@ import {
   ElementRef,
 } from '@angular/core';
 import { DiscoverService } from '../discover.service';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 import { FormsModule } from '@angular/forms';
 import {
   ActivatedRoute,
-  NavigationStart,
   Router,
   RouterLink,
 } from '@angular/router';
@@ -23,7 +21,7 @@ import { WatchlistService } from '../watchlist.service';
 import { WatchedService } from '../watched.service';
 import { AuthService } from '../auth.service';
 import { Title } from '@angular/platform-browser';
-import { Toast } from 'bootstrap'; // Import de Bootstrap Toast
+import { Toast } from 'bootstrap';
 
 @Component({
   selector: 'app-films',
@@ -37,7 +35,6 @@ export class FilmsComponent {
 
   toastMessage: string = '';
   films: any[] = [];
-  imageRevealed: boolean = false;
 
   totalPages: number = 0;
   currentPage: number = 1;

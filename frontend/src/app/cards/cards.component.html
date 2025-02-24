@@ -61,6 +61,11 @@
   </div>
 
   <div [ngClass]="{'active': currentTab === 'toprated'}" class="section">
+    <div class="d-flex justify-content-end">
+      <a routerLink="/films/toprated" class="btn btn-outline-light">
+        Voir plus de films
+      </a>
+    </div>
     <div class="row mt-5">
       <div *ngFor="let movie of toprated" class="col-6 col-md-4 col-lg-3 mb-4">
         <div class="card bg-dark text-white border-0 shadow-sm h-100">
@@ -95,8 +100,8 @@
         </div>
       </div>
     </div>
-  </div>
 
+  </div>
     <button *ngIf="isButtonVisible()" class="back-to-top btn btn-dark shadow" (click)="scrollToTop()" >↑</button>
 
 </div>

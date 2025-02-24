@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { map, Observable } from 'rxjs';
 import { environment } from '../environments/environment';
 
 @Injectable({
@@ -22,7 +22,18 @@ export class MovieService {
   }
 
   getTopRated(page: number = 1): Observable<any> {    
-    return this.http.get<any>(`${this.apiUrl}/top`, { params: { page } });
+    const validPage = Math.max(1, Math.min(page, 500));
+
+    let params = new HttpParams()
+      .set('page', validPage.toString())
+
+    const url = `${this.apiUrl}/top`;
+
+    return this.http.get<any>(url, { params }).pipe(
+      map((response: any) => {
+        return response;
+      })
+    );  
   }
 
   getUpcoming(region: string = 'BE', page: number = 1): Observable<any> {    

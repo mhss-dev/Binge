@@ -1,15 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, HostListener, ChangeDetectorRef, signal } from '@angular/core';
+import { Component, HostListener, ChangeDetectorRef, signal, ElementRef, ViewChild } from '@angular/core';
 import { DiscoverService } from '../discover.service';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, NavigationStart, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FavoritesService } from '../favorites.service';
 import { WatchlistService } from '../watchlist.service';
 import { WatchedService } from '../watched.service';
 import { AuthService } from '../auth.service';
 import { MovieService } from 'app/movie.service';
+import { Title } from '@angular/platform-browser';
+import { Toast } from 'bootstrap';
 
 @Component({
   selector: 'app-top-rated',
@@ -19,10 +21,10 @@ import { MovieService } from 'app/movie.service';
   styleUrl: './top-rated.component.css'
 })
 export class TopRatedComponent {
-
+  @ViewChild('toastElement', { static: false }) toastElement!: ElementRef;
+  
+  toastMessage: string = '';
   films: any[] = [];
-  imageRevealed: boolean = false;
-
   totalPages: number = 0;
   currentPage: number = 1;
   maxPages: number = 10;
@@ -38,12 +40,7 @@ export class TopRatedComponent {
   isWatched: boolean = false; 
   isLoggedIn = false;
   nickname: string | null = null;
-  sortOption: string = 'popularity.desc';
   isButtonVisible = signal(false);
-  selectedGenre: string = ''; 
-
-
-  
 
   constructor(private movieService: MovieService,
     private route: ActivatedRoute,
@@ -54,21 +51,17 @@ export class TopRatedComponent {
     private watched : WatchedService,
     private router: Router,
     private authService : AuthService,
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
-    
-        
-    this.route.params.subscribe(params => {
-      
+    this.route.params.subscribe((params) => {
       this.movieId = +params['id'];
-      this.loadFilms(1); 
+      this.loadFilms(1);
+      this.titleService.setTitle('Binge • social & découverte de films');
+    });
 
-  })
 
-
-    
-    
     this.authService.isLoggedIn$.subscribe(status => {
       this.isLoggedIn = status; 
       if (this.isLoggedIn) {
@@ -87,7 +80,7 @@ export class TopRatedComponent {
 
     
     
-    this.movieService.getTopRated(1).subscribe({
+    this.movieService.getTopRated(page).subscribe({
       next: (data) => {
         if (data.items && Array.isArray(data.items)) {
           this.films = page === 1 ? [...data.items] : [...this.films, ...data.items];
@@ -97,25 +90,20 @@ export class TopRatedComponent {
           this.checkIfFavorites(); 
           this.checkIfWatched(); 
           this.checkIfWatchlist(); 
-          this.cdr.detectChanges();
+          this.cdr.detectChanges();          
         } else {
-          console.log(data);
+          console.error(data);
         }
         this.cdr.detectChanges();
         this.isLoading = false;
-
-
       },
       error: (err) => {
         console.error(err);
         this.isLoading = false;
-      }
+      },
     });
   }
-  
-  
 
-  
   getNickname(): void {
     if (this.authService.isLoggedIn$) {
       this.authService.getProfil().subscribe({
@@ -132,6 +120,13 @@ export class TopRatedComponent {
     }
   }
   
+  showToast(message: string): void {
+    this.toastMessage = message;
+    this.cdr.detectChanges();
+    const toast = new Toast(this.toastElement.nativeElement);
+    toast.show();
+  }
+
   searchFilms(query: string): void {
     if (!query) return;
 

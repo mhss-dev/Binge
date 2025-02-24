@@ -47,7 +47,7 @@ export class CardsComponent implements OnInit {
     const nowPlaying$ = this.movieService.getNowPlayingMovies(this.selectedRegion, this.currentPage);
     const trending$ = this.movieService.getTrending();
     const upcoming$ = this.movieService.getUpcoming(this.selectedRegion, this.currentPage);
-    const toprated$ = this.movieService.getTopRated();
+    const toprated$ = this.movieService.getTopRated(this.currentPage);
 
     forkJoin([nowPlaying$, trending$, upcoming$, toprated$]).subscribe({
       next: ([nowPlayingData, trendingData, upcomingData, topratedData]) => {
@@ -55,7 +55,7 @@ export class CardsComponent implements OnInit {
         
         this.trendingMovies = trendingData.results;
         this.upcomingMovies = upcomingData.results;
-        this.toprated = topratedData.results;
+        this.toprated = topratedData.items;
 
         this.nowPlayingDates = nowPlayingData.dates;
         this.upcomingDates = upcomingData.dates;
