@@ -13,4 +13,7 @@ export class UserService {
   updateNickname(newNickname: string) {
     this.nicknameSource.next(newNickname);
   }
+  updateBio(newBio: string) {
+    this.nicknameSource.next(newBio);
+  }
 }

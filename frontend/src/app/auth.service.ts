@@ -106,8 +106,21 @@ export class AuthService {
     );
 }
 
+changeBio(newBio: string): Observable<any> {
+  const token = localStorage.getItem('token');
 
-   
+  const headers = new HttpHeaders({
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  });
+
+  return this.http.patch<any>(
+    `${this.apiUrl}/auth/profil/update`,
+    { newBio },
+    { headers }
+  );
+}
+
 
   register(username: string, password: string, nickname: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/register`, { username, password, nickname }, { observe: 'response' });

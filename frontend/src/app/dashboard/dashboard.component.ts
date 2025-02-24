@@ -51,8 +51,10 @@ export class DashboardComponent {
   currentWatchedPage = 1;
 
   newNickname: string = '';
+  newBio: string = '';
   errorMessage: string | null = null;
   isLoggedIn: boolean | undefined;
+  bio: string = '';
 
   followersCount: number = 0;
   followingCount: number = 0;
@@ -108,17 +110,20 @@ loadProfile(): void {
           if (profileResponse) {
             this.nickname = profileResponse.nickname;
             this.currentProfile = profileResponse;
+            this.bio = profileResponse.bio;
             this.fetchProfileData();
             this.fetchFollowers(routeNickname);
             this.fetchFollowings(routeNickname);
             this.checkFollowingStatus(routeNickname);
           } else {
             this.nickname = '';
+            this.bio = '';
           }
           this.isLoading = false;
         });
       } else {
         this.nickname = this.currentNickname;
+        this.bio = response ? response.bio : '';
         this.fetchProfileData();
         this.fetchFollowers(this.nickname);
         this.fetchFollowings(this.nickname);
@@ -303,7 +308,9 @@ processProfileData(data: any): void {
     this.watched = [];
   }
 }
-
+goToProfile(nickname: string) {
+  this.router.navigate(['/profil', nickname]);
+}
 
   handleEnter(event: KeyboardEvent): void {
     if (event.key === 'Enter') {
@@ -317,7 +324,6 @@ processProfileData(data: any): void {
       this.cdr.detectChanges();
       return;
     }
-  
     this.authService.changeNickname(this.newNickname).subscribe({
       next: (response) => {
   
@@ -341,7 +347,33 @@ processProfileData(data: any): void {
       }
     });
   }
+
+  onSaveNewBio(): void {
+    if (!this.newBio || this.newBio.length > 50) {
+      this.errorMessage = 'Votre newBio est invalide ou dépasse 50 caractères.';
+      this.cdr.detectChanges();
+      return;
+    }
+    this.authService.changeBio(this.newBio).subscribe({
+      next: (response) => {
+
+        this.bio = this.newBio;
+        this.userService.updateBio(this.newBio); 
+        this.errorMessage = null;
   
+        this.router.navigate(['/profil', this.nickname]);
+
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        if (err.status === 400) {
+          console.error('Erreur de mise à jour de la bio :', err);
+          this.errorMessage = 'Erreur lors de la mise à jour de la bio. Veuillez réessayer plus tard.';
+        }
+        this.cdr.detectChanges();
+      }
+    });
+  }
   
   toggleWatched(movieId: number): void {
     const movie = this.movie.find((m: any) => m.id === movieId);

@@ -16,10 +16,11 @@
         class="avatar rounded-circle mb-2 unclickable" 
         *ngIf="nickname && currentNickname && nickname !== currentNickname" />
 
-      <h1 class="mt-3">
-        {{ nickname && currentNickname && nickname === currentNickname ? nickname : 'Profil de ' + nickname }}
-      </h1>
-
+        <h1 class="mt-3">
+          {{ nickname && currentNickname && nickname === currentNickname ? nickname : 'Profil de ' + nickname }}
+          <p class="fs-6 lead fst-italic" *ngIf="bio">« {{ bio }} »</p>
+        </h1>
+        
       <div class="row text-center p-0">
         <div class="d-flex justify-content-center align-items-center">
           <button class="btn btn-white text-white small" data-bs-toggle="modal" data-bs-target="#followersModal">
@@ -119,6 +120,11 @@
               </button>
             </li>
             <li class="nav-item" role="presentation">
+              <button class="nav-link text-dark" id="nickname-tab" data-bs-toggle="tab" data-bs-target="#bioTabContent" type="button" role="tab" aria-controls="bioTabContent" aria-selected="false">
+                Modifier la bio
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
               <button class="nav-link text-dark" id="avatar-tab" data-bs-toggle="tab" data-bs-target="#avatarTabContent" type="button" role="tab" aria-controls="avatarTabContent" aria-selected="false">
                 Modifier l'avatar
               </button>
@@ -131,6 +137,13 @@
                 <div *ngIf="errorMessage" class="text-danger mt-2">{{ errorMessage }}</div>
               </div>
               <button type="button" class="btn btn-primary w-100" data-bs-dismiss="modal" (click)="onSaveNewNickname()">Sauvegarder</button>
+            </div>
+            <div class="tab-pane fade" id="bioTabContent" role="tabpanel" aria-labelledby="bio-tab">
+              <div class="mb-3">
+                <input type="text" class="form-control" id="bioInputModal" [(ngModel)]="newBio" (keydown.enter)="onSaveNewBio()">
+                <div *ngIf="errorMessage" class="text-danger mt-2">{{ errorMessage }}</div>
+              </div>
+              <button type="button" class="btn btn-primary w-100" data-bs-dismiss="modal" (click)="onSaveNewBio()">Sauvegarder</button>
             </div>
             <div class="tab-pane fade" id="avatarTabContent" role="tabpanel" aria-labelledby="avatar-tab">
               <div class="avatar-container d-flex flex-wrap gap-2">
@@ -159,7 +172,11 @@
           <div *ngIf="followersList && followersList.length > 0; else noFollowers">
             <div class="avatar-container">
               <div *ngFor="let follower of followersList" class="avatar-option">
-                <img [src]="follower.follower_avatar_url" class="rounded-circle" />
+                <img [src]="follower.follower_avatar_url" 
+                (click)="goToProfile(follower.follower_nickname)"
+                data-bs-dismiss="modal"
+                style="cursor: pointer;"
+                class="rounded-circle" data-bs-dismiss="modal" />
                 {{ follower.follower_nickname }}
               </div>
             </div>
@@ -184,8 +201,14 @@
         <div class="modal-body text-dark">
           <div *ngIf="followingsList && followingsList.length > 0; else noFollowings">
             <div class="avatar-container">
-              <div *ngFor="let following of followingsList" class="avatar-option">
-                <img [src]="following.following_avatar_url" class="rounded-circle" />
+              <div 
+                *ngFor="let following of followingsList" 
+                class="avatar-option" 
+                data-bs-dismiss="modal"
+                (click)="goToProfile(following.following_nickname)"
+                style="cursor: pointer;"
+              >
+                <img [src]="following.following_avatar_url" data-bs-dismiss="modal" class="rounded-circle" />
                 {{ following.following_nickname }}
               </div>
             </div>
@@ -194,6 +217,7 @@
             <p class="text-center">Aucun abonnement pour le moment.</p>
           </ng-template>
         </div>
+        
       </div>
     </div>
   </div>
