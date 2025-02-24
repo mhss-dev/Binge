@@ -352,7 +352,7 @@ goToProfile(nickname: string) {
   }
 
   onSaveNewBio(): void {
-    if (!this.newBio || this.newBio.length > 50) {
+    if (this.newBio.length > 50) {
       this.errorMessage = 'Votre newBio est invalide ou dépasse 50 caractères.';
       this.cdr.detectChanges();
       return;
