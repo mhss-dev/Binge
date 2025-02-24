@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { catchError, forkJoin, of } from 'rxjs';
 import { UserService } from 'app/services/user.service';
 import { MembersService } from 'app/members.service';
+import { Title } from '@angular/platform-browser';
 
 
 @Component({
@@ -72,6 +73,7 @@ export class DashboardComponent {
     private userService: UserService,
     private route: ActivatedRoute,
     private memberservice: MembersService,
+    private titleService: Title
   ) {}
   
   ngOnInit(): void {
@@ -111,6 +113,7 @@ loadProfile(): void {
             this.nickname = profileResponse.nickname;
             this.currentProfile = profileResponse;
             this.bio = profileResponse.bio;
+            this.titleService.setTitle('Binge • profil de ' + profileResponse.nickname);
             this.fetchProfileData();
             this.fetchFollowers(routeNickname);
             this.fetchFollowings(routeNickname);
