@@ -167,12 +167,6 @@
 }
 
 .avatar-option {
-  text-align: center;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.avatar-option {
   display: inline-block;
   cursor: pointer;
   transition: transform 0.2s, border 0.2s;
