@@ -75,6 +75,7 @@
 .avatar {
   width: 150px;
   height: 150px;
+  border: solid 2px white;
 }
 
 .pagination {
