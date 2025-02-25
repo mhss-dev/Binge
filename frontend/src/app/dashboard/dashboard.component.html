@@ -66,17 +66,6 @@
           <a [routerLink]="['/film', movie.id]" class="d-block">
             <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
           </a>
-          <div class="d-flex justify-content-center custom-background">
-            <button class="btn btn-link fs-6" [ngClass]="{'text-success': movie.isWatched, 'text-light': !movie.isWatched}" (click)="(movie.id)">
-              <i class="fa-solid fa-eye" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Marqué comme vu"></i>
-            </button>
-            <button class="btn btn-link" [ngClass]="{'text-danger': movie.isFavorite, 'text-light': !movie.isFavorite}" (click)="(movie.id)">
-              <i class="fa-solid fa-heart" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ajouter aux favoris"></i>
-            </button>
-            <button class="btn btn-link" [ngClass]="{'text-warning': movie.isWatchlist, 'text-light': !movie.isWatchlist}" (click)="(movie.id)">
-              <i class="fa-solid fa-clock" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ajouter à la watchlist"></i>
-            </button>
-          </div>
         </div>
         <div *ngIf="watched.length === 0" class="text-center mt-3">
           <p>
