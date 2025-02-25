@@ -244,7 +244,7 @@ toggleFollow(): void {
   
   getAvatars(): string[] {
     const images: string[] = [];
-    for (let i = 1; i <= 20; i++) {
+    for (let i = 1; i <= 24; i++) {
         images.push(`assets/images/${i}.png`);
     }
     return images;
