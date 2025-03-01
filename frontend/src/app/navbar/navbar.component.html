@@ -35,7 +35,7 @@
         </ul>
 
         <div class="d-flex">
-          <ng-container *ngIf="!isLoggedIn; else loggedInTemplate">
+          <div *ngIf="!isLoggedIn">
             <a class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#searchModal">
               <i class="fa-solid fa-search"></i>
             </a>
@@ -45,19 +45,18 @@
             <a routerLink="/register" class="btn btn-dark" (click)="isNavbarCollapsed = true">
               <i class="fa-solid fa-user-plus"></i>
             </a>
-          </ng-container>
-
-          <ng-template #loggedInTemplate>
-            <a class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#searchModal"  data-bs-toggle="tooltip" data-bs-placement="bottom" title="Recherchez un film">
+          </div>
+          <div *ngIf="isLoggedIn">
+            <a class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#searchModal">
               <i class="fa-solid fa-search"></i>
             </a>
-            <a [routerLink]="['/profil', nickname]" class="btn btn-dark" (click)="isNavbarCollapsed = true" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Profil de {{ nickname }}">
+            <a [routerLink]="['/profil', nickname]" class="btn btn-dark" (click)="isNavbarCollapsed = true">
               <i class="fa-solid fa-user"></i>
             </a>
-            <a (click)="logout(); isNavbarCollapsed = true" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Déconnexion">
-              <i class="fa-solid fa-right-from-bracket" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Déconnexion"></i>
+            <a (click)="logout(); isNavbarCollapsed = true" class="btn btn-danger">
+              <i class="fa-solid fa-right-from-bracket"></i>
             </a>
-          </ng-template>
+          </div>          
         </div>
       </div>
     </div>
@@ -71,7 +70,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body p-3">
-          <input type="text" [(ngModel)]="searchQuery"  placeholder="Insérez le nom du film ici" class="form-control w-100" />
+          <input type="text" [(ngModel)]="searchQuery" (keydown.enter)="searchFilms()" placeholder="Insérez le nom du film ici" class="form-control w-100" />
         </div>
         <div class="modal-footer p-3">
           <button type="button" class="btn btn-primary w-100" data-bs-dismiss="modal" (click)="searchFilms()">Recherche</button>
