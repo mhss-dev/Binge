@@ -38,7 +38,7 @@ export class MembersComponent {
     ngOnInit(): void {
       this.MembreService.getMembers().subscribe({
         next: (response) => {
-          this.members = response;          
+          this.members = response.sort((a, b) => (b.watched_count || 0) - (a.watched_count || 0));          
           this.updateCounts();
           this.cdr.detectChanges();
         },
