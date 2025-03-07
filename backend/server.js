@@ -292,23 +292,18 @@ app.get('/api/teaser/:id', async (req, res) => {
 
 app.get('/api/providers/:id', async (req, res) => {
   const movieId = req.params.id;
-  const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
   try {
-    const geoResponse = await axios.get(`https://ipapi.co/${clientIp}/json/`);
-    const countryCode = geoResponse.data.country_code;
-
     const response = await axios.get(
       `https://api.themoviedb.org/3/movie/${movieId}/watch/providers`,
       {
-        params: { api_key: TMDB_API_KEY },
+        params: {
+          api_key: TMDB_API_KEY,
+        },
       }
     );
-
-    const providers = response.data.results?.[countryCode];
-
-    res.json({ countryCode, providers });
-
+    res.json(response.data);
+    
   } catch (error) {
     console.error(`Erreur lors de l'appel à l'API pour le provider ${movieId} :`, error);
     res.status(500).send('Erreur lors de la récupération des providers');
