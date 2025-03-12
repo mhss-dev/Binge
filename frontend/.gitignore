@@ -36,6 +36,10 @@ yarn-error.log
 /libpeerconnection.log
 testem.log
 /typings
+/ios
+/android
+/icons
+/assets
 
 # System files
 .DS_Store
