@@ -6,17 +6,18 @@ import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AuthGuard } from './authguard.service'; 
-import { noAuthGuard } from './no-auth.guard';
 import { ActorComponent } from './actor/actor.component';
 import { MembersComponent } from './members/members.component';
 import { CardsComponent } from './cards/cards.component';
 import { SearchComponent } from './search/search.component';
 import { TopRatedComponent } from './top-rated/top-rated.component';
+import { SeriesComponent } from './series/series.component';
 
 
 export const routes: Routes = [
     { path: 'home', component: HomeComponent },
     { path: 'films', component: FilmsComponent },
+    { path: 'series', component: SeriesComponent },
     { path: 'films/toprated', component: TopRatedComponent },
     { path: 'actuellement-cinema', component: CardsComponent },
     { path: 'membres', component: MembersComponent, canActivate:[AuthGuard] },

@@ -40,7 +40,7 @@ export class LoginComponent {
   loadMovies() {
     this.movieService.getNowPlayingMovies().subscribe({
       next: (data) => {        
-        this.movie = data.results[this.getRandomBackdrop(0, data.results.length -1)];                
+        this.movie = data.results[2];                
       },
       error: (error) => {
         console.error('Erreur lors de la récupération des films en cours', error);

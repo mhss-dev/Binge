@@ -1,10 +1,17 @@
-<div class="d-flex flex-column min-vh-100">
+<div class="d-flex flex-column min-vh-100"
+     [ngStyle]="{
+       'background-image': 'linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0)), url(https://image.tmdb.org/t/p/original/' + movie.backdrop_path + ')',
+       'background-size': 'cover',
+       'background-position': 'center',
+       'background-attachment': 'fixed'
+     }">
   <div class="container my-auto">
     <div class="row justify-content-center align-items-center">
       <div class="col-lg-5">
-        <div class="register-container p-5 bg-white shadow rounded">
+        <div class="register-container p-5 shadow">
           <div class="text-center mb-4">
             <h2>Inscription</h2>
+            <p class="text-muted">Retrouvez vos films, favoris et watchlist en un clic !</p>
             <div *ngIf="registerMessage" class="alert {{ alertType }}" role="alert">
               {{ registerMessage }}
             </div>
@@ -29,9 +36,9 @@
               <input type="text" id="nickname" class="form-control" [(ngModel)]="nickname" name="nickname" required placeholder="Votre pseudo">
             </div>
             
-            <button type="submit" class="btn btn-primary w-100 mt-3">S'inscrire</button>
+            <button type="submit" class="btn btn-dark w-100 mt-3">S'inscrire</button>
             <div class="text-center mt-3">
-              <a href="/login">Vous avez déjà un compte ?</a>
+              <a class="text-dark" href="/login">Vous avez déjà un compte ?</a>
             </div>
           </form>
           
