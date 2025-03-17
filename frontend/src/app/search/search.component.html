@@ -1,32 +1,33 @@
 <div class="container text-white pt-5 px-3">
-    <div class="text-center mb-5">
-      <h1 class="display-5 font-weight-bold">
-        Recherche pour {{ searchQuery}}
-      </h1>
-    </div>
+  <div class="text-center mb-5">
+    <h1 class="display-5 font-weight-bold">Recherche pour {{ searchQuery }}</h1>
+  </div>
 
-    <div>
-      <div class="row mt-5">
-        <div *ngFor="let movie of films" class="col-6 col-md-4 col-lg-3 mb-4">
-          <div class="position-relative">
-            <div class="card bg-dark text-white border-0 shadow-sm h-100">
-              
-              <a [routerLink]="['/film', movie?.id]" class="d-block" target="_blank" rel="noopener noreferrer">
-                <img
-                
-                  [src]="movie?.poster_path ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path : 'https://via.placeholder.com/500x750?text=Aucun+poster+disponible'"
-                  class="card-img-top img-fluid rounded"
-                  alt="{{ movie?.title || 'Inconnu' }}">
-              </a>
-              
-              
-            </div>
+  <div>
+    <div class="row mt-5">
+      <div *ngFor="let movie of films" class="col-6 col-md-4 col-lg-3 mb-4">
+        <div class="position-relative">
+          <div class="card bg-dark text-white border-0 shadow-sm h-100">
+            <a
+              [routerLink]="['/film', movie?.id]"
+              class="d-block"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                [src]="
+                  movie?.poster_path
+                    ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path
+                    : 'https://placehold.co/500x750?text=Aucun+poster+disponible'
+                "
+                class="card-img-top img-fluid rounded"
+                alt="{{ movie?.title || 'Inconnu' }}"
+              />
+            </a>
+          </div>
         </div>
-        
+      </div>
     </div>
+    <div class="spacer"></div>
+  </div>
 </div>
-<div class="spacer"></div>
-    
-    </div>
-    </div>
-  

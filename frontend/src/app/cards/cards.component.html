@@ -1,66 +1,100 @@
 <div class="container text-white">
   <div class="text-center mb-5 pb-5" id="aucinema">
-    <h1 class="display-4 font-weight-bold"> {{ title }}</h1>
+    <h1 class="display-4 font-weight-bold">{{ title }}</h1>
     <p class="lead text-secondary">
-      Du {{ minDate | date:'dd/MM/yyyy'}} au {{ maxDate | date:'dd/MM/yyyy'}}
+      Du {{ minDate | date : "dd/MM/yyyy" }} au
+      {{ maxDate | date : "dd/MM/yyyy" }}
     </p>
   </div>
 
   <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
 
   <div class="toggle-container mb-4 border-2">
-    <button (click)="selectTab('nowPlaying')" [class.active]="currentTab === 'nowPlaying'" class="toggle-button">Actuellement au cinéma</button>
-    <button (click)="selectTab('trending')" [class.active]="currentTab === 'trending'" class="toggle-button">Tendance de la semaine</button>
-    <button (click)="selectTab('toprated')" [class.active]="currentTab === 'toprated'" class="toggle-button">Les mieux évalués</button>
-    <button (click)="selectTab('upcoming')" [class.active]="currentTab === 'upcoming'" class="toggle-button">Prochaines sorties</button>
+    <button
+      (click)="selectTab('nowPlaying')"
+      [class.active]="currentTab === 'nowPlaying'"
+      class="toggle-button"
+    >
+      Actuellement au cinéma
+    </button>
+    <button
+      (click)="selectTab('trending')"
+      [class.active]="currentTab === 'trending'"
+      class="toggle-button"
+    >
+      Tendance de la semaine
+    </button>
+    <button
+      (click)="selectTab('toprated')"
+      [class.active]="currentTab === 'toprated'"
+      class="toggle-button"
+    >
+      Les mieux évalués
+    </button>
+    <button
+      (click)="selectTab('upcoming')"
+      [class.active]="currentTab === 'upcoming'"
+      class="toggle-button"
+    >
+      Prochaines sorties
+    </button>
   </div>
-  
-  
 
-  <div [ngClass]="{'active': currentTab === 'nowPlaying'}" class="section">
-        <div class="d-flex justify-content-end">
-          <select class="form-select w-0" [(ngModel)]="selectedRegion" (change)="fetchMovieData()">
-            <option value="BE">Belgique</option>
-            <option value="FR">France</option>
-            <option value="US">États-Unis</option>
-          </select>
-        </div>
+  <div [ngClass]="{ active: currentTab === 'nowPlaying' }" class="section">
+    <div class="d-flex justify-content-end">
+      <select
+        class="form-select w-0"
+        [(ngModel)]="selectedRegion"
+        (change)="fetchMovieData()"
+      >
+        <option value="BE">Belgique</option>
+        <option value="FR">France</option>
+        <option value="US">États-Unis</option>
+      </select>
+    </div>
     <div class="row mt-5">
-      
       <div *ngFor="let movie of movies" class="col-6 col-md-4 col-lg-3 mb-4">
         <div class="card bg-dark text-white border-0 shadow-sm h-100">
           <a [routerLink]="['/film', movie?.id]" class="d-block">
             <img
-              [src]="movie?.poster_path ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path : 'https://via.placeholder.com/500x750?text=Aucun+poster+disponible'"
+              [src]="
+                movie?.poster_path
+                  ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path
+                  : 'https://placehold.co/500x750?text=Aucun+poster+disponible'
+              "
               class="card-img-top img-fluid rounded"
-              alt="{{ movie?.title || 'Inconnu' }}">
-          </a>
-        </div>
-      </div>
-    </div>
-      </div>
-  
-  
-  
-  
-  
-
-  <div [ngClass]="{'active': currentTab === 'trending'}" class="section">
-    <div class="row mt-5">
-      <div *ngFor="let movie of trendingMovies" class="col-6 col-md-4 col-lg-3 mb-4">
-        <div class="card bg-dark text-white border-0 shadow-sm h-100">
-          <a [routerLink]="['/film', movie?.id]" class="d-block">
-            <img
-              [src]="movie?.poster_path ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path : 'https://via.placeholder.com/500x750?text=Aucun+poster+disponible'"
-              class="card-img-top img-fluid rounded"
-              alt="{{ movie?.title || 'Inconnu' }}">
+              alt="{{ movie?.title || 'Inconnu' }}"
+            />
           </a>
         </div>
       </div>
     </div>
   </div>
 
-  <div [ngClass]="{'active': currentTab === 'toprated'}" class="section">
+  <div [ngClass]="{ active: currentTab === 'trending' }" class="section">
+    <div class="row mt-5">
+      <div
+        *ngFor="let movie of trendingMovies"
+        class="col-6 col-md-4 col-lg-3 mb-4"
+      >
+        <div class="card bg-dark text-white border-0 shadow-sm h-100">
+          <a [routerLink]="['/film', movie?.id]" class="d-block">
+            <img
+              [src]="
+                movie?.poster_path
+                  ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path
+                  : 'https://placehold.co/500x750?text=Aucun+poster+disponible'
+              "
+              class="card-img-top img-fluid rounded"
+              alt="{{ movie?.title || 'Inconnu' }}"
+            />
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div [ngClass]="{ active: currentTab === 'toprated' }" class="section">
     <div class="d-flex justify-content-end">
       <a routerLink="/films/toprated" class="btn btn-outline-light">
         Voir plus de films
@@ -71,37 +105,58 @@
         <div class="card bg-dark text-white border-0 shadow-sm h-100">
           <a [routerLink]="['/film', movie?.id]" class="d-block">
             <img
-              [src]="movie?.poster_path ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path : 'https://via.placeholder.com/500x750?text=Aucun+poster+disponible'"
+              [src]="
+                movie?.poster_path
+                  ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path
+                  : 'https://placehold.co/500x750?text=Aucun+poster+disponible'
+              "
               class="card-img-top img-fluid rounded"
-              alt="{{ movie?.title || 'Inconnu' }}">
+              alt="{{ movie?.title || 'Inconnu' }}"
+            />
           </a>
         </div>
       </div>
     </div>
   </div>
 
-  <div [ngClass]="{'active': currentTab === 'upcoming'}" class="section">
+  <div [ngClass]="{ active: currentTab === 'upcoming' }" class="section">
     <div class="d-flex justify-content-end">
-      <select class="form-select w-0" [(ngModel)]="selectedRegion" (change)="fetchMovieData()">
+      <select
+        class="form-select w-0"
+        [(ngModel)]="selectedRegion"
+        (change)="fetchMovieData()"
+      >
         <option value="BE">Belgique</option>
         <option value="FR">France</option>
         <option value="US">États-Unis</option>
       </select>
     </div>
     <div class="row mt-5">
-      <div *ngFor="let movie of upcomingMovies" class="col-6 col-md-4 col-lg-3 mb-4">
+      <div
+        *ngFor="let movie of upcomingMovies"
+        class="col-6 col-md-4 col-lg-3 mb-4"
+      >
         <div class="card bg-dark text-white border-0 shadow-sm h-100">
           <a [routerLink]="['/film', movie?.id]" class="d-block">
             <img
-              [src]="movie?.poster_path ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path : 'https://via.placeholder.com/500x750?text=Aucun+poster+disponible'"
+              [src]="
+                movie?.poster_path
+                  ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path
+                  : 'https://placehold.co/500x750?text=Aucun+poster+disponible'
+              "
               class="card-img-top img-fluid rounded"
-              alt="{{ movie?.title || 'Inconnu' }}">
+              alt="{{ movie?.title || 'Inconnu' }}"
+            />
           </a>
         </div>
       </div>
     </div>
-
   </div>
-    <button *ngIf="isButtonVisible()" class="back-to-top btn btn-dark shadow" (click)="scrollToTop()" >↑</button>
-
+  <button
+    *ngIf="isButtonVisible()"
+    class="back-to-top btn btn-dark shadow"
+    (click)="scrollToTop()"
+  >
+    ↑
+  </button>
 </div>

@@ -57,7 +57,7 @@
             <a [routerLink]="['/film', movie?.id]" class="d-block">
               <img
               
-                [src]="movie?.poster_path ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path : 'https://via.placeholder.com/500x750?text=Aucun+poster+disponible'"
+                [src]="movie?.poster_path ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path : 'https://placehold.co/500x750?text=Aucun+poster+disponible'"
                 class="card-img-top img-fluid rounded"
                 alt="{{ movie?.title || 'Inconnu' }}">
             </a>
