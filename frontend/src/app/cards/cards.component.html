@@ -60,8 +60,7 @@
               [src]="
                 movie?.poster_path
                   ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path
-                  : 'https://placehold.co/500x750?text=Aucun+poster+disponible'
-              "
+                  : 'https://placehold.co/500x750?text=Aucun+poster+disponible%0A(' + movie?.title + ')'"
               class="card-img-top img-fluid rounded"
               alt="{{ movie?.title || 'Inconnu' }}"
             />
