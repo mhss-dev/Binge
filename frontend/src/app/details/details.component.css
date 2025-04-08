@@ -47,15 +47,21 @@
   right: 0;
   background: rgba(0, 0, 0, 0.6);
   color: #fff;
-  padding: 10px;
+  padding: 8px;
   text-align: center;
-  font-size: 14px;
+  font-size: 13px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .overlay-text h6,
 .overlay-text p {
   margin: 0;
   padding: 0;
+  font-size: 13px;
+  font-weight: normal;
 }
 
 .movie-description {
