@@ -265,7 +265,7 @@ fetchProfileData(): void {
 processProfileData(data: any): void {
   if (data.favorites?.length) {
     const favoriteMovieIds = data.favorites.map((item: any) => item.movie_id);
-    this.detailsService.loadBatchMovies(favoriteMovieIds, 5).subscribe({
+    this.detailsService.loadBatchMovies(favoriteMovieIds, 10).subscribe({
       next: (movies: any[]) => {
         this.favorites = movies;
         this.cdr.detectChanges();
@@ -281,7 +281,7 @@ processProfileData(data: any): void {
 
   if (data.watchlist?.length) {
     const watchlistMovieIds = data.watchlist.map((item: any) => item.movie_id);
-    this.detailsService.loadBatchMovies(watchlistMovieIds, 5).subscribe({
+    this.detailsService.loadBatchMovies(watchlistMovieIds, 10).subscribe({
       next: (movies: any[]) => {
         this.watchlist = movies;
         this.cdr.detectChanges();
@@ -297,7 +297,7 @@ processProfileData(data: any): void {
 
   if (data.watched?.length) {
     const watchedMovieIds = data.watched.map((item: any) => item.movie_id);
-    this.detailsService.loadBatchMovies(watchedMovieIds, 5).subscribe({
+    this.detailsService.loadBatchMovies(watchedMovieIds, 10).subscribe({
       next: (movies: any[]) => {
         this.watched = movies;
         this.cdr.detectChanges();
