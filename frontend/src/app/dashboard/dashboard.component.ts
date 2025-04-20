@@ -60,6 +60,7 @@ export class DashboardComponent {
   followersCount: number = 0;
   followingCount: number = 0;
   showEditIcon: boolean = false;
+  connectedDevices: any[] = [];
 
 
   constructor(
@@ -79,6 +80,7 @@ export class DashboardComponent {
   ngOnInit(): void {
     
    this.loadProfile();
+   this.fetchConnectedDevices();
 }
 
 loadProfile(): void {
@@ -137,6 +139,20 @@ loadProfile(): void {
   });
 }
 
+fetchConnectedDevices(): void {
+  this.authService.getConnectedDevices().subscribe({
+    next: (devices) => {
+      this.connectedDevices = devices;
+      console.log(devices);
+      
+      this.cdr.detectChanges();
+    },
+    error: (err) => {
+      console.error('Erreur lors de la récupération des appareils connectés :', err);
+      this.connectedDevices = [];
+    }
+  });
+}
 
   checkFollowingStatus(nickname: string): void {
     this.memberservice.isFollowing(nickname).subscribe({

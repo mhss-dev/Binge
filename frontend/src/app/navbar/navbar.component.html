@@ -2,20 +2,18 @@
   <nav class="navbar navbar-expand-md py-2 navbar-bg" [ngClass]="{ 'navbar-scroll': isScrolled }">
     <div class="container-fluid">
       <a
-      routerLink="/home"
-        class="fs-2 ms-4 text-white d-flex align-items-center text-dark text-decoration-none"
+        routerLink="/home"
+        class="fs-2 ms-4 text-white d-flex align-items-center text-decoration-none"
         *ngIf="isLogoVisible">
         Binge
       </a>
 
-      <button
-        class="navbar-toggler"
-        type="button"
-        (click)="toggleNavbar()">
+      <button class="navbar-toggler" type="button" (click)="toggleNavbar()">
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div [ngClass]="{'collapse': isNavbarCollapsed, 'collapse.show': !isNavbarCollapsed}" class="collapse navbar-collapse justify-content-center" id="navbarNav">
+      <div [ngClass]="{ 'collapse': isNavbarCollapsed, 'collapse show': !isNavbarCollapsed }"
+           class="collapse navbar-collapse justify-content-center" id="navbarNav">
         <ul class="navbar-nav d-flex justify-content-center flex-grow-1">
           <li class="nav-item">
             <a routerLink="/home" class="nav-link text-white" (click)="isNavbarCollapsed = true">
@@ -34,29 +32,45 @@
           </li>
         </ul>
 
-        <div class="d-flex">
-          <div *ngIf="!isLoggedIn">
-            <a class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#searchModal">
-              <i class="fa-solid fa-search"></i>
-            </a>
-            <a routerLink="/login" class="btn btn-dark" (click)="isNavbarCollapsed = true">
+        <div class="d-flex align-items-center">
+          <a class="btn btn-dark me-2" data-bs-toggle="modal" data-bs-target="#searchModal">
+            <i class="fa-solid fa-search"></i>
+          </a>
+
+          <ng-container *ngIf="isLoggedIn; else guestButtons">
+            <div class="dropdown ms-2">
+              <a
+                href="#"
+                class="dropdown-toggle d-flex align-items-center text-decoration-none"
+                id="profileDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <img [src]="avatar" class="rounded-circle me-2 avatar-img" alt="Avatar" />
+              </a>
+            
+              <div class="dropdown-menu dropdown-menu-end bg-dark text-white shadow" aria-labelledby="profileDropdown">
+                <a class="dropdown-item text-white d-flex align-items-center"
+                   routerLink="/profil/settings" (click)="isNavbarCollapsed = true">
+                  <i class="fa-solid fa-gear me-2 text-orange"></i> Paramètres
+                </a>
+                <div class="dropdown-divider bg-secondary"></div>
+                <button class="dropdown-item text-danger d-flex align-items-center"
+                        (click)="logout(); isNavbarCollapsed = true">
+                  <i class="fa-solid fa-right-from-bracket me-2"></i> Se déconnecter
+                </button>
+              </div>
+            </div>
+            
+          </ng-container>
+
+          <ng-template #guestButtons>
+            <a routerLink="/login" class="btn btn-dark me-2" (click)="isNavbarCollapsed = true">
               <i class="fa-solid fa-sign-in-alt"></i>
             </a>
             <a routerLink="/register" class="btn btn-dark" (click)="isNavbarCollapsed = true">
               <i class="fa-solid fa-user-plus"></i>
             </a>
-          </div>
-          <div *ngIf="isLoggedIn">
-            <a class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#searchModal">
-              <i class="fa-solid fa-search"></i>
-            </a>
-            <a [routerLink]="['/profil', nickname]" class="btn btn-dark" (click)="isNavbarCollapsed = true">
-              <i class="fa-solid fa-user"></i>
-            </a>
-            <a (click)="logout(); isNavbarCollapsed = true" class="btn btn-danger">
-              <i class="fa-solid fa-right-from-bracket"></i>
-            </a>
-          </div>          
+          </ng-template>
         </div>
       </div>
     </div>
@@ -70,15 +84,17 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body p-3">
-          <input type="text" [(ngModel)]="searchQuery" (keydown.enter)="searchFilms()" placeholder="Insérez le nom du film ici" class="form-control w-100" />
+          <input type="text" [(ngModel)]="searchQuery" (keydown.enter)="searchFilms()"
+                 placeholder="Insérez le nom du film ici" class="form-control w-100" />
         </div>
         <div class="modal-footer p-3">
-          <button type="button" class="btn btn-primary w-100" data-bs-dismiss="modal" (click)="searchFilms()">Recherche</button>
+          <button type="button" class="btn btn-primary w-100" data-bs-dismiss="modal" (click)="searchFilms()">
+            Recherche
+          </button>
         </div>
       </div>
     </div>
   </div>
-  
 
   <router-outlet></router-outlet>
 </div>

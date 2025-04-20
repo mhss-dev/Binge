@@ -21,6 +21,7 @@ export class NavbarComponent {
   isLoading: boolean = false;
   films: any[] = [];
   searchQuery: string = ''; 
+  avatar: string = '';
 
 
   constructor(private route: ActivatedRoute, private authService: AuthService, private router: Router, private cdr: ChangeDetectorRef, private discoverService: DiscoverService) {}
@@ -82,7 +83,10 @@ export class NavbarComponent {
     if (this.authService.isLoggedIn$) {
       this.authService.getProfil().subscribe({
         next: (response: any) => {
+          console.log(response);
+          
           this.nickname = response.nickname;
+          this.avatar = response.avatar_url
           this.cdr.detectChanges(); 
         },
         error: (error: any) => {

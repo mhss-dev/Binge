@@ -24,18 +24,44 @@ export class AuthService {
     });
   }
 
-  login(username: string, password: string, nickname?: string): Observable<any> {
+  getConnectedDevices() {
+    const token = localStorage.getItem('token');
+  
+    return this.http.get<any[]>(
+      `${this.apiUrl}/auth/devices`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+  }
+  private generateDeviceId(): string {
+    return 'device-' + Math.random().toString(36).substring(2, 10);
+  }
+  
+
+  login(username: string, password: string, nickname?: string, avatar_url?: string): Observable<any> {
+    let deviceId = localStorage.getItem('deviceId') ?? this.generateDeviceId();
+    if (!deviceId) {
+      deviceId = this.generateDeviceId();
+      localStorage.setItem('deviceId', deviceId);
+    }
+    const deviceName = `${navigator.platform} - ${navigator.userAgent.split(' ')[0]}`;
+
+    const location = fetch('https://ipapi.co/country_name/')
+  
+    
     return this.http.post<{ token: string }>(
       `${this.apiUrl}/auth/login`,
-      { username, password, nickname },
+      { username, password, nickname, avatar_url, deviceId, location },
       { observe: 'response', withCredentials: true }
     ).pipe(
       tap(response => {
         
         if (response.status === 200 && response.body && response.body.token) {
           const token = response.body.token;
-  
-          
+          console.log(response.body);
           localStorage.setItem('token', token);
           this.setLoggedIn(true);
         } else {
@@ -76,7 +102,7 @@ export class AuthService {
     );
   }
 
-  getProfil(nickname?: string): Observable<any> {
+  getProfil(nickname?: string, avatar?: string): Observable<any> {
     const token = localStorage.getItem('token');
     
     if (!token) {
