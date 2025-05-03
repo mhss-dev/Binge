@@ -22,7 +22,6 @@ export const routes: Routes = [
     { path: 'films/toprated', component: TopRatedComponent },
     { path: 'actuellement-cinema', component: CardsComponent },
     { path: 'membres', component: MembersComponent, canActivate:[AuthGuard] },
-    // { path: 'settings', component: SettingsComponent, canActivate:[AuthGuard] },
     { path: 'film/:id', component: DetailsComponent },
     { path: 'acteur/:id', component: ActorComponent },
     { path: 'actrice/:id', component: ActorComponent },
