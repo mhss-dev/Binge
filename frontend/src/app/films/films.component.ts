@@ -82,6 +82,7 @@ export class FilmsComponent {
         return;
       }
     });
+    localStorage.setItem('redirectUrl', window.location.pathname)
   }
 
   loadFilms(page: number): void {

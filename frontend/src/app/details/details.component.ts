@@ -70,7 +70,7 @@ export class DetailsComponent {
         this.loadSimilarMovies(movieId);
         this.loadWatchProviders(movieId);
         this.loadTrailers(movieId); 
-        
+        localStorage.setItem('redirectUrl', window.location.pathname)
       } else {
         console.error("L'ID du film n'a pas été trouvé?");
       }
