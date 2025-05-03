@@ -74,9 +74,8 @@ export class LoginComponent {
 
           if (redirectUrl) {
             this.router.navigateByUrl(redirectUrl);
-          } else {
-            this.router.navigate(['/profil', nickname]);
           }
+          this.router.navigate(['/profil', nickname]);
         } else if (response.status === 201) {
           this.loginMessage = 'Vous êtes déjà connecté, redirection en cours.';
           this.alertType = 'alert-warning';
