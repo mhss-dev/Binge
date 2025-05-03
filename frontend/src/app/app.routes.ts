@@ -12,6 +12,7 @@ import { CardsComponent } from './cards/cards.component';
 import { SearchComponent } from './search/search.component';
 import { TopRatedComponent } from './top-rated/top-rated.component';
 import { SeriesComponent } from './series/series.component';
+import { SettingsComponent } from './settings/settings.component';
 
 
 export const routes: Routes = [
@@ -23,6 +24,7 @@ export const routes: Routes = [
     { path: 'membres', component: MembersComponent, canActivate:[AuthGuard] },
     { path: 'film/:id', component: DetailsComponent },
     { path: 'acteur/:id', component: ActorComponent },
+    { path: 'actrice/:id', component: ActorComponent },
     { path: 'realisateur/:id', component: ActorComponent },
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
