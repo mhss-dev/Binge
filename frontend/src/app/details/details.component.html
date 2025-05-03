@@ -92,10 +92,10 @@
           <ng-container *ngFor="let chunk of chunkedActors; let i = index">
             <div class="carousel-item" [class.active]="i === 0" data-bs-interval="5000">
               <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-2">
-                <ng-container *ngFor="let actor of chunk">
+                <ng-container *ngFor="let actor of chunk" [ngIf]="actor && actor.name">
                   <div class="col">
                     <div class="card bg-transparent text-white border-0 h-100 cast-card position-relative">
-                      <a [routerLink]="['/acteur', actor.id]" class="text-decoration-none">
+                      <a [routerLink]="['/', actor.gender === 'female' ? 'actrice' : 'acteur', actor.id]" class="text-decoration-none">
                         <div class="position-relative">
                           <img *ngIf="actor.profile_path; else noImage" 
                                class="card-img-top rounded img-fluid" 
