@@ -82,9 +82,7 @@ export class NavbarComponent {
   getNickname(): void {
     if (this.authService.isLoggedIn$) {
       this.authService.getProfil().subscribe({
-        next: (response: any) => {
-          console.log(response);
-          
+        next: (response: any) => {          
           this.nickname = response.nickname;
           this.avatar = response.avatar_url
           this.cdr.detectChanges(); 

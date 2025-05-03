@@ -142,9 +142,7 @@ loadProfile(): void {
 fetchConnectedDevices(): void {
   this.authService.getConnectedDevices().subscribe({
     next: (devices) => {
-      this.connectedDevices = devices;
-      console.log(devices);
-      
+      this.connectedDevices = devices;      
       this.cdr.detectChanges();
     },
     error: (err) => {
