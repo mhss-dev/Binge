@@ -12,8 +12,6 @@ import { CardsComponent } from './cards/cards.component';
 import { SearchComponent } from './search/search.component';
 import { TopRatedComponent } from './top-rated/top-rated.component';
 import { SeriesComponent } from './series/series.component';
-import { SettingsComponent } from './settings/settings.component';
-
 
 export const routes: Routes = [
     { path: 'home', component: HomeComponent },
