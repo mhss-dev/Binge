@@ -95,7 +95,7 @@
                 <ng-container *ngFor="let actor of chunk" [ngIf]="actor && actor.name">
                   <div class="col">
                     <div class="card bg-transparent text-white border-0 h-100 cast-card position-relative">
-                      <a [routerLink]="['/', actor.gender === 'female' ? 'actrice' : 'acteur', actor.id]" class="text-decoration-none">
+                      <a [routerLink]="['/', actor.gender ===  1 ? 'actrice' : 'acteur', actor.id]" class="text-decoration-none">
                         <div class="position-relative">
                           <img *ngIf="actor.profile_path; else noImage" 
                                class="card-img-top rounded img-fluid" 
