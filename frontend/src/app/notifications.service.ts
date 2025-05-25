@@ -19,7 +19,6 @@ export class NotificationService {
     
     return this.http.get<any[]>(`${this.apiUrl}`, { headers }).pipe(
       catchError((error) => {
-        console.error('Error fetching notifications', error);
         throw error;
       })
     );
@@ -39,7 +38,6 @@ export class NotificationService {
     
     return this.http.patch(`${this.apiUrl}/${notificationId}/mark-read`, {}, { headers }).pipe(
       catchError((error) => {
-        console.error('Error marking notification as read', error);
         throw error;
       })
     );
