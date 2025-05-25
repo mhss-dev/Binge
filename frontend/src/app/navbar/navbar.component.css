@@ -130,8 +130,8 @@ li:hover {
 }
 
 
-.dropdown-menu {
-  background-color: #1c1e22 !important;
+.dropdown-menu{
+  background-color: #14181d !important;
   border: none;
   min-width: 200px;
   padding: 0.5rem 0;
@@ -178,9 +178,3 @@ li:hover {
     padding-top: 3rem;
   }
 }
-
-
-
-
-
-

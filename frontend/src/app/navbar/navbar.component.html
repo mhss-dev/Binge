@@ -1,10 +1,14 @@
 <div class="container-fluid p-0">
-  <nav class="navbar navbar-expand-md py-2 navbar-bg" [ngClass]="{ 'navbar-scroll': isScrolled }">
+  <nav
+    class="navbar navbar-expand-md py-2 navbar-bg"
+    [ngClass]="{ 'navbar-scroll': isScrolled }"
+  >
     <div class="container-fluid">
       <a
         routerLink="/home"
         class="fs-2 ms-4 text-white d-flex align-items-center text-decoration-none"
-        *ngIf="isLogoVisible">
+        *ngIf="isLogoVisible"
+      >
         Binge
       </a>
 
@@ -12,40 +16,131 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div [ngClass]="{ 'collapse': isNavbarCollapsed, 'collapse show': !isNavbarCollapsed }"
-           class="collapse navbar-collapse justify-content-center" id="navbarNav">
+      <div
+        [ngClass]="{
+          collapse: isNavbarCollapsed,
+          'collapse show': !isNavbarCollapsed
+        }"
+        class="collapse navbar-collapse justify-content-center"
+        id="navbarNav"
+      >
         <ul class="navbar-nav d-flex justify-content-center flex-grow-1">
           <li class="nav-item">
-            <a routerLink="/home" class="nav-link text-white" (click)="isNavbarCollapsed = true">
+            <a
+              routerLink="/home"
+              class="nav-link text-white"
+              (click)="isNavbarCollapsed = true"
+            >
               <i class="fa-solid fa-house"></i> Accueil
             </a>
           </li>
           <li class="nav-item">
-            <a routerLink="/films" class="nav-link text-white" (click)="isNavbarCollapsed = true">
+            <a
+              routerLink="/films"
+              class="nav-link text-white"
+              (click)="isNavbarCollapsed = true"
+            >
               <i class="fa-solid fa-film"></i> Découverte
             </a>
           </li>
           <li class="nav-item">
-            <a routerLink="/membres" class="nav-link text-white" (click)="isNavbarCollapsed = true">
+            <a
+              routerLink="/membres"
+              class="nav-link text-white"
+              (click)="isNavbarCollapsed = true"
+            >
               <i class="fa-solid fa-user-friends"></i> Membres
             </a>
           </li>
         </ul>
 
-        <div class="d-flex align-items-center">
-          <a class="btn btn-dark me-2" data-bs-toggle="modal" data-bs-target="#searchModal">
-            <i class="fa-solid fa-search"></i>
+        <div class="d-flex align-items-center text-decoration-none">
+          <a
+            class="btn btn-dark me-2 d-flex align-items-center justify-content-center p-2"
+            data-bs-toggle="modal"
+            data-bs-target="#searchModal"
+          >
+            <i class="fa-solid fa-search fs-6"></i>
           </a>
 
           <ng-container *ngIf="isLoggedIn; else guestButtons">
-            <div class="dropdown ms-2">
+            <div class="dropdown position-relative">
+              <a
+                href="#"
+                class="btn btn-dark me-2 dropdown-toggle d-flex align-items-center justify-content-center p-2"
+                id="notificationsDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <i class="fa-solid fa-bell fs-6"></i>
+                <span
+                  *ngIf="unreadNotifications.length > 0"
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                >
+                  {{ unreadNotifications.length }}
+                </span>
+              </a>
+
+              <div
+                class="dropdown-menu dropdown-menu-end bg-dark text-white shadow notifications-dropdown"
+                aria-labelledby="notificationsDropdown"
+              >
+                <div
+                  *ngIf="unreadNotifications.length === 0"
+                  class="dropdown-item text-center text-white"
+                >
+                  Aucune nouvelle notification
+                </div>
+
+                    <button
+      *ngIf="unreadNotifications.length > 0"
+      class="dropdown-item text-white text-center"
+      (click)="clearAllNotifications()"
+    >
+      Marquer comme lu
+    </button>
+
+                <div
+                  *ngFor="let notification of unreadNotifications"
+                  class="dropdown-item text-white d-flex align-items-center py-3 text-decoration-none notification-item"
+                  [ngClass]="{ 'text-muted': notification.read }"
+                  (click)="markNotificationAsRead(notification)"
+                >
+                  <img
+                    *ngIf="notification.avatar_url"
+                    [src]="notification.avatar_url"
+                    class="rounded-circle me-3"
+                    width="50"
+                    height="50"
+                  />
+
+                  <div class="d-flex flex-column">
+                    <a
+                      [routerLink]="['/film', notification.movie_id]"
+                      class="text-white d-flex align-items-center text-decoration-none"
+                    >
+                      <span
+                        class="notification-message"
+                      >
+                        {{ notification.message }} {{ movieTitles[notification.movie_id] }} {{ getTypeText(notification.type) }}
+                      </span>
+                    </a>
+
+                    <small class="text-white mt-2">
+                      {{ notification.created_at | date : "dd/MM/YYYY" }}
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </div>
+              <div class="dropdown ms-2">
               <a
                 href="#"
                 class="dropdown-toggle d-flex align-items-center text-decoration-none"
                 id="profileDropdown"
                 data-bs-toggle="dropdown"
                 aria-expanded="false">
-                <img [src]="avatar" class="rounded-circle me-2 avatar-img" alt="Avatar" />
+                <img [src]="avatar" class="rounded-circle fs-6 me-2 avatar-img" alt="Avatar" />
               </a>
             
               <div class="dropdown-menu dropdown-menu-end bg-dark text-white shadow" aria-labelledby="profileDropdown">
@@ -60,35 +155,66 @@
                 </button>
               </div>
             </div>
-            
           </ng-container>
-
-          <ng-template #guestButtons>
-            <a routerLink="/login" class="btn btn-dark me-2" (click)="isNavbarCollapsed = true">
-              <i class="fa-solid fa-sign-in-alt"></i>
-            </a>
-            <a routerLink="/register" class="btn btn-dark" (click)="isNavbarCollapsed = true">
-              <i class="fa-solid fa-user-plus"></i>
-            </a>
-          </ng-template>
         </div>
+
+        <ng-template #guestButtons>
+          <a
+            routerLink="/login"
+            class="btn btn-dark me-2"
+            (click)="isNavbarCollapsed = true"
+          >
+            <i class="fa-solid fa-sign-in-alt"></i>
+          </a>
+          <a
+            routerLink="/register"
+            class="btn btn-dark"
+            (click)="isNavbarCollapsed = true"
+          >
+            <i class="fa-solid fa-user-plus"></i>
+          </a>
+        </ng-template>
       </div>
     </div>
   </nav>
 
-  <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+  <div
+    class="modal fade"
+    id="searchModal"
+    tabindex="-1"
+    aria-labelledby="searchModalLabel"
+    aria-hidden="true"
+  >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="searchModalLabel">À la recherche d'un film ?</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <h5 class="modal-title" id="searchModalLabel">
+            À la recherche d'un film ?
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
         </div>
         <div class="modal-body p-3">
-          <input type="text" [(ngModel)]="searchQuery" (keydown.enter)="searchFilms()"
-                 placeholder="Insérez le nom du film ici" class="form-control w-100" />
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            (keydown.enter)="searchFilms()"
+            placeholder="Insérez le nom du film ici"
+            class="form-control w-100"
+            autofocus
+          />
         </div>
         <div class="modal-footer p-3">
-          <button type="button" class="btn btn-primary w-100" data-bs-dismiss="modal" (click)="searchFilms()">
+          <button
+            type="button"
+            class="btn btn-primary w-100"
+            data-bs-dismiss="modal"
+            (click)="searchFilms()"
+          >
             Recherche
           </button>
         </div>
