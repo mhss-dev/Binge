@@ -81,6 +81,21 @@ export class DetailsComponent {
     });
 
   }
+
+  ngAfterViewInit(): void {
+    const modalElement = document.getElementById('trailerModal');
+    if (modalElement) {
+      modalElement.addEventListener('hidden.bs.modal', this.resetTrailer.bind(this));
+      modalElement.addEventListener('shown.bs.modal', this.updateTrailerUrl.bind(this));
+    }
+  }
+  ngOnDestroy(): void {
+    const modalElement = document.getElementById('trailerModal');
+    if (modalElement) {
+      modalElement.removeEventListener('hidden.bs.modal', this.resetTrailer.bind(this));
+      modalElement.removeEventListener('shown.bs.modal', this.updateTrailerUrl.bind(this));
+    }
+  }
   
   private loadMovieDetails(id: number): void {
     this.detailsService.getMovieByID(id).subscribe({
@@ -157,6 +172,9 @@ export class DetailsComponent {
     } else {
       console.error("Erreur sur l'URL.");
     }
+  }
+  resetTrailer(): void {
+    this.trailerUrl = null;
   }
   
   
