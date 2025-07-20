@@ -216,7 +216,7 @@ export class FilmsComponent {
     const movie = this.films.find((m) => m.id === movieId);
 
     if (!this.isLoggedIn) {
-      this.router.navigate(['/login']);
+      this.showToast("Vous devez être connecté pour pouvoir effectuer cette action");
       return;
     }
 
@@ -362,7 +362,7 @@ export class FilmsComponent {
     const movie = this.films.find((m) => m.id === movieId);
 
     if (!this.isLoggedIn) {
-      this.router.navigate(['/login']);
+      this.showToast("Vous devez être connecté pour pouvoir effectuer cette action");
       return;
     }
 
@@ -396,7 +396,7 @@ export class FilmsComponent {
     const movie = this.films.find((m) => m.id === movieId);
 
     if (!this.isLoggedIn) {
-      this.router.navigate(['/login']);
+      this.showToast("Vous devez être connecté pour pouvoir effectuer cette action");
       return;
     }
     if (!movie) {
