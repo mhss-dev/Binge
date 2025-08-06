@@ -5,8 +5,9 @@
     <h1 class="display-3 display-md-1 pb-3 pb-md-5">Binge</h1>
     <p class="lead mb-4">Gardez un œil sur les films que vous avez visionnés.</p>
     <p class="lead mb-4">Ajoutez ceux que vous souhaitez découvrir et partagez vos coups de cœur avec vos amis.</p>    
-    <p class="text-small text-secondary mt-4 fs-5 movie-name">{{ movie?.title || "Merci de patienter quelques instants, le service démarre." }} ({{ movie.release_date | date: 'yyyy' || "Chargement... Merci de patienter quelques instants." }})</p>
-    
+    <a [routerLink]="['/film', movie?.id]" class="d-block text-decoration-none">
+      <p class="text-small text-secondary mt-4 fs-5 movie-name">{{ movie?.title || "Merci de patienter quelques instants, le service démarre." }} ({{ movie.release_date | date: 'yyyy' || "Chargement... Merci de patienter quelques instants." }})</p>
+    </a>
     <div class="arrow-container">
       <a class="mt-5" (click)="scrollTo('aucinema')">
         <i class="fas fa-arrow-down"></i>
