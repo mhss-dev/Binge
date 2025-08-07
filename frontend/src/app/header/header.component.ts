@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { interval, Subscription } from 'rxjs';
 import { DiscoverService } from 'app/discover.service';
 import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, NgbToastModule],
+  imports: [CommonModule, NgbToastModule, RouterLink],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
