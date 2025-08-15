@@ -61,7 +61,6 @@ export class AuthService {
         
         if (response.status === 200 && response.body && response.body.token) {
           const token = response.body.token;
-          console.log(response.body);
           localStorage.setItem('token', token);
           this.setLoggedIn(true);
         } else {
