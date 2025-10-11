@@ -28,12 +28,32 @@ export class HeaderComponent {
   ngOnInit(): void {
     this.loadMovies();
     this.setupBackgroundUpdater();
+    this.animateSplitText();
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
   
+
+  private animateSplitText(): void {
+    const elements = this.el.nativeElement.querySelectorAll('.split-text');
+    elements.forEach((el: HTMLElement) => {
+      const text = el.textContent || '';
+      el.textContent = '';
+      const letters = text.split('');
+      letters.forEach((char, i) => {
+        const span = document.createElement('span');
+        span.textContent = char === ' ' ? '\u00A0' : char;
+        span.style.display = 'inline-block';
+        span.style.opacity = '0';
+        span.style.transform = 'translateY(20px)';
+        span.style.animation = `fadeInUp 0.5s forwards`;
+        span.style.animationDelay = `${i * 0.05}s`;
+        el.appendChild(span);
+      });
+    });
+  }
 
   loadMovies() {
     this.movieService.getNowPlayingMovies().subscribe({

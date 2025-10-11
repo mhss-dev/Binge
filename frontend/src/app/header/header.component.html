@@ -2,9 +2,9 @@
         [ngStyle]="{'background-image': 'url(https://image.tmdb.org/t/p/original/' + movie.backdrop_path + ')'}">
   <div class="overlay position-absolute w-100 h-100"></div>
   <div class="container-fluid position-relative z-index-2 px-5 py-5">
-    <h1 class="display-3 display-md-1 pb-3 pb-md-5">Binge</h1>
-    <p class="lead mb-4">Gardez un œil sur les films que vous avez visionnés.</p>
-    <p class="lead mb-4">Ajoutez ceux que vous souhaitez découvrir et partagez vos coups de cœur avec vos amis.</p>    
+    <h1 class="display-3 display-md-1 pb-3 pb-md-5 split-text">Binge</h1>
+    <p class="lead mb-4 split-text">Gardez un œil sur les films que vous avez visionnés.</p>
+    <p class="lead mb-4 split-text">Ajoutez ceux que vous souhaitez découvrir et partagez vos coups de cœur avec vos amis.</p>    
     <a [routerLink]="['/film', movie?.id]" class="d-block text-decoration-none">
       <p class="text-small text-secondary mt-4 fs-5 movie-name">{{ movie?.title || "Merci de patienter quelques instants, le service démarre." }} ({{ movie.release_date | date: 'yyyy' || "Chargement... Merci de patienter quelques instants." }})</p>
     </a>
