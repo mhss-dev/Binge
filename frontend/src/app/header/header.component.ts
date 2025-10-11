@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, AfterViewInit  } from '@angular/core';
 import { MovieService } from '../movie.service';
 import { CommonModule } from '@angular/common';
 import { interval, Subscription } from 'rxjs';
@@ -23,16 +23,19 @@ export class HeaderComponent {
   private subscription: Subscription = new Subscription();
   private readonly BACKDROP_UPDATE_INTERVAL = 5000;
 
-  constructor(private movieService: MovieService) {}
+  constructor(private movieService: MovieService, private el: ElementRef) {}
 
   ngOnInit(): void {
     this.loadMovies();
     this.setupBackgroundUpdater();
-    this.animateSplitText();
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+  
+  ngAfterViewInit(): void {
+    this.animateSplitText();
   }
   
 
