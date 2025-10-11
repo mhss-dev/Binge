@@ -33,11 +33,12 @@ export class HeaderComponent {
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
-  
+
   ngAfterViewInit(): void {
+  setTimeout(() => {
     this.animateSplitText();
-  }
-  
+  }, 500);
+}
 
   private animateSplitText(): void {
     const elements = this.el.nativeElement.querySelectorAll('.split-text');
