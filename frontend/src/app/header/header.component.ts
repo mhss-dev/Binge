@@ -1,4 +1,4 @@
-import { Component, ElementRef, AfterViewInit  } from '@angular/core';
+import { Component } from '@angular/core';
 import { MovieService } from '../movie.service';
 import { CommonModule } from '@angular/common';
 import { interval, Subscription } from 'rxjs';
@@ -23,7 +23,7 @@ export class HeaderComponent {
   private subscription: Subscription = new Subscription();
   private readonly BACKDROP_UPDATE_INTERVAL = 5000;
 
-  constructor(private movieService: MovieService, private el: ElementRef) {}
+  constructor(private movieService: MovieService) {}
 
   ngOnInit(): void {
     this.loadMovies();
@@ -33,31 +33,7 @@ export class HeaderComponent {
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
-
-  ngAfterViewInit(): void {
-  setTimeout(() => {
-    this.animateSplitText();
-  }, 500);
-}
-
-  private animateSplitText(): void {
-    const elements = this.el.nativeElement.querySelectorAll('.split-text');
-    elements.forEach((el: HTMLElement) => {
-      const text = el.textContent || '';
-      el.textContent = '';
-      const letters = text.split('');
-      letters.forEach((char, i) => {
-        const span = document.createElement('span');
-        span.textContent = char === ' ' ? '\u00A0' : char;
-        span.style.display = 'inline-block';
-        span.style.opacity = '0';
-        span.style.transform = 'translateY(20px)';
-        span.style.animation = `fadeInUp 0.5s forwards`;
-        span.style.animationDelay = `${i * 0.05}s`;
-        el.appendChild(span);
-      });
-    });
-  }
+  
 
   loadMovies() {
     this.movieService.getNowPlayingMovies().subscribe({
