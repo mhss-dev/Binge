@@ -24,8 +24,7 @@
   pointer-events: none;
 }
 
-.profile-main,
-.library-stats {
+.profile-main {
   position: relative;
 }
 
@@ -87,6 +86,10 @@
   color: rgba(245, 247, 251, 0.76);
 }
 
+.profile-bio-empty {
+  color: var(--muted);
+}
+
 .social-stats {
   display: flex;
   flex-wrap: wrap;
@@ -107,36 +110,17 @@
   color: var(--text);
 }
 
+.stat-pill-accent {
+  background: rgba(255, 122, 24, 0.14);
+  border-color: rgba(255, 122, 24, 0.28);
+}
+
 .follow-action {
   margin-top: 1rem;
   background: linear-gradient(135deg, rgba(255, 122, 24, 0.9), rgba(255, 179, 71, 0.95));
   color: #08111f;
   font-weight: 700;
   border: 0;
-}
-
-.library-stats {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.85rem;
-  margin-top: 1.5rem;
-}
-
-.library-pill {
-  display: grid;
-  gap: 0.2rem;
-  padding: 1rem 1.1rem;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.library-pill strong {
-  font-size: 1.5rem;
-}
-
-.library-pill span {
-  color: var(--muted);
 }
 
 .library-shell {
@@ -182,6 +166,10 @@
 
 .movie-card {
   min-height: 100%;
+}
+
+.movie-card .poster-link {
+  display: block;
 }
 
 .movie-poster {
@@ -253,6 +241,38 @@
   gap: 0.6rem;
 }
 
+.editor-panel {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.editor-copy {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.editor-copy h3,
+.editor-copy p {
+  margin: 0;
+}
+
+.editor-copy p {
+  color: var(--muted);
+}
+
+.editor-kicker {
+  color: var(--accent-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
 .profile-input {
   width: 100%;
   min-height: 2.9rem;
@@ -262,6 +282,11 @@
   background: rgba(255, 255, 255, 0.04);
   color: var(--text);
   outline: none;
+}
+
+.profile-textarea {
+  min-height: 7.5rem;
+  resize: vertical;
 }
 
 .field-error {
@@ -289,6 +314,13 @@
   border-radius: 18px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.04);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.avatar-option:hover,
+.avatar-option.selected {
+  border-color: rgba(255, 122, 24, 0.45);
+  background: rgba(255, 122, 24, 0.1);
 }
 
 .avatar-option img {
@@ -355,10 +387,6 @@
     padding: 1rem;
   }
 
-  .library-stats {
-    grid-template-columns: 1fr;
-  }
-
   .library-tabs {
     display: grid;
   }
@@ -366,5 +394,9 @@
   .library-tabs .nav-link {
     width: 100%;
     justify-content: center;
+  }
+
+  .editor-panel {
+    padding: 0.85rem;
   }
 }

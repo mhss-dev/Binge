@@ -21,16 +21,28 @@
       />
 
       <div class="profile-copy">
-        <p class="eyebrow">Profil cinéma</p>
+        <p class="eyebrow">Profil cinema</p>
         <h1>{{ nickname && currentNickname && nickname === currentNickname ? nickname : 'Profil de ' + nickname }}</h1>
         <p class="profile-bio" *ngIf="bio">{{ bio }}</p>
+        <p class="profile-bio profile-bio-empty" *ngIf="!bio && nickname === currentNickname">
+          Ajoutez une bio courte pour donner le ton de votre profil.
+        </p>
 
         <div class="social-stats">
           <button class="stat-pill" data-bs-toggle="modal" data-bs-target="#followersModal">
-            Abonné{{ followersCount >= 2 ? 's' : '' }} : {{ followersCount }}
+            Abonne{{ followersCount >= 2 ? 's' : '' }} : {{ followersCount }}
           </button>
           <button class="stat-pill" data-bs-toggle="modal" data-bs-target="#followingsModal">
             Abonnement{{ followingCount >= 2 ? 's' : '' }} : {{ followingCount }}
+          </button>
+          <button
+            *ngIf="nickname && currentNickname && nickname === currentNickname"
+            type="button"
+            class="stat-pill stat-pill-accent"
+            data-bs-toggle="modal"
+            data-bs-target="#profileUpdateModal"
+          >
+            Modifier le profil
           </button>
         </div>
 
@@ -41,21 +53,6 @@
         >
           {{ isFollowing ? 'Ne plus suivre' : 'Suivre' }}
         </button>
-      </div>
-    </div>
-
-    <div class="library-stats">
-      <div class="library-pill">
-        <strong>{{ watched.length }}</strong>
-        <span>Visionnés</span>
-      </div>
-      <div class="library-pill">
-        <strong>{{ favorites.length }}</strong>
-        <span>Favoris</span>
-      </div>
-      <div class="library-pill">
-        <strong>{{ watchlist.length }}</strong>
-        <span>Watchlist</span>
       </div>
     </div>
   </div>
@@ -73,7 +70,7 @@
           aria-controls="watched"
           aria-selected="true"
         >
-          Visionnés <span>{{ watched.length }}</span>
+          Visionnes <span>{{ watched.length }}</span>
         </button>
       </li>
       <li class="nav-item" role="presentation">
@@ -112,15 +109,12 @@
           <article *ngFor="let movie of paginatedWatched()" class="movie-card poster-card">
             <a [routerLink]="['/film', movie.id]" class="poster-link">
               <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
-              <div class="poster-overlay">
-                <h2>{{ movie.title }}</h2>
-              </div>
             </a>
           </article>
         </div>
         <ng-template #watchedEmpty>
           <div class="empty-state">
-            <p>Vous n'avez pas encore ajouté de films visionnés.</p>
+            <p>Vous n'avez pas encore ajoute de films visionnes.</p>
             <a [routerLink]="['/films']" class="empty-link">Explorer le catalogue</a>
           </div>
         </ng-template>
@@ -131,16 +125,13 @@
           <article *ngFor="let movie of paginatedFavorites()" class="movie-card poster-card">
             <a [routerLink]="['/film', movie.id]" class="poster-link">
               <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
-              <div class="poster-overlay">
-                <h2>{{ movie.title }}</h2>
-              </div>
             </a>
           </article>
         </div>
         <ng-template #favoritesEmpty>
           <div class="empty-state">
-            <p>Aucun favori enregistré pour l'instant.</p>
-            <a [routerLink]="['/films']" class="empty-link">Découvrir des films</a>
+            <p>Aucun favori enregistre pour l'instant.</p>
+            <a [routerLink]="['/films']" class="empty-link">Decouvrir des films</a>
           </div>
         </ng-template>
       </div>
@@ -150,16 +141,13 @@
           <article *ngFor="let movie of paginatedWatchlist()" class="movie-card poster-card">
             <a [routerLink]="['/film', movie.id]" class="poster-link">
               <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
-              <div class="poster-overlay">
-                <h2>{{ movie.title }}</h2>
-              </div>
             </a>
           </article>
         </div>
         <ng-template #watchlistEmpty>
           <div class="empty-state">
             <p>Votre watchlist est encore vide.</p>
-            <a [routerLink]="['/films']" class="empty-link">Trouver quelque chose à ajouter</a>
+            <a [routerLink]="['/films']" class="empty-link">Trouver quelque chose a ajouter</a>
           </div>
         </ng-template>
       </div>
@@ -195,26 +183,47 @@
 
           <div class="tab-content modal-content-body" id="updateTabContent">
             <div class="tab-pane fade show active" id="nicknameTabContent" role="tabpanel" aria-labelledby="nickname-tab">
-              <div class="field-stack">
-                <input type="text" class="profile-input" id="nicknameInputModal" [(ngModel)]="newNickname" (keydown.enter)="onSaveNewNickname()">
-                <div *ngIf="errorMessage" class="field-error">{{ errorMessage }}</div>
+              <div class="editor-panel">
+                <div class="editor-copy">
+                  <p class="editor-kicker">Identite</p>
+                  <h3>Mettre a jour le pseudo</h3>
+                  <p>Choisissez un nom court et reconnaissable pour votre profil.</p>
+                </div>
+                <div class="field-stack">
+                  <input type="text" class="profile-input" id="nicknameInputModal" [(ngModel)]="newNickname" (keydown.enter)="onSaveNewNickname()">
+                  <div *ngIf="errorMessage" class="field-error">{{ errorMessage }}</div>
+                </div>
               </div>
               <button type="button" class="save-button" data-bs-dismiss="modal" (click)="onSaveNewNickname()">Sauvegarder</button>
             </div>
 
             <div class="tab-pane fade" id="bioTabContent" role="tabpanel" aria-labelledby="bio-tab">
-              <div class="field-stack">
-                <input type="text" class="profile-input" id="bioInputModal" [(ngModel)]="newBio" (keydown.enter)="onSaveNewBio()">
-                <div *ngIf="errorMessage" class="field-error">{{ errorMessage }}</div>
+              <div class="editor-panel">
+                <div class="editor-copy">
+                  <p class="editor-kicker">Bio</p>
+                  <h3>Donner une personnalite au profil</h3>
+                  <p>Une phrase suffit pour dire vos gouts ou votre humeur cinema.</p>
+                </div>
+                <div class="field-stack">
+                  <textarea class="profile-input profile-textarea" id="bioInputModal" [(ngModel)]="newBio"></textarea>
+                  <div *ngIf="errorMessage" class="field-error">{{ errorMessage }}</div>
+                </div>
               </div>
               <button type="button" class="save-button" data-bs-dismiss="modal" (click)="onSaveNewBio()">Sauvegarder</button>
             </div>
 
             <div class="tab-pane fade" id="avatarTabContent" role="tabpanel" aria-labelledby="avatar-tab">
-              <div class="avatar-grid">
-                <button *ngFor="let avatar of avatars" type="button" (click)="selectAvatar(avatar, $event)" class="avatar-option">
-                  <img [src]="avatar" alt="Avatar disponible">
-                </button>
+              <div class="editor-panel avatar-editor">
+                <div class="editor-copy">
+                  <p class="editor-kicker">Avatar</p>
+                  <h3>Choisir une presence visuelle</h3>
+                  <p>Selectionnez l'avatar qui represente le mieux votre profil.</p>
+                </div>
+                <div class="avatar-grid">
+                  <button *ngFor="let avatar of avatars" type="button" (click)="selectAvatar(avatar, $event)" class="avatar-option">
+                    <img [src]="avatar" alt="Avatar disponible">
+                  </button>
+                </div>
               </div>
               <button type="button" class="save-button mt-3" data-bs-dismiss="modal" (click)="saveAvatar()">Sauvegarder</button>
             </div>
@@ -228,7 +237,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content modal-surface">
         <div class="modal-header modal-head">
-          <h2 class="modal-title" id="followersModalLabel">Abonné{{ followersCount >= 2 ? 's' : '' }}</h2>
+          <h2 class="modal-title" id="followersModalLabel">Abonnes{{ followersCount >= 2 ? 's' : '' }}</h2>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body modal-content-body">
@@ -245,7 +254,7 @@
             </button>
           </div>
           <ng-template #noFollowers>
-            <p class="empty-modal">Aucun abonné pour le moment.</p>
+            <p class="empty-modal">Aucun abonne pour le moment.</p>
           </ng-template>
         </div>
       </div>

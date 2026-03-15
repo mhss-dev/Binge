@@ -151,6 +151,10 @@ export class DetailsComponent {
     return uniqueProviders;
   }
 
+  getWatchProviderLink(): string | null {
+    return this.watchProviders?.link || null;
+  }
+
   getProviderRegionLabel(): string {
     const labels: Record<string, string> = {
       BE: 'Belgique',

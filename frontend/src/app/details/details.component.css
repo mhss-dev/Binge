@@ -122,6 +122,8 @@
   padding: 0.55rem 0.7rem;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.05);
+  text-decoration: none;
+  color: var(--text);
 }
 
 .providers-logo {
