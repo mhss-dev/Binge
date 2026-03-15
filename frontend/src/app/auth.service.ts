@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, from, throwError } from 'rxjs';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 
 @Injectable({
@@ -9,6 +9,7 @@ import { environment } from '../environments/environment';
 })
 export class AuthService {
   private apiUrl = environment.apiUrl;
+  private readonly fallbackLocations = ['Belgium', 'France', 'Luxembourg'];
 
   private isLoggedInSubject = new BehaviorSubject<boolean>(false);
   isLoggedIn$ = this.isLoggedInSubject.asObservable();
@@ -39,7 +40,32 @@ export class AuthService {
   private generateDeviceId(): string {
     return 'device-' + Math.random().toString(36).substring(2, 10);
   }
-  
+
+  private async resolveLocation(deviceId: string): Promise<string> {
+    try {
+      const response = await fetch('https://ipapi.co/json/');
+
+      if (!response.ok) {
+        throw new Error(`Location lookup failed with status ${response.status}`);
+      }
+
+      const data = await response.json();
+      const countryName = typeof data?.country_name === 'string' ? data.country_name.trim() : '';
+
+      if (countryName) {
+        return countryName;
+      }
+    } catch (error) {
+      console.warn('Location lookup failed, using fallback location.', error);
+    }
+
+    return this.getFallbackLocation(deviceId);
+  }
+
+  private getFallbackLocation(deviceId: string): string {
+    const hash = Array.from(deviceId).reduce((total, char) => total + char.charCodeAt(0), 0);
+    return this.fallbackLocations[hash % this.fallbackLocations.length];
+  }
 
   login(username: string, password: string, nickname?: string, avatar_url?: string): Observable<any> {
     let deviceId = localStorage.getItem('deviceId') ?? this.generateDeviceId();
@@ -47,16 +73,15 @@ export class AuthService {
       deviceId = this.generateDeviceId();
       localStorage.setItem('deviceId', deviceId);
     }
-    const deviceName = `${navigator.platform} - ${navigator.userAgent.split(' ')[0]}`;
 
-    const location = fetch('https://ipapi.co/country_name/')
-  
-    
-    return this.http.post<{ token: string }>(
-      `${this.apiUrl}/auth/login`,
-      { username, password, nickname, avatar_url, deviceId, location },
-      { observe: 'response', withCredentials: true }
-    ).pipe(
+    return from(this.resolveLocation(deviceId)).pipe(
+      switchMap((location) =>
+        this.http.post<{ token: string }>(
+          `${this.apiUrl}/auth/login`,
+          { username, password, nickname, avatar_url, deviceId, location },
+          { observe: 'response', withCredentials: true }
+        )
+      ),
       tap(response => {
         
         if (response.status === 200 && response.body && response.body.token) {
