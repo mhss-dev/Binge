@@ -1,99 +1,189 @@
-<div class="container text-white pt-5 px-3">
-  <div class="text-center mb-5">
-    <h1 class="display-5 font-weight-bold">
-      Découverte de vos goûts{{ nickname ? ', ' + nickname : '' }} 🎬
-    </h1>
-  </div>
+<section class="discover-page app-shell text-white">
+  <div class="discover-hero glass-panel">
+    <div class="discover-intro">
+      <div class="discover-copy-block">
+        <p class="eyebrow">Explorer vos goûts</p>
+        <h1>Découverte de vos goûts{{ nickname ? ", " + nickname : "" }}</h1>
+        <p class="discover-lead">
+          Naviguez dans le catalogue, filtrez rapidement et gérez vos listes
+          sans quitter la carte.
+        </p>
+      </div>
 
-  <div class="row mb-4 align-items-end">
-    <div class="col-12 col-md-6 mb-3 mb-md-0">
-      <form class="d-flex shadow-none" (keydown.enter)="searchFilms(searchQuery)" (input)="searchFilms(searchQuery)">
-        <div class="search-container w-100 me-2">
-          <i class="fa fa-search search-icon"></i>
-          <input class="form-control search-input" type="search" placeholder="Trouvez un film" aria-label="Search" [(ngModel)]="searchQuery" name="searchQuery">
-        </div>
+      <div class="discover-summary">
+        <span class="summary-pill">Catalogue vivant</span>
+        <span class="summary-pill">Actions rapides</span>
+      </div>
+    </div>
+
+    <div class="filters-panel">
+      <form
+        class="search-wrap"
+        (keydown.enter)="searchFilms(searchQuery)"
+        (input)="searchFilms(searchQuery)"
+      >
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input
+          type="search"
+          placeholder="Trouvez un film"
+          aria-label="Recherche"
+          [(ngModel)]="searchQuery"
+          name="searchQuery"
+        />
       </form>
-    </div>
 
-    <div class="col-12 col-md-6 d-flex justify-content-md-end mb-3 mb-md-0">
-      <select class="form-control custom-width me-2" [(ngModel)]="sortOption" name="sortOption" (change)="loadFilms(1)">
-        <option value="popularity.desc">Popularité (+/-)</option>
-        <option value="popularity.asc">Popularité (-/+)</option>
-        <option value="primary_release_date.desc">Date de sortie (+/-)</option>
-        <option value="primary_release_date.asc">Date de sortie (-/+)</option>
-      </select>
-
-      <select class="form-control custom-width me-2" [(ngModel)]="selectedGenre" name="genreOption" (change)="loadFilms(1)">
-        <option value="">Tous les genres</option>
-        <option value="28">Action</option>
-        <option value="12">Aventure</option>
-        <option value="16">Animation</option>
-        <option value="35">Comédie</option>
-        <option value="80">Crime</option>
-        <option value="99">Documentaire</option>
-        <option value="18">Drame</option>
-        <option value="10751">Famille</option>
-        <option value="14">Fantastique</option>
-        <option value="36">Histoire</option>
-        <option value="27">Horreur</option>
-        <option value="10402">Musique</option>
-        <option value="9648">Mystère</option>
-        <option value="10749">Romance</option>
-        <option value="878">Science-fiction</option>
-        <option value="10770">Téléfilm</option>
-        <option value="53">Thriller</option>
-        <option value="10752">Guerre</option>
-        <option value="37">Western</option>
-      </select>
-    </div>
-  </div>
-
-  <div>
-    <div class="row mt-5">
-      <div *ngFor="let movie of films" class="col-6 col-md-4 col-lg-3 mb-4">
-        <div class="position-relative">
-          <div class="card bg-dark text-white border-0 shadow-sm h-100">
-            
-            <a [routerLink]="['/film', movie?.id]" class="d-block">
-              <img
-              
-                [src]="movie?.poster_path ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path : 'https://placehold.co/500x750?text=Aucun+poster+disponible'"
-                class="card-img-top img-fluid rounded"
-                alt="{{ movie?.title || 'Inconnu' }}">
-            </a>
-            <div class="d-flex justify-content-center custom-background">
-              <button class="btn btn-link" [ngClass]="{'text-success': movie.isWatched, 'text-light': !movie.isWatched}" (click)="toggleWatched(movie.id)">
-                <i class="fa-solid fa-eye" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Marqué comme vu"></i>
-              </button>
-              <button class="btn btn-link" [ngClass]="{'text-danger': movie.isFavorite, 'text-light': !movie.isFavorite}" (click)="toggleFavorite(movie.id)">
-                <i class="fa-solid fa-heart" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ajouter aux favoris"></i>
-              </button>
-              <button class="btn btn-link" [ngClass]="{'text-warning': movie.isWatchlist, 'text-light': !movie.isWatchlist}" (click)="toggleWatchlist(movie.id)">
-                <i class="fa-solid fa-clock" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ajouter à la watchlist"></i>
-              </button>
-            </div>
-        
-           
+      <div class="filters-grid">
+        <div class="filter-stack">
+          <span class="filter-caption">Trier</span>
+          <div class="select-shell">
+            <mat-select
+              panelClass="app-select-panel"
+              [(ngModel)]="sortOption"
+              name="sortOption"
+              (selectionChange)="loadFilms(1)"
+            >
+              <mat-option value="popularity.desc">Popularité +</mat-option>
+              <mat-option value="popularity.asc">Popularité -</mat-option>
+              <mat-option value="primary_release_date.desc"
+                >Sortie récente</mat-option
+              >
+              <mat-option value="primary_release_date.asc"
+                >Sortie ancienne</mat-option
+              >
+            </mat-select>
           </div>
         </div>
-        
-      </div>
-    </div>
-    <div class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3 text-center" *ngIf="toastMessage">
-      <div 
-        class="toast align-items-center text-white custom-background border-0 d-flex justify-content-center" 
-        role="alert" 
-        aria-live="assertive" 
-        aria-atomic="true" 
-        #toastElement>
-        <div class="d-flex text-center">
-          <div class="toast-body text-center">
-            {{ toastMessage }}
+
+        <div class="filter-stack">
+          <span class="filter-caption">Genre</span>
+          <div class="select-shell">
+            <mat-select
+              panelClass="app-select-panel"
+              [(ngModel)]="selectedGenre"
+              name="genreOption"
+              (selectionChange)="loadFilms(1)"
+            >
+              <mat-option
+                *ngFor="let genre of genreOptions"
+                [value]="genre.value"
+                >{{ genre.label }}</mat-option
+              >
+            </mat-select>
           </div>
         </div>
+
+        <button
+          *ngIf="hasActiveFilters()"
+          type="button"
+          class="clear-filters"
+          (click)="clearFilters()"
+          aria-label="Réinitialiser les filtres"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
-    </div>    
-  
-    <button *ngIf="isButtonVisible()" class="btn btn-dark back-to-top shadow" (click)="scrollToTop()"><i class="fas fa-arrow-up"></i></button>
+    </div>
   </div>
+
+  <section class="discover-results">
+    <div class="section-heading discover-results-heading">
+      <div>
+        <p class="eyebrow">À explorer</p>
+        <h2>Films à parcourir</h2>
+      </div>
+      <span class="results-caption"
+        >{{ films.length }} affiches prêtes à trier</span
+      >
+    </div>
+
+    <div class="discover-grid">
+      <article
+        *ngFor="let movie of films; trackBy: trackByMovieId"
+        class="discover-card glass-panel"
+      >
+        <a [routerLink]="['/film', movie?.id]" class="discover-poster">
+          <img
+            [src]="
+              movie?.poster_path
+                ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path
+                : 'https://placehold.co/500x750?text=Aucun+poster+disponible'
+            "
+            alt="{{ movie?.title || 'Inconnu' }}"
+          />
+        </a>
+
+        <div class="discover-body">
+          <div class="discover-copy">
+            <h2>{{ movie?.title || "Titre inconnu" }}</h2>
+            <p>
+              <span *ngIf="movie?.release_date">{{
+                movie?.release_date | date : "yyyy"
+              }}</span>
+              <span *ngIf="movie?.vote_average"
+                >Note {{ movie?.vote_average | number : "1.0-1" }}/10</span
+              >
+            </p>
+          </div>
+
+          <div class="action-grid">
+            <button
+              class="action-tile"
+              [ngClass]="{ active: movie.isWatched }"
+              (click)="toggleWatched(movie.id)"
+              aria-label="Marquer comme vu"
+            >
+              <i class="fa-solid fa-eye"></i>
+              <span>{{ movie.isWatched ? "Vu" : "À voir" }}</span>
+            </button>
+            <button
+              class="action-tile"
+              [ngClass]="{ favorite: movie.isFavorite }"
+              (click)="toggleFavorite(movie.id)"
+              aria-label="Ajouter aux favoris"
+            >
+              <i class="fa-solid fa-heart"></i>
+              <span>Favori</span>
+            </button>
+            <button
+              class="action-tile"
+              [ngClass]="{ watchlist: movie.isWatchlist }"
+              (click)="toggleWatchlist(movie.id)"
+              aria-label="Ajouter à la watchlist"
+            >
+              <i class="fa-solid fa-clock"></i>
+              <span>Watchlist</span>
+            </button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <div
+    class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3 text-center"
+    *ngIf="toastMessage"
+  >
+    <div
+      class="toast align-items-center text-white border-0 d-flex justify-content-center discover-toast"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+      #toastElement
+    >
+      <div class="d-flex text-center">
+        <div class="toast-body text-center">
+          {{ toastMessage }}
+        </div>
+      </div>
+    </div>
   </div>
+
+  <button
+    *ngIf="isButtonVisible()"
+    class="floating-action"
+    (click)="scrollToTop()"
+    aria-label="Retour en haut"
+  >
+    <i class="fas fa-arrow-up"></i>
+  </button>
+</section>

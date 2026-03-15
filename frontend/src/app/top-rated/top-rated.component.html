@@ -1,89 +1,116 @@
-<div class="container text-white pt-5 px-3">
-  <div class="text-center mb-5">
-    <h1 class="display-5 font-weight-bold">Les films les mieux évalués</h1>
-  </div>
+<section class="top-rated-page app-shell text-white">
+  <div class="top-rated-hero glass-panel">
+    <div class="top-rated-intro">
+      <div class="top-rated-copy">
+        <p class="eyebrow">Sélection critique</p>
+        <h1>Les films les mieux notés</h1>
+        <p class="top-rated-lead">
+          Parcourez les titres les plus appréciés, cherchez rapidement un film
+          précis et ajoutez-le à vos listes en un geste.
+        </p>
+      </div>
 
-  <div class="row mb-4 align-items-end">
-    <div class="col-12 col-md-6 mb-3 mb-md-0">
+      <div class="top-rated-summary">
+        <span class="summary-pill">Classement vivant</span>
+        <span class="summary-pill">Actions rapides</span>
+      </div>
+    </div>
+
+    <div class="top-rated-toolbar">
       <form
-        class="d-flex shadow-none"
+        class="search-wrap"
         (keydown.enter)="searchFilms(searchQuery)"
         (input)="searchFilms(searchQuery)"
       >
-        <div class="search-container w-100 me-2">
-          <i class="fa fa-search search-icon"></i>
-          <input
-            class="form-control search-input"
-            type="search"
-            placeholder="Trouvez un film"
-            aria-label="Search"
-            [(ngModel)]="searchQuery"
-            name="searchQuery"
-          />
-        </div>
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input
+          type="search"
+          placeholder="Trouvez un film"
+          aria-label="Recherche"
+          [(ngModel)]="searchQuery"
+          name="searchQuery"
+        />
       </form>
     </div>
   </div>
 
-  <div>
-    <div class="row mt-5">
-      <div *ngFor="let movie of films" class="col-6 col-md-4 col-lg-3 mb-4">
-        <div class="position-relative">
-          <div class="card bg-dark text-white border-0 shadow-sm h-100">
-            <a [routerLink]="['/film', movie?.id]" class="d-block">
-              <img
-                [src]="
-                  movie?.poster_path
-                    ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path
-                    : 'https://placehold.co/500x750?text=Aucun+poster+disponible'
-                "
-                class="card-img-top img-fluid rounded"
-                alt="{{ movie?.title || 'Inconnu' }}"
-              />
-            </a>
-            <div class="d-flex justify-content-center custom-background">
-              <button
-                class="btn btn-link"
-                [ngClass]="{
-                  'text-success': movie.isWatched,
-                  'text-light': !movie.isWatched
-                }"
-                (click)="toggleWatched(movie.id)"
-              >
-                <i class="fa-solid fa-eye"></i>
-              </button>
-              <button
-                class="btn btn-link"
-                [ngClass]="{
-                  'text-danger': movie.isFavorite,
-                  'text-light': !movie.isFavorite
-                }"
-                (click)="toggleFavorite(movie.id)"
-              >
-                <i class="fa-solid fa-heart"></i>
-              </button>
-              <button
-                class="btn btn-link"
-                [ngClass]="{
-                  'text-warning': movie.isWatchlist,
-                  'text-light': !movie.isWatchlist
-                }"
-                (click)="toggleWatchlist(movie.id)"
-              >
-                <i class="fa-solid fa-clock"></i>
-              </button>
-            </div>
-          </div>
-        </div>
+  <section class="top-rated-results">
+    <div class="section-heading top-rated-heading">
+      <div>
+        <p class="eyebrow">En tête du classement</p>
+        <h2>Des valeurs sûres à explorer</h2>
       </div>
+      <span class="results-caption"
+        >{{ films.length }} affiches à parcourir</span
+      >
     </div>
 
-    <button
-      *ngIf="isButtonVisible()"
-      class="btn btn-dark back-to-top shadow"
-      (click)="scrollToTop()"
-    >
-      <i class="fas fa-arrow-up"></i>
-    </button>
-  </div>
-</div>
+    <div class="top-rated-grid">
+      <article *ngFor="let movie of films" class="top-rated-card glass-panel">
+        <a [routerLink]="['/film', movie?.id]" class="top-rated-poster">
+          <img
+            [src]="
+              movie?.poster_path
+                ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path
+                : 'https://placehold.co/500x750?text=Aucun+poster+disponible'
+            "
+            alt="{{ movie?.title || 'Inconnu' }}"
+          />
+        </a>
+
+        <div class="top-rated-body">
+          <div class="top-rated-copy-block">
+            <h3>{{ movie?.title || "Titre inconnu" }}</h3>
+            <p>
+              <span *ngIf="movie?.release_date">{{
+                movie?.release_date | date : "yyyy"
+              }}</span>
+              <span *ngIf="movie?.vote_average"
+                >Note {{ movie?.vote_average | number : "1.0-1" }}/10</span
+              >
+            </p>
+          </div>
+
+          <div class="action-grid">
+            <button
+              class="action-tile"
+              [ngClass]="{ active: movie.isWatched }"
+              (click)="toggleWatched(movie.id)"
+              aria-label="Marquer comme vu"
+            >
+              <i class="fa-solid fa-eye"></i>
+              <span>Vu</span>
+            </button>
+            <button
+              class="action-tile"
+              [ngClass]="{ favorite: movie.isFavorite }"
+              (click)="toggleFavorite(movie.id)"
+              aria-label="Ajouter aux favoris"
+            >
+              <i class="fa-solid fa-heart"></i>
+              <span>Favori</span>
+            </button>
+            <button
+              class="action-tile"
+              [ngClass]="{ watchlist: movie.isWatchlist }"
+              (click)="toggleWatchlist(movie.id)"
+              aria-label="Ajouter à la watchlist"
+            >
+              <i class="fa-solid fa-clock"></i>
+              <span>Watchlist</span>
+            </button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <button
+    *ngIf="isButtonVisible()"
+    class="floating-action"
+    (click)="scrollToTop()"
+    aria-label="Retour en haut"
+  >
+    <i class="fas fa-arrow-up"></i>
+  </button>
+</section>

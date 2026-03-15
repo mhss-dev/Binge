@@ -1,14 +1,15 @@
 import { Component, HostListener, OnInit, signal } from '@angular/core';
 import { MovieService } from '../movie.service';
 import { CommonModule } from '@angular/common';
-import { RouterLink, Route } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { FormsModule } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-cards',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, MatSelectModule],
   templateUrl: './cards.component.html',
   styleUrl: './cards.component.css',
 })
@@ -17,23 +18,21 @@ export class CardsComponent implements OnInit {
   trendingMovies: any[] = [];
   upcomingMovies: any[] = [];
   toprated: any[] = [];
-  error: string = '';
-  minDate: string = '';
-  maxDate: string = '';
+  error = '';
+  minDate = '';
+  maxDate = '';
   currentTab = 'nowPlaying';
-  title: string = 'Actuellement au cinéma';
+  title = 'Actuellement au cinéma';
 
   nowPlayingDates: any;
-  trendingDates: any;
   upcomingDates: any;
-  isLoading: boolean = false;
-  hasMore: boolean = true; 
+  isLoading = false;
+  hasMore = true;
   isButtonVisible = signal(false);
 
   selectedRegion = 'BE';
   currentPage = 1;
-
-
+  readonly tabOrder = ['nowPlaying', 'trending', 'toprated', 'upcoming'];
 
   constructor(private movieService: MovieService) {}
 
@@ -52,32 +51,27 @@ export class CardsComponent implements OnInit {
     forkJoin([nowPlaying$, trending$, upcoming$, toprated$]).subscribe({
       next: ([nowPlayingData, trendingData, upcomingData, topratedData]) => {
         this.movies = nowPlayingData.results;
-        
         this.trendingMovies = trendingData.results;
         this.upcomingMovies = upcomingData.results;
         this.toprated = topratedData.items;
-
         this.nowPlayingDates = nowPlayingData.dates;
         this.upcomingDates = upcomingData.dates;
-
         this.updateDates();
-
       },
       error: (error) => {
-        this.error = "Dans 99% des cas, rafraîchir la page résout ce problème, qui est lié à Netlify.";
+        this.error = 'Dans 99% des cas, rafraîchir la page résout ce problème, qui est lié à Netlify.';
         console.error(error);
       },
       complete: () => {
-        console.log('Données des films récupérés avec succès');
+        console.log('Données des films récupérées avec succès');
       },
     });
   }
 
-
   scrollToTop(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-  
+
   @HostListener('window:scroll', [])
   onWindowScroll(): void {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
@@ -86,20 +80,13 @@ export class CardsComponent implements OnInit {
     this.isButtonVisible.set(scrollPercentage > 30);
   }
 
-  selectTab(tab: string) {
+  selectTab(tab: string): void {
     this.currentTab = tab;
     this.updateTitle();
     this.updateDates();
   }
 
-  isTabActive(tab: string): boolean {
-    return this.currentTab === tab;
-  }
-
-  
-
-
-  updateTitle() {
+  updateTitle(): void {
     switch (this.currentTab) {
       case 'nowPlaying':
         this.title = 'Actuellement au cinéma';
@@ -124,10 +111,9 @@ export class CardsComponent implements OnInit {
         this.minDate = this.nowPlayingDates?.minimum;
         this.maxDate = this.nowPlayingDates?.maximum;
         break;
-      case 'trending':
+      case 'trending': {
         const today = new Date();
         const currentDay = today.getDay();
-        const daysUntilMonday = currentDay === 0 ? 1 : 8 - currentDay;
         const currentMonday = new Date(today);
         currentMonday.setDate(today.getDate() - (currentDay - 1));
         const nextMonday = new Date(currentMonday);
@@ -135,6 +121,7 @@ export class CardsComponent implements OnInit {
         this.minDate = currentMonday.toISOString().split('T')[0];
         this.maxDate = nextMonday.toISOString().split('T')[0];
         break;
+      }
       case 'upcoming':
         this.minDate = this.upcomingDates?.minimum;
         this.maxDate = this.upcomingDates?.maximum;
@@ -149,7 +136,30 @@ export class CardsComponent implements OnInit {
         break;
     }
   }
-  Today(): string {
-    return new Date().toISOString().split('T')[0];
+
+  getActiveMovies(): any[] {
+    switch (this.currentTab) {
+      case 'trending':
+        return this.trendingMovies;
+      case 'toprated':
+        return this.toprated;
+      case 'upcoming':
+        return this.upcomingMovies;
+      case 'nowPlaying':
+      default:
+        return this.movies;
+    }
+  }
+
+  getActiveLabel(): string {
+    return `${this.getActiveMovies().length} titres à explorer`;
+  }
+
+  showRegionSelector(): boolean {
+    return this.currentTab === 'nowPlaying' || this.currentTab === 'upcoming';
+  }
+
+  trackByMovieId(index: number, movie: any): number {
+    return movie.id ?? index;
   }
 }

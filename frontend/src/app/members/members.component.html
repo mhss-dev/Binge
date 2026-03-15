@@ -1,43 +1,59 @@
-<div class="container text-white my-5">
-  <div class="row justify-content-start">
-      <div class="text-center mb-5 pb-5" id="aucinema">
-          <h1 class="display-4 font-weight-bold">Liste de nos membres</h1>
-          <p class="lead text-secondary">
-              Rejoignez {{ members.length }} fans de cinéma
-          </p>
+<section class="members-page app-shell text-white">
+  <div class="members-hero glass-panel">
+    <div class="members-intro">
+      <div class="members-copy">
+        <p class="eyebrow">Communauté</p>
+        <h1>Les membres Binge</h1>
+        <p class="members-lead">
+          Explorez les profils, découvrez les habitudes de visionnage de la communauté et trouvez de nouvelles personnes à suivre.
+        </p>
       </div>
-      <div *ngFor="let member of members" class="col-md-6 col-lg-4 mb-4">
-          <a routerLink="/profil/{{member.nickname}}" class="text-decoration-none">
-              <div class="card member-item">
-                  <div class="image-container">
-                      <img src="{{member.avatar_url}}" alt="{{ member.nickname }}" class="card-img-top rounded-circle" />
-                  </div>
-                  <div class="card-body text-center">
-                      <h5 class="card-title fs-4">{{ member.nickname }}</h5>
-                      <hr class="text-white">
-                      <div class="row justify-content-center">
-                          <div class="col-auto text-center">
-                              <p class="text-success small">
-                                  <i class="fa-solid fa-film" data-bs-toggle="tooltip" title="Films regardés"></i> 
-                                  <span class="fw-bold"> {{ member.watched_count }}</span>
-                              </p>
-                          </div>
-                          <div class="col-auto text-center">
-                              <p class="text-danger small">
-                                  <i class="fa-solid fa-heart" data-bs-toggle="tooltip" title="Nombre de favoris"></i> 
-                                  <span class="fw-bold"> {{ member.favorites_count }}</span>
-                              </p>
-                          </div>
-                          <div class="col-auto text-center">
-                              <p class="text-warning small">
-                                  <i class="fa-solid fa-clock" data-bs-toggle="tooltip" title="Films à voir"></i> 
-                                  <span class="fw-bold"> {{ member.watchlist_count }}</span>
-                              </p>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </a>
+
+      <div class="members-summary">
+        <span class="summary-pill">{{ members.length }} profils</span>
+        <span class="summary-pill">Fans de cinéma</span>
+        <span class="summary-pill">Découverte sociale</span>
       </div>
+    </div>
   </div>
-</div>
+
+  <section class="members-results">
+    <div class="section-heading members-heading">
+      <div>
+        <p class="eyebrow">À rencontrer</p>
+        <h2>Des profils à parcourir</h2>
+      </div>
+      <span class="results-caption">Classement par activité visionnée</span>
+    </div>
+
+    <div class="members-grid">
+      <a *ngFor="let member of members" [routerLink]="['/profil', member.nickname]" class="member-card glass-panel">
+        <div class="member-avatar-wrap">
+          <img [src]="member.avatar_url" alt="{{ member.nickname }}" class="member-avatar" />
+        </div>
+
+        <div class="member-body">
+          <h3>{{ member.nickname }}</h3>
+
+          <div class="member-stats">
+            <div class="member-stat watched">
+              <i class="fa-solid fa-film"></i>
+              <span>{{ member.watched_count }}</span>
+              <small>Vus</small>
+            </div>
+            <div class="member-stat favorite">
+              <i class="fa-solid fa-heart"></i>
+              <span>{{ member.favorites_count }}</span>
+              <small>Favoris</small>
+            </div>
+            <div class="member-stat watchlist">
+              <i class="fa-solid fa-clock"></i>
+              <span>{{ member.watchlist_count }}</span>
+              <small>Watchlist</small>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </section>
+</section>

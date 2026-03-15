@@ -1,122 +1,347 @@
-h1 {
-  padding-top: 10rem;
-  font-size: 2rem;
+.discover-page {
+  padding: 2.9rem 0 6rem;
 }
 
-.card {
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  height: 100%;
+.discover-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 1.5rem;
+  border-radius: 32px;
+  margin-bottom: 2.2rem;
+  background:
+    radial-gradient(circle at top right, rgba(255, 122, 24, 0.12), transparent 32%),
+    rgba(8, 16, 28, 0.68);
 }
 
-.card img {
-  width: 100%;
-  height: auto;
-  object-fit: cover;
+.discover-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 8.5rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent),
+    radial-gradient(circle at top left, rgba(255, 122, 24, 0.18), transparent 46%);
+  pointer-events: none;
 }
 
-.card:hover {
-  transform: scale(1.05);
-}
-
-.custom-background {
-  background-color: rgba(20, 24, 29, 0.95) !important;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.card-body .btn {
-  margin-right: 20px;
-}
-
-.search-container {
+.discover-intro {
   position: relative;
   display: flex;
-  align-items: center;
-  width: 100%;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1.25rem;
+  align-items: flex-start;
 }
 
-.search-icon {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 18px;
-  color: #aaa;
-  cursor: pointer;
-  transition: color 0.3s;
+.discover-copy-block {
+  max-width: 680px;
 }
 
-.search-input {
-  width: 100%;
-  padding: 10px 10px 10px 40px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  transition: width 0.5s ease-in-out;
+.discover-hero h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 0.95;
 }
 
-.form-control {
-  border-radius: 5px;
+.discover-lead {
+  margin: 1rem 0 0;
+  max-width: 52ch;
+  color: rgba(245, 247, 251, 0.76);
 }
 
-.form-control:focus {
-  box-shadow: none;
+.discover-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
-.back-to-top {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
+.summary-pill {
+  padding: 0.75rem 1rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--muted);
+}
+
+.filters-panel {
+  position: relative;
+  margin-top: 1.4rem;
+  padding: 0.75rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.search-wrap,
+.clear-filters {
+  min-height: 2.05rem;
+  border-radius: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+}
+
+.search-wrap {
   display: flex;
   align-items: center;
+  gap: 0.45rem;
+  padding: 0 0.65rem;
+}
+
+.search-wrap input {
+  flex: 1;
+  background: transparent;
+  border: 0;
+  outline: none;
+  color: var(--text);
+  line-height: 1;
+  font-size: 0.97rem;
+}
+
+.search-wrap input::placeholder {
+  color: rgba(245, 247, 251, 0.5);
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(140px, 180px)) auto;
+  gap: 0.55rem;
+  align-items: center;
+  justify-content: start;
+  margin-top: 0.55rem;
+}
+
+.filter-stack {
+  display: grid;
+  gap: 0.24rem;
+  align-content: start;
+}
+
+.filter-caption {
+  font-size: 0.64rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245, 247, 251, 0.62);
+  padding-left: 0.15rem;
+  line-height: 1;
+}
+
+.select-shell {
+  display: flex;
+  align-items: center;
+  min-height: 2.05rem;
+  max-width: 180px;
+  padding: 0 0.5rem;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+:host ::ng-deep .select-shell .mat-mdc-select {
+  width: 100%;
+  color: var(--text);
+  font-size: 0.97rem;
+  line-height: 1;
+}
+
+:host ::ng-deep .select-shell .mat-mdc-select-trigger {
+  min-height: 2.05rem;
+  height: 2.05rem;
+  display: flex;
+  align-items: center;
+}
+
+:host ::ng-deep .select-shell .mat-mdc-select-value {
+  display: flex;
+  align-items: center;
+}
+
+:host ::ng-deep .select-shell .mat-mdc-select-value-text {
+  line-height: 1;
+}
+
+:host ::ng-deep .select-shell .mat-mdc-select-value-text,
+:host ::ng-deep .select-shell .mat-mdc-select-arrow {
+  color: var(--text) !important;
+}
+
+
+.clear-filters {
+  width: 2.05rem;
+  min-width: 2.05rem;
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
+  padding: 0;
   cursor: pointer;
-  font-size: 19px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(10px);
-  transition: background-color 0.3s, box-shadow 0.3s;
+  border-radius: 13px;
+  margin-top: 0.9rem;
 }
 
-.back-to-top:hover {
-  background-color: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-}
-.custom-width {
-  width: 160px;
-  padding: 10px;
+.clear-filters i {
+  font-size: 0.9rem;
 }
 
-@media (max-width: 768px) {
-  .search-container {
-    width: 100%;
-    flex: 1;
-  }
+.discover-results {
+  position: relative;
+  padding-top: 0.85rem;
+}
 
-  h1 {
-    font-size: 1.5rem;
-  }
+.discover-results::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: min(12rem, 28vw);
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255, 122, 24, 0.75), rgba(255, 122, 24, 0));
+}
 
-  .custom-width {
-    width: 100%;
-    max-width: 200px;
-  }
+.discover-results-heading {
+  margin-bottom: 1.3rem;
+}
 
-  .back-to-top {
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
+.discover-results-heading h2 {
+  font-size: clamp(1.35rem, 1.1rem + 1vw, 2rem);
+}
+
+.results-caption {
+  color: var(--muted);
+}
+
+.discover-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.discover-card {
+  overflow: hidden;
+  border-radius: 24px;
+  background: rgba(8, 16, 28, 0.62);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.discover-card:hover {
+  border-color: rgba(255, 122, 24, 0.5);
+  box-shadow: 0 24px 32px rgba(0, 0, 0, 0.28);
+}
+
+.discover-poster {
+  display: block;
+  text-decoration: none;
+}
+
+.discover-poster img {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+.discover-body {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.discover-copy h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.discover-copy p {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.action-tile {
+  min-height: 4.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  text-align: center;
+  padding: 0.7rem 0.45rem;
+}
+
+.action-tile span {
+  font-size: 0.76rem;
+  line-height: 1.1;
+}
+
+.action-tile.active {
+  background: rgba(77, 213, 161, 0.18);
+  color: var(--success);
+}
+
+.action-tile.favorite {
+  background: rgba(255, 107, 129, 0.18);
+  color: var(--danger);
+}
+
+.action-tile.watchlist {
+  background: rgba(255, 179, 71, 0.18);
+  color: var(--accent-soft);
+}
+
+.discover-toast {
+  background: rgba(7, 17, 31, 0.96);
+  border-radius: 18px;
+  box-shadow: var(--shadow-md);
+}
+
+@media (max-width: 1100px) {
+  .discover-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
-@media (min-width: 769px) {
-  .search-input {
-    max-width: 300px;
+@media (max-width: 900px) {
+  .filters-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .discover-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .discover-page {
+    padding-top: 1.6rem;
+  }
+
+  .discover-hero,
+  .filters-panel {
+    padding: 1rem;
+  }
+
+  .filters-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .select-shell {
+    max-width: none;
+  }
+
+  .discover-grid {
+    grid-template-columns: 1fr;
   }
 }

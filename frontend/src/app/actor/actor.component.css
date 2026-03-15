@@ -1,95 +1,166 @@
-
-h1, h2 {
-  padding-top: 2rem;
+.person-page {
+  padding: 2.9rem 0 6rem;
 }
 
-.display-4 {
-  font-size: 2.5rem;
+.person-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 1.5rem;
+  border-radius: 32px;
+  margin-bottom: 2.2rem;
+  background:
+    radial-gradient(circle at top right, rgba(255, 122, 24, 0.14), transparent 34%),
+    rgba(8, 16, 28, 0.68);
 }
 
-p.lead {
-  font-size: 1.125rem;
-  line-height: 1.5;
-  color: #ddd;
+.person-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 8.5rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent),
+    radial-gradient(circle at top left, rgba(255, 179, 71, 0.14), transparent 44%);
+  pointer-events: none;
 }
 
-hr.bg-light {
-  border: 0;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.2);
-  margin: 1.5rem 0;
+.person-main {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
 }
 
-
-
-img.rounded {
-  object-fit: cover;
-  border-radius: 10px;
-  max-height: 500px;
-  width: 100%;
-}
-
-.card {
-  background-color: #23272b;
-  transition: transform 0.3s ease;
-}
-
-.card:hover {
-  transform: scale(1.05);
-}
-
-.card-body {
-  padding: 1rem;
-  text-align: center;
-}
-
-.card-title {
-  font-size: 1.1rem;
-  color: #fff;
-}
-
-.card small {
-  color: #ccc;
-}
-
-.back-to-top {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #505050;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
+.person-portrait-wrap {
   display: flex;
-  align-items: center;
   justify-content: center;
-  cursor: pointer;
-  font-size: 24px;
 }
 
-.back-to-top:hover {
-  background-color: #6b6b6b;
+.person-portrait {
+  width: 100%;
+  max-width: 320px;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 26px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-lg);
 }
 
+.person-copy h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 0.95;
+}
 
-@media (max-width: 767.98px) {
-  .display-4 {
-      font-size: 1.75rem;
-  }
+.person-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.15rem;
+}
 
-  img.rounded {
-      max-width: 250px;
+.fact-pill {
+  padding: 0.75rem 1rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--muted);
+}
+
+.bio-panel {
+  margin-top: 1.2rem;
+  padding: 1rem 1.05rem;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.bio-panel p {
+  margin: 0;
+  line-height: 1.7;
+  color: rgba(245, 247, 251, 0.82);
+}
+
+.empty-bio p {
+  color: var(--muted);
+}
+
+.filmography-section {
+  position: relative;
+  padding-top: 0.85rem;
+}
+
+.filmography-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: min(12rem, 28vw);
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255, 122, 24, 0.75), rgba(255, 122, 24, 0));
+}
+
+.filmography-heading {
+  margin-bottom: 1.3rem;
+}
+
+.filmography-heading h2 {
+  font-size: clamp(1.35rem, 1.1rem + 1vw, 2rem);
+}
+
+.results-caption {
+  color: var(--muted);
+}
+
+.filmography-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.filmography-card {
+  min-height: 100%;
+}
+
+.poster-overlay p {
+  margin-top: 0.35rem;
+}
+
+@media (max-width: 1100px) {
+  .filmography-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
-@media (min-width: 768px) {
-  .display-4 {
-      font-size: 2.5rem;
+@media (max-width: 900px) {
+  .person-main {
+    grid-template-columns: 1fr;
   }
 
-  .card-title {
-      font-size: 1.25rem;
+  .person-copy {
+    text-align: center;
+  }
+
+  .person-facts {
+    justify-content: center;
+  }
+
+  .filmography-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .person-page {
+    padding-top: 1.6rem;
+  }
+
+  .person-hero {
+    padding: 1rem;
+  }
+
+  .filmography-grid {
+    grid-template-columns: 1fr;
   }
 }

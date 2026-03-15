@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { HeaderComponent } from '../header/header.component';
 import { CardsComponent } from '../cards/cards.component';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { NavbarComponent } from '../navbar/navbar.component';
 import { Title } from '@angular/platform-browser';
 
 @Component({
@@ -13,10 +12,7 @@ import { Title } from '@angular/platform-browser';
   styleUrl: './home.component.css',
 })
 export class HomeComponent {
-  constructor(
-    private NavbarComponent: NavbarComponent,
-    private titleService: Title
-  ) {}
+  constructor(private titleService: Title) {}
 
   ngOnInit(): void {
     this.titleService.setTitle('Binge • social & découverte de films');

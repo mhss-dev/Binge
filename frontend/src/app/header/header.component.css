@@ -1,150 +1,133 @@
-header {
-  height: 100vh;
+.header {
+  position: relative;
+  min-height: 92vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-size: cover;
   background-position: center;
   color: white;
-  transition: background-image 1s ease-in-out;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-header h1 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 4rem;
-  margin: 0;
-  color: #ffffff;
-  animation: fadeInUp 1s ease-out;
-}
-
-header p {
-  font-size: 1.5rem;
-  color: #f8f9fa;
-  animation: fadeInUp 1s ease-out 0.5s;
 }
 
 .overlay {
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), #141414);
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
+  inset: 0;
+  background:
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.05), transparent 26%),
+    linear-gradient(180deg, rgba(7, 17, 31, 0.18), rgba(7, 17, 31, 0.9) 92%),
+    linear-gradient(90deg, rgba(7, 17, 31, 0.74), rgba(7, 17, 31, 0.28));
 }
 
-.container-fluid {
+.header-inner {
   position: relative;
-  z-index: 2;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 6rem 0 3rem;
 }
 
-
-.arrow-container i {
-  animation: fadeInUp 1s ease-out;
-  font-size: 3rem; 
-  color: #fff;     
-  animation: blink 2s infinite;
-  margin-top: 3rem !important;
+.hero-copy {
+  width: min(100%, 840px);
+  text-align: center;
 }
 
-@keyframes blink {
-  0% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  50% {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.hero-copy h1 {
+  margin: 0;
+  font-size: clamp(3.4rem, 8vw, 6.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
 }
 
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.hero-text {
+  margin: 1.15rem auto 0;
+  max-width: 54ch;
+  font-size: clamp(1rem, 1.8vw, 1.18rem);
+  line-height: 1.65;
+  color: rgba(245, 247, 251, 0.82);
 }
 
-
-@media (max-width: 1200px) {
-  header h1 {
-    font-size: 3.5rem;
-  }
-
-  header p {
-    font-size: 1.3rem;
-  }
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.85rem;
+  margin-top: 1.75rem;
 }
 
-@media (max-width: 992px) {
-  header h1 {
-    font-size: 3rem;
-  }
+.hero-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.2rem;
+  padding: 0.85rem 1.2rem;
+  border-radius: 999px;
+  text-decoration: none;
+}
 
-  header p {
-    font-size: 1.2rem;
-  }
+.hero-link.primary {
+  background: linear-gradient(135deg, var(--accent), #ffb347);
+  color: #07111f;
+  font-weight: 700;
+}
+
+.hero-link.secondary {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text);
+}
+
+.featured-link {
+  display: inline-flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 240px;
+  padding: 0.9rem 1.1rem;
+  text-align: left;
+  background: rgba(7, 17, 31, 0.42);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.featured-kicker {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(245, 247, 251, 0.62);
+}
+
+.scroll-hint {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1.75rem;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
 }
 
 @media (max-width: 768px) {
-  header {
-    height: 80vh;
-  }
-  
-  header h1 {
-    font-size: 2.5rem;
-    margin-top: 3rem !important;
+  .header {
+    min-height: 82vh;
   }
 
-  header p {
-    font-size: 1.1rem;
+  .header-inner {
+    padding: 5.5rem 0 2rem;
   }
 
-  .movie-name {
-    font-size: 1rem !important;
-  }
-  .arrow-container i {
-    font-size: 1.8rem; 
-    color: #fff;     
-    margin-top: 1.5rem !important;
-  }
- 
-  .blink {
-    font-size: 2.5rem;
-  }
-}
-
-@media (max-width: 576px) {
-  header {
-    height: 70vh;
+  .hero-copy h1 {
+    font-size: clamp(3rem, 16vw, 5rem);
   }
 
-  header h1 {
-    font-size: 2rem;
+  .hero-actions {
+    flex-direction: column;
   }
 
-  header p {
-    font-size: 1rem;
-  }
-
-  .movie-name {
-    font-size: 0.9rem;
-  }
-
- 
-  .blink {
-    font-size: 2rem;
-    
+  .hero-link {
+    width: 100%;
   }
 }

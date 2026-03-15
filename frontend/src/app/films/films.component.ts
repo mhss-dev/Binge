@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { DiscoverService } from '../discover.service';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
 
 import { FormsModule } from '@angular/forms';
 import {
@@ -26,7 +27,7 @@ import { Toast } from 'bootstrap';
 @Component({
   selector: 'app-films',
   standalone: true,
-  imports: [CommonModule, MatPaginatorModule, FormsModule, RouterLink],
+  imports: [CommonModule, MatPaginatorModule, FormsModule, RouterLink, MatSelectModule],
   templateUrl: './films.component.html',
   styleUrl: './films.component.css',
 })
@@ -54,6 +55,28 @@ export class FilmsComponent {
   sortOption: string = 'popularity.desc';
   isButtonVisible = signal(false);
   selectedGenre: string = '';
+  readonly genreOptions = [
+    { value: '', label: 'Tous les genres' },
+    { value: '28', label: 'Action' },
+    { value: '12', label: 'Aventure' },
+    { value: '16', label: 'Animation' },
+    { value: '35', label: 'Comedie' },
+    { value: '80', label: 'Crime' },
+    { value: '99', label: 'Documentaire' },
+    { value: '18', label: 'Drame' },
+    { value: '10751', label: 'Famille' },
+    { value: '14', label: 'Fantastique' },
+    { value: '36', label: 'Histoire' },
+    { value: '27', label: 'Horreur' },
+    { value: '10402', label: 'Musique' },
+    { value: '9648', label: 'Mystere' },
+    { value: '10749', label: 'Romance' },
+    { value: '878', label: 'Science-fiction' },
+    { value: '10770', label: 'Telefilm' },
+    { value: '53', label: 'Thriller' },
+    { value: '10752', label: 'Guerre' },
+    { value: '37', label: 'Western' },
+  ];
 
   constructor(
     private discoverService: DiscoverService,
@@ -134,7 +157,10 @@ export class FilmsComponent {
   }
 
   searchFilms(query: string): void {
-    if (!query) return;
+    if (!query?.trim()) {
+      this.loadFilms(1);
+      return;
+    }
 
     this.isLoading = true;
     this.films = [];
@@ -153,6 +179,22 @@ export class FilmsComponent {
         this.isLoading = false;
       },
     });
+  }
+
+  clearFilters(): void {
+    this.searchQuery = '';
+    this.sortOption = 'popularity.desc';
+    this.selectedGenre = '';
+    this.hasMore = true;
+    this.loadFilms(1);
+  }
+
+  hasActiveFilters(): boolean {
+    return Boolean(this.searchQuery || this.selectedGenre || this.sortOption !== 'popularity.desc');
+  }
+
+  trackByMovieId(index: number, movie: any): number {
+    return movie.id ?? index;
   }
 
   @HostListener('window:scroll', ['$event'])

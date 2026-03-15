@@ -1,161 +1,100 @@
-<div class="container text-white">
-  <div class="text-center mb-5 pb-5" id="aucinema">
-    <h1 class="display-4 font-weight-bold">{{ title }}</h1>
-    <p class="lead text-secondary">
-      Du {{ minDate | date : "dd/MM/yyyy" }} au
-      {{ maxDate | date : "dd/MM/yyyy" }}
-    </p>
-  </div>
-
-  <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
-
-  <div class="toggle-container mb-4 border-2">
-    <button
-      (click)="selectTab('nowPlaying')"
-      [class.active]="currentTab === 'nowPlaying'"
-      class="toggle-button"
-    >
-      Actuellement au cinéma
-    </button>
-    <button
-      (click)="selectTab('trending')"
-      [class.active]="currentTab === 'trending'"
-      class="toggle-button"
-    >
-      Tendance de la semaine
-    </button>
-    <button
-      (click)="selectTab('toprated')"
-      [class.active]="currentTab === 'toprated'"
-      class="toggle-button"
-    >
-      Les mieux évalués
-    </button>
-    <button
-      (click)="selectTab('upcoming')"
-      [class.active]="currentTab === 'upcoming'"
-      class="toggle-button"
-    >
-      Prochaines sorties
-    </button>
-  </div>
-
-  <div [ngClass]="{ active: currentTab === 'nowPlaying' }" class="section">
-    <div class="d-flex justify-content-end">
-      <select
-        class="form-select w-0"
-        [(ngModel)]="selectedRegion"
-        (change)="fetchMovieData()"
-      >
-        <option value="BE">Belgique</option>
-        <option value="FR">France</option>
-        <option value="US">États-Unis</option>
-      </select>
+<section class="cards-page app-shell text-white">
+  <div class="cards-hero glass-panel" id="aucinema">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Explorer maintenant</p>
+        <h1>{{ title }}</h1>
+      </div>
+      <div class="hero-meta">
+        <span class="hero-pill">{{ getActiveLabel() }}</span>
+        <span class="hero-pill" *ngIf="minDate && maxDate">
+          Du {{ minDate | date : "dd/MM/yyyy" }} au {{ maxDate | date : "dd/MM/yyyy" }}
+        </span>
+      </div>
     </div>
-    <div class="row mt-5">
-      <div *ngFor="let movie of movies" class="col-6 col-md-4 col-lg-3 mb-4">
-        <div class="card bg-dark text-white border-0 shadow-sm h-100">
-          <a [routerLink]="['/film', movie?.id]" class="d-block">
-            <img
-              [src]="
-                movie?.poster_path
-                  ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path
-                  : 'https://placehold.co/500x750?text=Aucun+poster+disponible%0A(' + movie?.title + ')'"
-              class="card-img-top img-fluid rounded"
-              alt="{{ movie?.title || 'Inconnu' }}"
-            />
-          </a>
+
+    <div *ngIf="error" class="error-banner">{{ error }}</div>
+
+    <div class="tab-scroller">
+      <button
+        *ngFor="let tab of tabOrder"
+        type="button"
+        class="toggle-button"
+        [class.active]="currentTab === tab"
+        (click)="selectTab(tab)"
+      >
+        {{
+          tab === "nowPlaying"
+            ? "Au cinéma"
+            : tab === "trending"
+              ? "Tendances"
+              : tab === "toprated"
+                ? "Top notés"
+                : "Bientôt"
+        }}
+      </button>
+    </div>
+
+    <div class="cards-toolbar">
+      <div class="toolbar-copy">
+        <strong>{{ title }}</strong>
+        <span>Sélection mise à jour selon la catégorie choisie.</span>
+      </div>
+
+      <div class="toolbar-actions">
+        <div *ngIf="showRegionSelector()" class="filter-stack region-stack">
+          <span class="filter-caption">Pays</span>
+          <div class="select-shell region-shell">
+            <mat-select panelClass="app-select-panel" [(ngModel)]="selectedRegion" (selectionChange)="fetchMovieData()">
+              <mat-option value="BE">Belgique</mat-option>
+              <mat-option value="FR">France</mat-option>
+              <mat-option value="US">États-Unis</mat-option>
+            </mat-select>
+          </div>
         </div>
+
+        <a *ngIf="currentTab === 'toprated'" routerLink="/films/toprated" class="ghost-link">
+          Voir plus
+        </a>
       </div>
     </div>
   </div>
 
-  <div [ngClass]="{ active: currentTab === 'trending' }" class="section">
-    <div class="row mt-5">
-      <div
-        *ngFor="let movie of trendingMovies"
-        class="col-6 col-md-4 col-lg-3 mb-4"
-      >
-        <div class="card bg-dark text-white border-0 shadow-sm h-100">
-          <a [routerLink]="['/film', movie?.id]" class="d-block">
-            <img
-              [src]="
-                movie?.poster_path
-                  ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path
-                  : 'https://placehold.co/500x750?text=Aucun+poster+disponible'
-              "
-              class="card-img-top img-fluid rounded"
-              alt="{{ movie?.title || 'Inconnu' }}"
-            />
-          </a>
+  <div class="poster-grid cards-grid">
+    <article
+      *ngFor="let movie of getActiveMovies(); trackBy: trackByMovieId"
+      class="poster-card cards-poster"
+    >
+      <a [routerLink]="['/film', movie?.id]" class="poster-link">
+        <img
+          [src]="
+            movie?.poster_path
+              ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path
+              : 'https://placehold.co/500x750?text=Aucun+poster'
+          "
+          alt="{{ movie?.title || 'Inconnu' }}"
+        />
+        <div class="poster-overlay">
+          <h2>{{ movie?.title || movie?.name || 'Titre inconnu' }}</h2>
+          <p>
+            <span *ngIf="movie?.vote_average">
+              {{ movie?.vote_average | number : "1.0-1" }}/10
+            </span>
+            <span *ngIf="movie?.release_date || movie?.first_air_date">
+              {{ (movie?.release_date || movie?.first_air_date) | date : "yyyy" }}
+            </span>
+          </p>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <div [ngClass]="{ active: currentTab === 'toprated' }" class="section">
-    <div class="d-flex justify-content-end">
-      <a routerLink="/films/toprated" class="btn btn-outline-light">
-        Voir plus de films
       </a>
-    </div>
-    <div class="row mt-5">
-      <div *ngFor="let movie of toprated" class="col-6 col-md-4 col-lg-3 mb-4">
-        <div class="card bg-dark text-white border-0 shadow-sm h-100">
-          <a [routerLink]="['/film', movie?.id]" class="d-block">
-            <img
-              [src]="
-                movie?.poster_path
-                  ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path
-                  : 'https://placehold.co/500x750?text=Aucun+poster+disponible'
-              "
-              class="card-img-top img-fluid rounded"
-              alt="{{ movie?.title || 'Inconnu' }}"
-            />
-          </a>
-        </div>
-      </div>
-    </div>
+    </article>
   </div>
 
-  <div [ngClass]="{ active: currentTab === 'upcoming' }" class="section">
-    <div class="d-flex justify-content-end">
-      <select
-        class="form-select w-0"
-        [(ngModel)]="selectedRegion"
-        (change)="fetchMovieData()"
-      >
-        <option value="BE">Belgique</option>
-        <option value="FR">France</option>
-        <option value="US">États-Unis</option>
-      </select>
-    </div>
-    <div class="row mt-5">
-      <div
-        *ngFor="let movie of upcomingMovies"
-        class="col-6 col-md-4 col-lg-3 mb-4"
-      >
-        <div class="card bg-dark text-white border-0 shadow-sm h-100">
-          <a [routerLink]="['/film', movie?.id]" class="d-block">
-            <img
-              [src]="
-                movie?.poster_path
-                  ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path
-                  : 'https://placehold.co/500x750?text=Aucun+poster+disponible'
-              "
-              class="card-img-top img-fluid rounded"
-              alt="{{ movie?.title || 'Inconnu' }}"
-            />
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
   <button
     *ngIf="isButtonVisible()"
-    class="back-to-top btn btn-dark shadow"
+    class="floating-action"
     (click)="scrollToTop()"
+    aria-label="Retour en haut"
   >
-    ↑
+    <i class="fa-solid fa-arrow-up"></i>
   </button>
-</div>
+</section>

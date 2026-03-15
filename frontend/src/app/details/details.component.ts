@@ -41,6 +41,10 @@ export class DetailsComponent {
   trailerKey: string | null = null;
   trailerUrl: SafeResourceUrl | null = null;
   movies: any[] = [];
+  providerRegion = 'BE';
+  activePanel: 'cast' | 'similar' = 'cast';
+  overviewExpanded = false;
+  copiedLink = false;
 
 
   @ViewChild('trailerModal') trailerModal!: ElementRef;
@@ -101,6 +105,9 @@ export class DetailsComponent {
     this.detailsService.getMovieByID(id).subscribe({
       next: (data) => {
         this.movie = data;
+        this.overviewExpanded = false;
+        this.copiedLink = false;
+        this.activePanel = 'cast';
         this.chunkActors();
         this.checkIfFavorite();
         this.checkIfWatchlist();
@@ -142,6 +149,16 @@ export class DetailsComponent {
     }
     const uniqueProviders = Array.from(new Map(providers.map(provider => [provider.logo_path, provider])).values());
     return uniqueProviders;
+  }
+
+  getProviderRegionLabel(): string {
+    const labels: Record<string, string> = {
+      BE: 'Belgique',
+      FR: 'France',
+      US: 'Etats-Unis',
+    };
+
+    return labels[this.providerRegion] || this.providerRegion;
   }
 
   private loadTrailers(id: number): void {
@@ -191,13 +208,15 @@ export class DetailsComponent {
   private loadWatchProviders(id: number): void {
     this.detailsService.getProviders(id).subscribe({
       next: (data) => {
-        const providers = data.results?.BE;  
-        
+        const regionOrder = ['BE', 'FR', 'US'];
+        const region = regionOrder.find((item) => data.results?.[item]);
+        const providers = region ? data.results?.[region] : null;
 
         if (providers) {
-          this.watchProviders = providers;  
+          this.providerRegion = region || 'BE';
+          this.watchProviders = providers;
         } else {
-          this.watchProviders = null;  
+          this.watchProviders = null;
         }
       },
       error: (error) => {
@@ -267,6 +286,62 @@ private chunkMovies(movies: any[]): any[][] {
         (crewMember: any) => crewMember.job === 'Director'
       ) || []
     );
+  }
+
+  getLeadCast(): any[] {
+    return (this.movie?.credits?.cast || []).slice(0, 12);
+  }
+
+  getRecommendationList(): any[] {
+    return this.similarMovies.slice(0, 12);
+  }
+
+  getReleaseYear(): string {
+    return this.movie?.release_date
+      ? new Date(this.movie.release_date).getFullYear().toString()
+      : 'Date inconnue';
+  }
+
+  getOverview(): string {
+    if (!this.movie?.overview) {
+      return 'Aucune description disponible.';
+    }
+
+    if (this.overviewExpanded || this.movie.overview.length <= 220) {
+      return this.movie.overview;
+    }
+
+    return `${this.movie.overview.slice(0, 220)}...`;
+  }
+
+  canToggleOverview(): boolean {
+    return Boolean(this.movie?.overview && this.movie.overview.length > 220);
+  }
+
+  toggleOverview(): void {
+    this.overviewExpanded = !this.overviewExpanded;
+  }
+
+  selectPanel(panel: 'cast' | 'similar'): void {
+    this.activePanel = panel;
+  }
+
+  copyPageLink(): void {
+    const url = window.location.href;
+
+    navigator.clipboard
+      .writeText(url)
+      .then(() => {
+        this.copiedLink = true;
+        setTimeout(() => {
+          this.copiedLink = false;
+          this.cdr.detectChanges();
+        }, 2000);
+        this.cdr.detectChanges();
+      })
+      .catch(() => {
+        this.copiedLink = false;
+      });
   }
 
 

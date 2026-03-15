@@ -1,33 +1,29 @@
-<div class="container text-white pt-5 px-3">
-  <div class="text-center mb-5">
-    <h1 class="display-5 font-weight-bold">Recherche pour {{ searchQuery }}</h1>
+<section class="search-page app-shell text-white">
+  <div class="search-hero glass-panel">
+    <p class="eyebrow">Recherche</p>
+    <h1>Resultats pour "{{ searchQuery }}"</h1>
+    <p>{{ films.length }} titre(s) trouves</p>
   </div>
 
-  <div>
-    <div class="row mt-5">
-      <div *ngFor="let movie of films" class="col-6 col-md-4 col-lg-3 mb-4">
-        <div class="position-relative">
-          <div class="card bg-dark text-white border-0 shadow-sm h-100">
-            <a
-              [routerLink]="['/film', movie?.id]"
-              class="d-block"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                [src]="
-                  movie?.poster_path
-                    ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path
-                    : 'https://placehold.co/500x750?text=Aucun+poster+disponible'
-                "
-                class="card-img-top img-fluid rounded"
-                alt="{{ movie?.title || 'Inconnu' }}"
-              />
-            </a>
-          </div>
+  <div *ngIf="films.length; else emptyState" class="poster-grid search-grid">
+    <article *ngFor="let movie of films; trackBy: trackByMovieId" class="poster-card">
+      <a [routerLink]="['/film', movie?.id]" class="search-card-link">
+        <img
+          [src]="movie?.poster_path ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path : 'https://placehold.co/500x750?text=Aucun+poster+disponible'"
+          alt="{{ movie?.title || 'Inconnu' }}"
+        />
+        <div class="search-overlay">
+          <h2>{{ movie?.title || 'Titre inconnu' }}</h2>
+          <p>{{ movie?.release_date | date : "yyyy" }}</p>
         </div>
-      </div>
-    </div>
-    <div class="spacer"></div>
+      </a>
+    </article>
   </div>
-</div>
+
+  <ng-template #emptyState>
+    <div class="empty-state glass-panel">
+      <h2>Aucun resultat pour le moment</h2>
+      <p>Essayez un autre titre depuis la recherche rapide.</p>
+    </div>
+  </ng-template>
+</section>

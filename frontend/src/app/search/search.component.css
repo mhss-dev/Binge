@@ -1,35 +1,53 @@
-h1 {
-    padding-top: 10rem;
-    font-size: 2rem;
-  }
-  
-  .card {
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    height: 100%;
-  }
-  
-  .card img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-  }
-  
-  .card:hover {
-    transform: scale(1.05);
-  }
-  
-  .spacer{
-    background-color: #14181d !important;
-    margin-bottom: 10rem;
-  }
-  
-  .card:hover {
-    transform: scale(1.05);
-  }
-  
-  .card-body .btn {
-    margin-right: 20px;
-  }
+.search-page {
+  padding: 1.5rem 0 6rem;
+}
+
+.search-hero,
+.empty-state {
+  padding: 1.5rem;
+  border-radius: var(--radius-xl);
+}
+
+.search-hero h1 {
+  margin: 0.35rem 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.search-hero p,
+.empty-state p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.search-grid {
+  margin-top: 1.5rem;
+}
+
+.search-card-link {
+  display: block;
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+}
+
+.search-overlay {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 1rem;
+  background: linear-gradient(180deg, transparent, rgba(5, 11, 20, 0.95));
+}
+
+.search-overlay h2,
+.search-overlay p {
+  margin: 0;
+}
+
+.search-overlay p {
+  margin-top: 0.35rem;
+  color: rgba(245, 247, 251, 0.72);
+}
+
+.empty-state {
+  margin-top: 1.5rem;
+  text-align: center;
+}

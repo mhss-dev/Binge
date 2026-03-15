@@ -45,4 +45,8 @@ export class SearchComponent implements OnInit {
       }
     });
   }
+
+  trackByMovieId(index: number, movie: any): number {
+    return movie.id ?? index;
+  }
 }

@@ -1,104 +1,67 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectorRef,
-  Component,
-  HostListener,
-  ViewChild,
-} from '@angular/core';
-import {
-  Router,
-  RouterLink,
-  RouterOutlet,
-  NavigationEnd,
-  ActivatedRoute,
-} from '@angular/router';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { AuthService } from '../auth.service';
-import { FormsModule, NgModel } from '@angular/forms';
-import { DiscoverService } from 'app/discover.service';
 import { NotificationService } from 'app/notifications.service';
-import { catchError, forkJoin, of } from 'rxjs';
 import { DetailsService } from 'app/details.service';
-
-declare var bootstrap: any;
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, CommonModule, FormsModule],
+  imports: [RouterLink, CommonModule, FormsModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
-  @ViewChild('searchInput') searchInput: any;
+  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
+
   isLoggedIn = false;
   nickname: string | null = null;
-  isLogoVisible: boolean = true;
-  isScrolled: boolean = false;
-  isNavbarCollapsed: boolean = true;
-  isLoading: boolean = false;
-  films: any[] = [];
-  searchQuery: string = '';
-  avatar: string = '';
+  isLogoVisible = true;
+  isScrolled = false;
+  isNavbarCollapsed = true;
+  searchQuery = '';
+  avatar = '';
   unreadNotifications: any[] = [];
-  notifications: any[] = [];
   movieTitles: any[] = [];
-  isNotificationsOpen: boolean = false;
+  isSearchOpen = false;
+
   typeMapping: { [key: string]: string } = {
-  watchlist: 'dans sa watchlist',
-  watched: 'dans ses visionnés',
-  favorite: 'dans ses favoris',
-};
-
-
+    watchlist: 'dans sa watchlist',
+    watched: 'dans ses visionnés',
+    favorite: 'dans ses favoris',
+  };
 
   constructor(
-    private route: ActivatedRoute,
     private authService: AuthService,
     private router: Router,
     private cdr: ChangeDetectorRef,
     private notificationService: NotificationService,
     private movieService: DetailsService
-
   ) {}
-  ngAfterViewInit() {
-    const navbarCollapse = document.getElementById('navbarNav');
-    if (navbarCollapse) {
-      navbarCollapse.addEventListener('show.bs.collapse', () => {
-        this.isLogoVisible = true;
-      });
 
-      navbarCollapse.addEventListener('hide.bs.collapse', () => {
-        this.isLogoVisible = false;
-      });
-    }
-    const modalElement = document.getElementById('searchModal');
-
-    if (modalElement) {
-      modalElement.addEventListener('shown.bs.modal', () => {
-        setTimeout(() => {
-          if (this.searchInput) {
-            this.searchInput.nativeElement.focus();
-          }
-        }, 200);
-      });
+  ngAfterViewInit(): void {
+    if (this.isSearchOpen) {
+      setTimeout(() => this.searchInput?.nativeElement.focus(), 50);
     }
   }
 
-ngOnInit(): void {
-  this.authService.isLoggedIn$.subscribe({
-    next: (status: boolean) => {
-      this.isLoggedIn = status;
-      if (this.isLoggedIn) {
-        this.getNickname();
-        this.fetchNotifications();
-      } else {
-        this.unreadNotifications = [];
-      }
-    },
-    error: (error: any) => {
-      console.error('Erreur lors de la récupération du statut de connexion :', error);
-    }
-  });
+  ngOnInit(): void {
+    this.authService.isLoggedIn$.subscribe({
+      next: (status: boolean) => {
+        this.isLoggedIn = status;
+        if (this.isLoggedIn) {
+          this.getNickname();
+          this.fetchNotifications();
+        } else {
+          this.unreadNotifications = [];
+        }
+      },
+      error: (error: any) => {
+        console.error('Erreur lors de la récupération du statut de connexion :', error);
+      },
+    });
 
     this.notificationService.getNotifications().subscribe((notifications) => {
       this.unreadNotifications = Array.isArray(notifications) ? notifications : [];
@@ -108,19 +71,17 @@ ngOnInit(): void {
         }
       });
     });
-}
+  }
 
   searchFilms(): void {
-    if (!this.searchQuery) return;
+    if (!this.searchQuery.trim()) {
+      return;
+    }
 
     this.router.navigate(['/search'], {
       queryParams: { query: this.searchQuery },
     });
-    const modalElement = document.getElementById('searchModal');
-    const modal = bootstrap.Modal.getInstance(modalElement);
-    if (modal) {
-      modal.hide();
-    }
+    this.closeSearch();
   }
 
   fetchNotifications(): void {
@@ -128,12 +89,11 @@ ngOnInit(): void {
       next: (notifications) => {
         this.notificationService.setNotifications(notifications);
       },
-      error: (err) => {
-      },
     });
   }
-    fetchMovieTitle(movieId: number): void {
-    this.movieService.getMovieByID(movieId).subscribe((movie : any) => {
+
+  fetchMovieTitle(movieId: number): void {
+    this.movieService.getMovieByID(movieId).subscribe((movie: any) => {
       this.movieTitles[movieId] = movie.title;
     });
   }
@@ -142,14 +102,10 @@ ngOnInit(): void {
     this.notificationService.markAsRead(notification.id).subscribe({
       next: () => {
         notification.read = true;
-        this.unreadNotifications = this.unreadNotifications.filter(
-          (notif) => notif.id !== notification.id
-        );
-      },
-      error: (err) => {
+        this.unreadNotifications = this.unreadNotifications.filter((notif) => notif.id !== notification.id);
       },
     });
-}
+  }
 
   clearAllNotifications(): void {
     this.unreadNotifications.forEach((notification) => {
@@ -157,36 +113,46 @@ ngOnInit(): void {
         next: () => {
           notification.read = true;
         },
-        error: (err) => {
-        },
       });
     });
 
     this.unreadNotifications = [];
   }
 
-getTypeText(type: string): string {
-  return this.typeMapping[type] || '';
-}
+  getTypeText(type: string): string {
+    return this.typeMapping[type] || '';
+  }
+
   @HostListener('window:scroll', [])
-  onWindowScroll() {
+  onWindowScroll(): void {
     this.isScrolled = window.scrollY > 50;
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    if (this.isSearchOpen) {
+      this.closeSearch();
+    }
   }
 
   toggleNavbar(): void {
     this.isNavbarCollapsed = !this.isNavbarCollapsed;
-  }
-  closeNavbar() {
-    this.isNavbarCollapsed = true;
+    this.isLogoVisible = this.isNavbarCollapsed;
   }
 
-  toggleLogo() {
-    this.isLogoVisible = !this.isLogoVisible;
+  closeNavbar(): void {
+    this.isNavbarCollapsed = true;
+    this.isLogoVisible = true;
   }
-  closeModalAfterEnter(event: KeyboardEvent): void {
-    if (event.key === 'Enter') {
-      this.searchFilms();
-    }
+
+  openSearch(): void {
+    this.isSearchOpen = true;
+    this.closeNavbar();
+    setTimeout(() => this.searchInput?.nativeElement.focus(), 50);
+  }
+
+  closeSearch(): void {
+    this.isSearchOpen = false;
   }
 
   getNickname(): void {
@@ -197,7 +163,7 @@ getTypeText(type: string): string {
           this.avatar = response.avatar_url;
           this.cdr.detectChanges();
         },
-        error: (error: any) => {
+        error: () => {
           this.nickname = '';
           this.cdr.detectChanges();
         },
