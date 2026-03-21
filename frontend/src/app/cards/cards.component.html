@@ -75,7 +75,6 @@
           alt="{{ movie?.title || 'Inconnu' }}"
         />
         <div class="poster-overlay">
-          <h2>{{ movie?.title || movie?.name || 'Titre inconnu' }}</h2>
           <p>
             <span *ngIf="movie?.vote_average">
               {{ movie?.vote_average | number : "1.0-1" }}/10
