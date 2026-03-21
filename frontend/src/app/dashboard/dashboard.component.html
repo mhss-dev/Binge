@@ -58,30 +58,6 @@
   </div>
 
   <div class="library-shell glass-panel">
-    <div class="dashboard-search">
-      <div class="dashboard-search-copy">
-        <p class="eyebrow">Recherche rapide sur ce profil</p>
-      </div>
-
-      <div class="dashboard-search-bar">
-        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-        <input
-          type="text"
-          [(ngModel)]="dashboardSearchQuery"
-          aria-label="Rechercher un film dans le profil courant"
-        />
-        <button
-          *ngIf="dashboardSearchQuery"
-          type="button"
-          class="dashboard-search-clear"
-          (click)="clearDashboardSearch()"
-          aria-label="Effacer la recherche"
-        >
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-    </div>
-
     <ul class="nav nav-tabs library-tabs" id="myTab" role="tablist">
       <li class="nav-item" role="presentation">
         <button
@@ -124,6 +100,26 @@
         >
           Watchlist <span>{{ watchlist.length }}</span>
         </button>
+      </li>
+      <li class="library-search-slot">
+        <div class="dashboard-search-bar">
+          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+          <input
+            type="text"
+            [(ngModel)]="dashboardSearchQuery"
+            placeholder="Rechercher dans ce profil..."
+            aria-label="Rechercher un film dans le profil courant"
+          />
+          <button
+            *ngIf="dashboardSearchQuery"
+            type="button"
+            class="dashboard-search-clear"
+            (click)="clearDashboardSearch()"
+            aria-label="Effacer la recherche"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
       </li>
     </ul>
 
