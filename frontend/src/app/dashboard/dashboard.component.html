@@ -25,7 +25,7 @@
         <h1>{{ nickname && currentNickname && nickname === currentNickname ? nickname : 'Profil de ' + nickname }}</h1>
         <p class="profile-bio" *ngIf="bio">{{ bio }}</p>
         <p class="profile-bio profile-bio-empty" *ngIf="!bio && nickname === currentNickname">
-          Ajoutez une bio courte pour donner le ton de votre profil.
+          Ajoutez une bio courte
         </p>
 
         <div class="social-stats">
@@ -70,7 +70,7 @@
           aria-controls="watched"
           aria-selected="true"
         >
-          Visionnes <span>{{ watched.length }}</span>
+          Visionnés <span>{{ watched.length }}</span>
         </button>
       </li>
       <li class="nav-item" role="presentation">
@@ -114,7 +114,7 @@
         </div>
         <ng-template #watchedEmpty>
           <div class="empty-state">
-            <p>Vous n'avez pas encore ajoute de films visionnes.</p>
+            <p>Vous n'avez pas encore ajoute de films visionnés.</p>
             <a [routerLink]="['/films']" class="empty-link">Explorer le catalogue</a>
           </div>
         </ng-template>
@@ -130,7 +130,7 @@
         </div>
         <ng-template #favoritesEmpty>
           <div class="empty-state">
-            <p>Aucun favori enregistre pour l'instant.</p>
+            <p>Aucun favori enregistré pour l'instant.</p>
             <a [routerLink]="['/films']" class="empty-link">Decouvrir des films</a>
           </div>
         </ng-template>
@@ -201,8 +201,8 @@
               <div class="editor-panel">
                 <div class="editor-copy">
                   <p class="editor-kicker">Bio</p>
-                  <h3>Donner une personnalite au profil</h3>
-                  <p>Une phrase suffit pour dire vos gouts ou votre humeur cinema.</p>
+                  <h3>Donnez une personnalité au profil</h3>
+                  <p>Une phrase suffit pour dire vos goûts ou votre humeur cinéma.</p>
                 </div>
                 <div class="field-stack">
                   <textarea class="profile-input profile-textarea" id="bioInputModal" [(ngModel)]="newBio"></textarea>
@@ -254,7 +254,7 @@
             </button>
           </div>
           <ng-template #noFollowers>
-            <p class="empty-modal">Aucun abonne pour le moment.</p>
+            <p class="empty-modal">Aucun abonné pour le moment.</p>
           </ng-template>
         </div>
       </div>
