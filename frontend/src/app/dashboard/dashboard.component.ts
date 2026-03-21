@@ -61,6 +61,7 @@ export class DashboardComponent {
   followingCount: number = 0;
   showEditIcon: boolean = false;
   connectedDevices: any[] = [];
+  dashboardSearchQuery: string = '';
 
 
   constructor(
@@ -325,6 +326,25 @@ processProfileData(data: any): void {
     this.watched = [];
   }
 }
+
+normalizeMovieTitle(movie: any): string {
+  return (movie?.title || movie?.name || '').toLowerCase();
+}
+
+filterProfileMovies(movies: any[]): any[] {
+  const query = this.dashboardSearchQuery.trim().toLowerCase();
+
+  if (!query) {
+    return movies;
+  }
+
+  return movies.filter((movie) => this.normalizeMovieTitle(movie).includes(query));
+}
+
+clearDashboardSearch(): void {
+  this.dashboardSearchQuery = '';
+}
+
 goToProfile(nickname: string) {
   this.router.navigate(['/profil', nickname]);
 }
@@ -448,18 +468,21 @@ getTotalPages(arrayLength: number): number[] {
 
 
 paginatedFavorites() {
+  const filteredFavorites = this.filterProfileMovies(this.favorites);
   const startIndex = (this.currentFavoritesPage - 1) * this.moviesPerPage;
-  return this.favorites.slice(startIndex, startIndex + this.moviesPerPage);
+  return filteredFavorites.slice(startIndex, startIndex + this.moviesPerPage);
 }
 
 paginatedWatchlist() {
+  const filteredWatchlist = this.filterProfileMovies(this.watchlist);
   const startIndex = (this.currentWatchlistPage - 1) * this.moviesPerPage;
-  return this.watchlist.slice(startIndex, startIndex + this.moviesPerPage);
+  return filteredWatchlist.slice(startIndex, startIndex + this.moviesPerPage);
 }
 
 paginatedWatched() {
+  const filteredWatched = this.filterProfileMovies(this.watched);
   const startIndex = (this.currentWatchedPage - 1) * this.moviesPerPage;
-  return this.watched.slice(startIndex, startIndex + this.moviesPerPage);
+  return filteredWatched.slice(startIndex, startIndex + this.moviesPerPage);
 }
 
 }

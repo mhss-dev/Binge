@@ -21,7 +21,7 @@
       />
 
       <div class="profile-copy">
-        <p class="eyebrow">Profil cinema</p>
+        <p class="eyebrow">Profil</p>
         <h1>{{ nickname && currentNickname && nickname === currentNickname ? nickname : 'Profil de ' + nickname }}</h1>
         <p class="profile-bio" *ngIf="bio">{{ bio }}</p>
         <p class="profile-bio profile-bio-empty" *ngIf="!bio && nickname === currentNickname">
@@ -58,6 +58,32 @@
   </div>
 
   <div class="library-shell glass-panel">
+    <div class="dashboard-search">
+      <div class="dashboard-search-copy">
+        <p class="eyebrow">Recherche rapide</p>
+        <h2>Rechercher un film dans ce profil</h2>
+      </div>
+
+      <div class="dashboard-search-bar">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <input
+          type="text"
+          [(ngModel)]="dashboardSearchQuery"
+          placeholder="Rechercher dans les films de ce profil..."
+          aria-label="Rechercher un film dans le profil courant"
+        />
+        <button
+          *ngIf="dashboardSearchQuery"
+          type="button"
+          class="dashboard-search-clear"
+          (click)="clearDashboardSearch()"
+          aria-label="Effacer la recherche"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </div>
+
     <ul class="nav nav-tabs library-tabs" id="myTab" role="tablist">
       <li class="nav-item" role="presentation">
         <button
@@ -105,7 +131,7 @@
 
     <div class="tab-content library-content">
       <div class="tab-pane fade show active" id="watched" role="tabpanel" aria-labelledby="watched-tab">
-        <div class="movie-grid" *ngIf="watched.length > 0; else watchedEmpty">
+        <div class="movie-grid" *ngIf="paginatedWatched().length > 0; else watchedEmpty">
           <article *ngFor="let movie of paginatedWatched()" class="movie-card poster-card">
             <a [routerLink]="['/film', movie.id]" class="poster-link">
               <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
@@ -114,14 +140,19 @@
         </div>
         <ng-template #watchedEmpty>
           <div class="empty-state">
-            <p>Vous n'avez pas encore ajoute de films visionnés.</p>
-            <a [routerLink]="['/films']" class="empty-link">Explorer le catalogue</a>
+            <ng-container *ngIf="dashboardSearchQuery; else watchedDefaultEmpty">
+              <p>Aucun film visionné de ce profil ne correspond à votre recherche.</p>
+            </ng-container>
+            <ng-template #watchedDefaultEmpty>
+              <p>Vous n'avez pas encore ajoute de films visionnés.</p>
+              <a [routerLink]="['/films']" class="empty-link">Explorer le catalogue</a>
+            </ng-template>
           </div>
         </ng-template>
       </div>
 
       <div class="tab-pane fade" id="favorites" role="tabpanel" aria-labelledby="favorites-tab">
-        <div class="movie-grid" *ngIf="favorites.length > 0; else favoritesEmpty">
+        <div class="movie-grid" *ngIf="paginatedFavorites().length > 0; else favoritesEmpty">
           <article *ngFor="let movie of paginatedFavorites()" class="movie-card poster-card">
             <a [routerLink]="['/film', movie.id]" class="poster-link">
               <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
@@ -130,14 +161,19 @@
         </div>
         <ng-template #favoritesEmpty>
           <div class="empty-state">
-            <p>Aucun favori enregistré pour l'instant.</p>
-            <a [routerLink]="['/films']" class="empty-link">Decouvrir des films</a>
+            <ng-container *ngIf="dashboardSearchQuery; else favoritesDefaultEmpty">
+              <p>Aucun favori de ce profil ne correspond à votre recherche.</p>
+            </ng-container>
+            <ng-template #favoritesDefaultEmpty>
+              <p>Aucun favori enregistré pour l'instant.</p>
+              <a [routerLink]="['/films']" class="empty-link">Decouvrir des films</a>
+            </ng-template>
           </div>
         </ng-template>
       </div>
 
       <div class="tab-pane fade" id="watchlist" role="tabpanel" aria-labelledby="watchlist-tab">
-        <div class="movie-grid" *ngIf="watchlist.length > 0; else watchlistEmpty">
+        <div class="movie-grid" *ngIf="paginatedWatchlist().length > 0; else watchlistEmpty">
           <article *ngFor="let movie of paginatedWatchlist()" class="movie-card poster-card">
             <a [routerLink]="['/film', movie.id]" class="poster-link">
               <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
@@ -146,8 +182,13 @@
         </div>
         <ng-template #watchlistEmpty>
           <div class="empty-state">
-            <p>Votre watchlist est encore vide.</p>
-            <a [routerLink]="['/films']" class="empty-link">Trouver quelque chose a ajouter</a>
+            <ng-container *ngIf="dashboardSearchQuery; else watchlistDefaultEmpty">
+              <p>Aucun film de la watchlist de ce profil ne correspond à votre recherche.</p>
+            </ng-container>
+            <ng-template #watchlistDefaultEmpty>
+              <p>Votre watchlist est encore vide.</p>
+              <a [routerLink]="['/films']" class="empty-link">Trouver quelque chose a ajouter</a>
+            </ng-template>
           </div>
         </ng-template>
       </div>

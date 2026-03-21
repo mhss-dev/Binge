@@ -56,6 +56,7 @@ export class NavbarComponent {
           this.fetchNotifications();
         } else {
           this.unreadNotifications = [];
+          this.notificationService.clearNotificationsState();
         }
       },
       error: (error: any) => {
@@ -63,7 +64,7 @@ export class NavbarComponent {
       },
     });
 
-    this.notificationService.getNotifications().subscribe((notifications) => {
+    this.notificationService.getNotificationsState().subscribe((notifications) => {
       this.unreadNotifications = Array.isArray(notifications) ? notifications : [];
       this.unreadNotifications.forEach((notification) => {
         if (notification.movie_id && !this.movieTitles[notification.movie_id]) {
@@ -99,24 +100,26 @@ export class NavbarComponent {
   }
 
   markNotificationAsRead(notification: any): void {
+    this.notificationService.markNotificationAsReadInState(notification.id);
+
     this.notificationService.markAsRead(notification.id).subscribe({
-      next: () => {
-        notification.read = true;
-        this.unreadNotifications = this.unreadNotifications.filter((notif) => notif.id !== notification.id);
+      error: () => {
+        this.fetchNotifications();
       },
     });
   }
 
   clearAllNotifications(): void {
-    this.unreadNotifications.forEach((notification) => {
+    const notificationsToClear = [...this.unreadNotifications];
+    this.notificationService.clearNotificationsState();
+
+    notificationsToClear.forEach((notification) => {
       this.notificationService.markAsRead(notification.id).subscribe({
-        next: () => {
-          notification.read = true;
+        error: () => {
+          this.fetchNotifications();
         },
       });
     });
-
-    this.unreadNotifications = [];
   }
 
   getTypeText(type: string): string {
@@ -178,6 +181,7 @@ export class NavbarComponent {
     this.authService.logout().subscribe({
       next: () => {
         this.isLoggedIn = false;
+        this.notificationService.clearNotificationsState();
         this.router.navigate(['/login']);
       },
       error: (err) => {

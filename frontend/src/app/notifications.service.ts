@@ -11,7 +11,7 @@ export class NotificationService {
   private apiUrl = `${environment.apiUrl}/auth/notifications`;
   private notificationsSubject = new BehaviorSubject<any[]>([]);
 
-    constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
   getNotifications(): Observable<any[]> {
     const token = localStorage.getItem('token');
@@ -25,11 +25,23 @@ export class NotificationService {
   }
 
   setNotifications(notifications: any[]): void {
-    this.notificationsSubject.next(notifications);
+    this.notificationsSubject.next(Array.isArray(notifications) ? notifications : []);
   }
 
   getNotificationsState(): Observable<any[]> {
     return this.notificationsSubject.asObservable();
+  }
+
+  markNotificationAsReadInState(notificationId: string): void {
+    const updatedNotifications = this.notificationsSubject.value.filter(
+      (notification) => notification.id !== notificationId
+    );
+
+    this.notificationsSubject.next(updatedNotifications);
+  }
+
+  clearNotificationsState(): void {
+    this.notificationsSubject.next([]);
   }
 
   markAsRead(notificationId: string): Observable<any> {
