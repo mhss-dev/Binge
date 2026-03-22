@@ -60,7 +60,7 @@ export class FilmsComponent {
     { value: '28', label: 'Action' },
     { value: '12', label: 'Aventure' },
     { value: '16', label: 'Animation' },
-    { value: '35', label: 'Comedie' },
+    { value: '35', label: 'Comédie' },
     { value: '80', label: 'Crime' },
     { value: '99', label: 'Documentaire' },
     { value: '18', label: 'Drame' },
@@ -69,10 +69,10 @@ export class FilmsComponent {
     { value: '36', label: 'Histoire' },
     { value: '27', label: 'Horreur' },
     { value: '10402', label: 'Musique' },
-    { value: '9648', label: 'Mystere' },
+    { value: '9648', label: 'Mystère' },
     { value: '10749', label: 'Romance' },
     { value: '878', label: 'Science-fiction' },
-    { value: '10770', label: 'Telefilm' },
+    { value: '10770', label: 'Téléfilm' },
     { value: '53', label: 'Thriller' },
     { value: '10752', label: 'Guerre' },
     { value: '37', label: 'Western' },
@@ -105,7 +105,7 @@ export class FilmsComponent {
         return;
       }
     });
-    localStorage.setItem('redirectUrl', window.location.pathname)
+    localStorage.setItem('redirectUrl', window.location.pathname);
   }
 
   loadFilms(page: number): void {

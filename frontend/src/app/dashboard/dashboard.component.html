@@ -30,7 +30,7 @@
 
         <div class="social-stats">
           <button class="stat-pill" data-bs-toggle="modal" data-bs-target="#followersModal">
-            Abonne{{ followersCount >= 2 ? 's' : '' }} : {{ followersCount }}
+            Abonné{{ followersCount >= 2 ? 's' : '' }} : {{ followersCount }}
           </button>
           <button class="stat-pill" data-bs-toggle="modal" data-bs-target="#followingsModal">
             Abonnement{{ followingCount >= 2 ? 's' : '' }} : {{ followingCount }}
@@ -138,7 +138,7 @@
               <p>Aucun film visionné de ce profil ne correspond à votre recherche.</p>
             </ng-container>
             <ng-template #watchedDefaultEmpty>
-              <p>Vous n'avez pas encore ajoute de films visionnés.</p>
+              <p>Vous n'avez pas encore ajouté de films visionnés.</p>
               <a [routerLink]="['/films']" class="empty-link">Explorer le catalogue</a>
             </ng-template>
           </div>
@@ -160,7 +160,7 @@
             </ng-container>
             <ng-template #favoritesDefaultEmpty>
               <p>Aucun favori enregistré pour l'instant.</p>
-              <a [routerLink]="['/films']" class="empty-link">Decouvrir des films</a>
+              <a [routerLink]="['/films']" class="empty-link">Découvrir des films</a>
             </ng-template>
           </div>
         </ng-template>
@@ -181,7 +181,7 @@
             </ng-container>
             <ng-template #watchlistDefaultEmpty>
               <p>Votre watchlist est encore vide.</p>
-              <a [routerLink]="['/films']" class="empty-link">Trouver quelque chose a ajouter</a>
+              <a [routerLink]="['/films']" class="empty-link">Trouver quelque chose à ajouter</a>
             </ng-template>
           </div>
         </ng-template>
@@ -220,8 +220,8 @@
             <div class="tab-pane fade show active" id="nicknameTabContent" role="tabpanel" aria-labelledby="nickname-tab">
               <div class="editor-panel">
                 <div class="editor-copy">
-                  <p class="editor-kicker">Identite</p>
-                  <h3>Mettre a jour le pseudo</h3>
+                  <p class="editor-kicker">Identité</p>
+                  <h3>Mettre à jour le pseudo</h3>
                   <p>Choisissez un nom court et reconnaissable pour votre profil.</p>
                 </div>
                 <div class="field-stack">
@@ -251,8 +251,8 @@
               <div class="editor-panel avatar-editor">
                 <div class="editor-copy">
                   <p class="editor-kicker">Avatar</p>
-                  <h3>Choisir une presence visuelle</h3>
-                  <p>Selectionnez l'avatar qui represente le mieux votre profil.</p>
+                  <h3>Choisir une présence visuelle</h3>
+                  <p>Sélectionnez l'avatar qui représente le mieux votre profil.</p>
                 </div>
                 <div class="avatar-grid">
                   <button *ngFor="let avatar of avatars" type="button" (click)="selectAvatar(avatar, $event)" class="avatar-option">
@@ -272,7 +272,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content modal-surface">
         <div class="modal-header modal-head">
-          <h2 class="modal-title" id="followersModalLabel">Abonnes{{ followersCount >= 2 ? 's' : '' }}</h2>
+          <h2 class="modal-title" id="followersModalLabel">Abonné{{ followersCount >= 2 ? 's' : '' }}</h2>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body modal-content-body">

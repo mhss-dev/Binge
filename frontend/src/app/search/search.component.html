@@ -1,8 +1,8 @@
 <section class="search-page app-shell text-white">
   <div class="search-hero glass-panel">
     <p class="eyebrow">Recherche</p>
-    <h1>Resultats pour "{{ searchQuery }}"</h1>
-    <p>{{ films.length }} titre(s) trouves</p>
+    <h1>Résultats pour "{{ searchQuery }}"</h1>
+    <p>{{ films.length }} titre(s) trouvés</p>
   </div>
 
   <div *ngIf="films.length; else emptyState" class="poster-grid search-grid">
@@ -22,7 +22,7 @@
 
   <ng-template #emptyState>
     <div class="empty-state glass-panel">
-      <h2>Aucun resultat pour le moment</h2>
+      <h2>Aucun résultat pour le moment</h2>
       <p>Essayez un autre titre depuis la recherche rapide.</p>
     </div>
   </ng-template>

@@ -79,7 +79,7 @@
             <span *ngIf="movie?.vote_average">
               {{ movie?.vote_average | number : "1.0-1" }}/10
             </span>
-        
+
             <span *ngIf="movie?.release_date || movie?.first_air_date">
               {{ (movie?.release_date || movie?.first_air_date) | date : "yyyy" }}
             </span>
