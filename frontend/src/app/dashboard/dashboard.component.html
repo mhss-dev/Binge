@@ -102,23 +102,58 @@
         </button>
       </li>
       <li class="library-search-slot">
-        <div class="dashboard-search-bar">
-          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-          <input
-            type="text"
-            [(ngModel)]="dashboardSearchQuery"
-            placeholder="Rechercher dans ce profil..."
-            aria-label="Rechercher un film dans le profil courant"
-          />
-          <button
-            *ngIf="dashboardSearchQuery"
-            type="button"
-            class="dashboard-search-clear"
-            (click)="clearDashboardSearch()"
-            aria-label="Effacer la recherche"
-          >
-            <i class="fa-solid fa-xmark"></i>
-          </button>
+        <div class="library-tools" style="gap:.65rem;">
+          <div style="display:grid;gap:.24rem;align-content:start;flex:1 1 auto;">
+            <span style="font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(245,247,251,.62);padding-left:.15rem;line-height:1;">
+              Rechercher
+            </span>
+            <div class="dashboard-search-bar">
+              <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+              <input
+                type="text"
+                [(ngModel)]="dashboardSearchQuery"
+                aria-label="Rechercher un film dans le profil courant"
+              />
+              <button
+                *ngIf="dashboardSearchQuery"
+                type="button"
+                class="dashboard-search-clear"
+                (click)="clearDashboardSearch()"
+                aria-label="Effacer la recherche"
+              >
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+          </div>
+          <div style="display:grid;gap:.24rem;align-content:start;flex:0 0 auto;min-width:11rem;">
+            <span style="font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(245,247,251,.62);padding-left:.15rem;line-height:1;">
+              Trier
+            </span>
+            <div style="display:flex;align-items:center;min-height:2.05rem;max-width:180px;padding:0 .5rem;border-radius:13px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08);">
+              <mat-select
+                panelClass="app-select-panel"
+                style="width:100%;"
+                [(ngModel)]="profileSortOption"
+                (selectionChange)="onWatchedSortChange()"
+                aria-label="Trier les films du profil"
+              >
+                <mat-select-trigger class="text-secondary">
+                  <span style="display:inline-flex;align-items:center;gap:.5rem;min-width:0;">
+                    <i class="fa-solid fa-arrow-down-wide-short" aria-hidden="true" style="color:var(--muted);font-size:.88rem;"></i>
+                    <span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                      {{ profileSortOption === 'title_desc' ? 'Titre Z-A' : 'Titre A-Z' }}
+                    </span>
+                  </span>
+                </mat-select-trigger>
+                <mat-option
+                  *ngFor="let option of watchedSortOptions"
+                  [value]="option.value"
+                >
+                  {{ option.label }}
+                </mat-option>
+              </mat-select>
+            </div>
+          </div>
         </div>
       </li>
     </ul>

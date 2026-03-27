@@ -157,17 +157,17 @@
 .library-search-slot {
   order: 99;
   margin-left: auto;
-  flex: 0 0 11.5rem;
-  min-width: min(100%, 11.5rem);
-  list-style: none;
+  flex: 0 1 28rem;
+  min-width: min(100%, 28rem);
+}
+
+.library-tools {
+  display: flex;
+  align-items: center;
 }
 
 .library-search-slot .dashboard-search-bar {
-  border-radius: 999px;
-}
-
-.library-search-slot .dashboard-search-bar input {
-  font-size: 0.9rem;
+  flex: 1 1 auto;
 }
 
 .library-tabs {
@@ -205,8 +205,7 @@
 
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(170px, 170px));
-  justify-content: start;
+  grid-template-columns: repeat(auto-fill, minmax(min(170px, 100%), 1fr));
   gap: 1rem;
 }
 
@@ -432,6 +431,11 @@
   .library-search-slot {
     margin-left: 0;
     min-width: 100%;
+  }
+
+  .library-tools {
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .library-tabs .nav-link {

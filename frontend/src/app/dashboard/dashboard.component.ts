@@ -1,22 +1,24 @@
-import { ChangeDetectorRef, Component, HostListener, OnInit, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, signal } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { MatSelectModule } from '@angular/material/select';
 import { FavoritesService } from '../favorites.service';
 import { WatchlistService } from '../watchlist.service';
 import { WatchedService } from '../watched.service';
 import { DetailsService } from '../details.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { catchError, forkJoin, of } from 'rxjs';
+import { catchError, of } from 'rxjs';
 import { UserService } from 'app/services/user.service';
 import { MembersService } from 'app/members.service';
 import { Title } from '@angular/platform-browser';
 
+type ProfileSortOption = 'title_asc' | 'title_desc';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, MatSelectModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
@@ -62,6 +64,11 @@ export class DashboardComponent {
   showEditIcon: boolean = false;
   connectedDevices: any[] = [];
   dashboardSearchQuery: string = '';
+  profileSortOption: ProfileSortOption = 'title_asc';
+  readonly watchedSortOptions = [
+    { value: 'title_asc', label: 'Titre A-Z' },
+    { value: 'title_desc', label: 'Titre Z-A' },
+  ];
 
 
   constructor(
@@ -331,6 +338,13 @@ normalizeMovieTitle(movie: any): string {
   return (movie?.title || movie?.name || '').toLowerCase();
 }
 
+onWatchedSortChange(): void {
+  this.currentFavoritesPage = 1;
+  this.currentWatchlistPage = 1;
+  this.currentWatchedPage = 1;
+  this.cdr.detectChanges();
+}
+
 filterProfileMovies(movies: any[]): any[] {
   const query = this.dashboardSearchQuery.trim().toLowerCase();
 
@@ -468,21 +482,32 @@ getTotalPages(arrayLength: number): number[] {
 
 
 paginatedFavorites() {
-  const filteredFavorites = this.filterProfileMovies(this.favorites);
+  const filteredFavorites = this.sortProfileMovies(this.filterProfileMovies(this.favorites));
   const startIndex = (this.currentFavoritesPage - 1) * this.moviesPerPage;
   return filteredFavorites.slice(startIndex, startIndex + this.moviesPerPage);
 }
 
 paginatedWatchlist() {
-  const filteredWatchlist = this.filterProfileMovies(this.watchlist);
+  const filteredWatchlist = this.sortProfileMovies(this.filterProfileMovies(this.watchlist));
   const startIndex = (this.currentWatchlistPage - 1) * this.moviesPerPage;
   return filteredWatchlist.slice(startIndex, startIndex + this.moviesPerPage);
 }
 
 paginatedWatched() {
-  const filteredWatched = this.filterProfileMovies(this.watched);
+  const filteredWatched = this.sortProfileMovies(this.filterProfileMovies(this.watched));
   const startIndex = (this.currentWatchedPage - 1) * this.moviesPerPage;
   return filteredWatched.slice(startIndex, startIndex + this.moviesPerPage);
+}
+
+sortProfileMovies(movies: any[]): any[] {
+  return [...movies].sort((movieA, movieB) => {
+    const titleA = this.normalizeMovieTitle(movieA);
+    const titleB = this.normalizeMovieTitle(movieB);
+
+    return this.profileSortOption === 'title_desc'
+      ? titleB.localeCompare(titleA, 'fr')
+      : titleA.localeCompare(titleB, 'fr');
+  });
 }
 
 }
