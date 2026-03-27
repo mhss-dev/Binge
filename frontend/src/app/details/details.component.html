@@ -57,13 +57,6 @@
               <span>{{ getProviderRegionLabel() }}</span>
             </div>
             <div class="providers-row">
-              <a
-                *ngFor="let provider of combinedProviders()"
-                class="provider-item"
-                [href]="getWatchProviderLink() || '#'"
-                [attr.target]="getWatchProviderLink() ? '_blank' : null"
-                [attr.rel]="getWatchProviderLink() ? 'noopener noreferrer' : null"
-              >
                 <img
                   [src]="'https://image.tmdb.org/t/p/w45' + provider.logo_path"
                   [alt]="provider.provider_name"
