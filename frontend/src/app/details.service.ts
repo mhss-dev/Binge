@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { forkJoin, Observable, of, tap } from 'rxjs';
+import { Observable, of, tap } from 'rxjs';
 import { environment } from '../environments/environment';
 
 
@@ -28,7 +28,9 @@ export class DetailsService {
 
   loadBatchMovies(movieIds: number[], batchSize?: number): Observable<any[]> {
     if (!movieIds.length) return of([]);
-    return forkJoin(movieIds.map(id => this.getMovieByID(id)));
+    return this.http.get<any[]>(`${this.apiUrl}/films/batch`, {
+      params: { ids: movieIds.join(',') }
+    });
   }  
 
   getLogoByID(id: number): Observable<any> {
