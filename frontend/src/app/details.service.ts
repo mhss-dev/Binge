@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { concat, forkJoin, Observable, of, scan, tap } from 'rxjs';
+import { forkJoin, merge, Observable, of, scan, tap } from 'rxjs';
 import { environment } from '../environments/environment';
 
 
@@ -27,12 +27,13 @@ export class DetailsService {
   }
 
   loadBatchMovies(movieIds: number[], batchSize: number = 5): Observable<any[]> {
+    if (!movieIds.length) return of([]);
     const batches: Observable<any[]>[] = [];
     for (let i = 0; i < movieIds.length; i += batchSize) {
       const batch = movieIds.slice(i, i + batchSize).map(id => this.getMovieByID(id));
       batches.push(forkJoin(batch));
     }
-    return concat(...batches).pipe(
+    return merge(...batches).pipe(
       scan((allMovies, batchMovies) => allMovies.concat(batchMovies), [] as any[])
     );
   }  
