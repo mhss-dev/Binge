@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostListener, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnDestroy, signal } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatSelectModule } from '@angular/material/select';
@@ -8,7 +8,7 @@ import { WatchedService } from '../watched.service';
 import { DetailsService } from '../details.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { catchError, of } from 'rxjs';
+import { catchError, of, Subject, takeUntil } from 'rxjs';
 import { UserService } from 'app/services/user.service';
 import { MembersService } from 'app/members.service';
 import { Title } from '@angular/platform-browser';
@@ -22,7 +22,8 @@ type ProfileSortOption = 'title_asc' | 'title_desc';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnDestroy {
+  private cancelPending$ = new Subject<void>();
   nickname: string = '';
   movie: any = null;
   favorites: any[] = [];
@@ -86,10 +87,14 @@ export class DashboardComponent {
   ) {}
   
   ngOnInit(): void {
-    
-   this.loadProfile();
-   this.fetchConnectedDevices();
-}
+    this.loadProfile();
+    this.fetchConnectedDevices();
+  }
+
+  ngOnDestroy(): void {
+    this.cancelPending$.next();
+    this.cancelPending$.complete();
+  }
 
 loadProfile(): void {
   this.isLoading = true;
@@ -275,7 +280,14 @@ toggleFollow(): void {
 fetchProfileData(): void {
   const routeNickname = this.route.snapshot.paramMap.get('nickname');
 
-  this.memberservice.getProfileData(routeNickname || undefined).subscribe({
+  this.cancelPending$.next();
+  this.favorites = [];
+  this.watchlist = [];
+  this.watched = [];
+
+  this.memberservice.getProfileData(routeNickname || undefined).pipe(
+    takeUntil(this.cancelPending$)
+  ).subscribe({
     next: (data: any) => {
       this.processProfileData(data);
     },
@@ -287,7 +299,9 @@ fetchProfileData(): void {
 processProfileData(data: any): void {
   if (data.favorites?.length) {
     const favoriteMovieIds = data.favorites.map((item: any) => item.movie_id);
-    this.detailsService.loadBatchMovies(favoriteMovieIds, 10).subscribe({
+    this.detailsService.loadBatchMovies(favoriteMovieIds).pipe(
+      takeUntil(this.cancelPending$)
+    ).subscribe({
       next: (movies: any[]) => {
         this.favorites = movies;
         this.cdr.detectChanges();
@@ -297,13 +311,13 @@ processProfileData(data: any): void {
         this.favorites = [];
       }
     });
-  } else {
-    this.favorites = [];
   }
 
   if (data.watchlist?.length) {
     const watchlistMovieIds = data.watchlist.map((item: any) => item.movie_id);
-    this.detailsService.loadBatchMovies(watchlistMovieIds, 10).subscribe({
+    this.detailsService.loadBatchMovies(watchlistMovieIds).pipe(
+      takeUntil(this.cancelPending$)
+    ).subscribe({
       next: (movies: any[]) => {
         this.watchlist = movies;
         this.cdr.detectChanges();
@@ -313,13 +327,13 @@ processProfileData(data: any): void {
         this.watchlist = [];
       }
     });
-  } else {
-    this.watchlist = [];
   }
 
   if (data.watched?.length) {
     const watchedMovieIds = data.watched.map((item: any) => item.movie_id);
-    this.detailsService.loadBatchMovies(watchedMovieIds, 10).subscribe({
+    this.detailsService.loadBatchMovies(watchedMovieIds).pipe(
+      takeUntil(this.cancelPending$)
+    ).subscribe({
       next: (movies: any[]) => {
         this.watched = movies;
         this.cdr.detectChanges();
@@ -329,8 +343,6 @@ processProfileData(data: any): void {
         this.watched = [];
       }
     });
-  } else {
-    this.watched = [];
   }
 }
 
