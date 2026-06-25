@@ -57,12 +57,17 @@
               <span>{{ getProviderRegionLabel() }}</span>
             </div>
             <div class="providers-row">
+              <div
+                *ngFor="let provider of combinedProviders()"
+                class="provider-item"
+              >
                 <img
                   [src]="'https://image.tmdb.org/t/p/w45' + provider.logo_path"
                   [alt]="provider.provider_name"
                   class="providers-logo"
                 />
                 <small>{{ provider.provider_name }}</small>
+              </div>
             </div>
           </div>
 
