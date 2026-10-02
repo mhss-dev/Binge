@@ -163,7 +163,7 @@
         <div class="movie-grid" *ngIf="paginatedWatched().length > 0; else watchedEmpty">
           <article *ngFor="let movie of paginatedWatched()" class="movie-card poster-card">
             <a [routerLink]="['/film', movie.id]" class="poster-link">
-              <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
+              <img class="movie-poster" loading="lazy" [src]="'https://image.tmdb.org/t/p/w342/' + movie.poster_path" alt="{{ movie.title }}" />
             </a>
           </article>
         </div>
@@ -184,7 +184,7 @@
         <div class="movie-grid" *ngIf="paginatedFavorites().length > 0; else favoritesEmpty">
           <article *ngFor="let movie of paginatedFavorites()" class="movie-card poster-card">
             <a [routerLink]="['/film', movie.id]" class="poster-link">
-              <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
+              <img class="movie-poster" loading="lazy" [src]="'https://image.tmdb.org/t/p/w342/' + movie.poster_path" alt="{{ movie.title }}" />
             </a>
           </article>
         </div>
@@ -205,7 +205,7 @@
         <div class="movie-grid" *ngIf="paginatedWatchlist().length > 0; else watchlistEmpty">
           <article *ngFor="let movie of paginatedWatchlist()" class="movie-card poster-card">
             <a [routerLink]="['/film', movie.id]" class="poster-link">
-              <img class="movie-poster" [src]="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="{{ movie.title }}" />
+              <img class="movie-poster" loading="lazy" [src]="'https://image.tmdb.org/t/p/w342/' + movie.poster_path" alt="{{ movie.title }}" />
             </a>
           </article>
         </div>

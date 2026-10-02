@@ -34,7 +34,7 @@ export class DetailsService {
     }
     return merge(
       ...chunks.map((ids, index) =>
-        this.http.get<any[]>(`${this.apiUrl}/films/batch`, { params: { ids: ids.join(',') } }).pipe(
+        this.http.get<any[]>(`${this.apiUrl}/films/batch`, { params: { ids: ids.join(','), light: '1' } }).pipe(
           map((movies) => ({ index, movies })),
           catchError(() => EMPTY)
         )
