@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, of, tap } from 'rxjs';
+import { EMPTY, Observable, catchError, defaultIfEmpty, map, merge, of, scan, tap } from 'rxjs';
 import { environment } from '../environments/environment';
 
 
@@ -26,12 +26,29 @@ export class DetailsService {
     );
   }
 
-  loadBatchMovies(movieIds: number[], batchSize?: number): Observable<any[]> {
+  loadBatchMovies(movieIds: number[], batchSize: number = 24): Observable<any[]> {
     if (!movieIds.length) return of([]);
-    return this.http.get<any[]>(`${this.apiUrl}/films/batch`, {
-      params: { ids: movieIds.join(',') }
-    });
-  }  
+    const chunks: number[][] = [];
+    for (let i = 0; i < movieIds.length; i += batchSize) {
+      chunks.push(movieIds.slice(i, i + batchSize));
+    }
+    return merge(
+      ...chunks.map((ids, index) =>
+        this.http.get<any[]>(`${this.apiUrl}/films/batch`, { params: { ids: ids.join(',') } }).pipe(
+          map((movies) => ({ index, movies })),
+          catchError(() => EMPTY)
+        )
+      )
+    ).pipe(
+      scan((acc: any[][], part) => {
+        const next = [...acc];
+        next[part.index] = part.movies;
+        return next;
+      }, [] as any[][]),
+      map((parts) => parts.flat()),
+      defaultIfEmpty([] as any[])
+    );
+  }
 
   getLogoByID(id: number): Observable<any> {
     const url = `${this.apiUrl}/logo/${id}`;
