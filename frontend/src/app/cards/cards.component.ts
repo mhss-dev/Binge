@@ -26,7 +26,6 @@ export class CardsComponent implements OnInit {
   upcomingDates: any;
   isLoading = false;
   hasMore = true;
-  isButtonVisible = signal(false);
 
   selectedRegion = 'BE';
   currentPage = 1;
@@ -86,17 +85,7 @@ export class CardsComponent implements OnInit {
       : 'https://placehold.co/500x750?text=Aucun+poster';
   }
 
-  scrollToTop(): void {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
 
-  @HostListener('window:scroll', [])
-  onWindowScroll(): void {
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    const scrollPercentage = (scrollTop / scrollHeight) * 100;
-    this.isButtonVisible.set(scrollPercentage > 30);
-  }
 
   selectTab(tab: string): void {
     this.currentTab = tab;

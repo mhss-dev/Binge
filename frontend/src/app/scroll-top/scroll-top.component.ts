@@ -1,4 +1,5 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, inject, NgZone, DestroyRef } from '@angular/core';
+import { watchScroll } from '../scroll.util';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -12,12 +13,14 @@ import { CommonModule } from '@angular/common';
   `,
 })
 export class ScrollTopComponent {
+  private readonly scrollWatch = watchScroll(inject(NgZone), inject(DestroyRef), () => this.isFar() !== this.visible, () => (this.visible = this.isFar()));
+
+  private isFar(): boolean {
+    return (window.scrollY || document.documentElement.scrollTop) > 600;
+  }
+
   visible = false;
 
-  @HostListener('window:scroll', [])
-  onScroll(): void {
-    this.visible = (window.scrollY || document.documentElement.scrollTop) > 600;
-  }
 
   top(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' });

@@ -38,7 +38,6 @@ export class DashboardComponent implements OnDestroy {
   profileImage: string | ArrayBuffer | null = null;
   currentNickname: string = '';
   currentProfile: any;
-  isButtonVisible = signal(false);
 
 
   avatars: string[] = this.getAvatars();
@@ -509,20 +508,7 @@ goToProfile(nickname: string) {
   }
 
 
-  @HostListener('window:scroll', ['$event'])
-  onScroll(event: Event): void {
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-    const bodyHeight = document.documentElement.scrollHeight;
-
-    const scrollPercentage = (scrollTop / (bodyHeight - windowHeight)) * 100;
-
-    this.isButtonVisible.set(scrollPercentage > 40);
-  }
   
-  scrollToTop(): void {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
 
 onLogout(): void {
   this.authService.logout().subscribe({

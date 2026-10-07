@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, HostListener, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, signal, inject, NgZone, DestroyRef } from '@angular/core';
+import { nearBottom, watchScroll } from '../scroll.util';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DiscoverService } from 'app/discover.service';
 import { DomSanitizer, SafeResourceUrl, Title, Meta } from '@angular/platform-browser';
@@ -12,6 +13,7 @@ import { DomSanitizer, SafeResourceUrl, Title, Meta } from '@angular/platform-br
   styleUrl: './actor.component.css'
 })
 export class ActorComponent {
+  private readonly scrollWatch = watchScroll(inject(NgZone), inject(DestroyRef), () => !this.isLoading && this.hasMore && nearBottom(), () => this.loadFilms(this.currentPage + 1));
   actor: any;
   movies: any = [];
   error: any;
@@ -22,7 +24,6 @@ export class ActorComponent {
   currentPage: number = 1;
   expanded: boolean = false; 
   maxBiographyLength: number = 500;
-  isButtonVisible = signal(false);
 
   constructor(private route: ActivatedRoute, private discoverService : DiscoverService, private cdr: ChangeDetectorRef, private titleService: Title, private metaService: Meta,) {}
 
@@ -81,26 +82,7 @@ export class ActorComponent {
   }
   
 
-  @HostListener('window:scroll', ['$event'])
-  onScroll(event: Event): void {
-    if (this.isLoading || !this.hasMore) return;
-
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-    const bodyHeight = document.documentElement.scrollHeight;
-
-    if (scrollTop + windowHeight >= bodyHeight - 100) {
-      this.loadFilms(this.currentPage + 1); 
-    }
-
-    const scrollPercentage = (scrollTop / (bodyHeight - windowHeight)) * 100;
-
-    this.isButtonVisible.set(scrollPercentage > 70);
-  }
   
-  scrollToTop(): void {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
 
   private updateMetaTags(): void {
     if (!this.actor) return;

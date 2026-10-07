@@ -18,12 +18,12 @@ import { MovieService } from '../movie.service';
     <div class="shade" [class.contained]="contained"></div>
   `,
   styles: [`
-    .wall { position: fixed; inset: -25%; display: grid; align-content: center; gap: 1rem; transform: rotate(-9deg); opacity: 0.6; }
+    .wall { contain: layout paint; position: fixed; inset: -25%; display: grid; align-content: center; gap: 1rem; transform: rotate(-9deg); opacity: 0.6; }
     .wall.contained { position: absolute; opacity: 0.7; }
     .row { display: flex; overflow: hidden; }
-    .track { display: flex; gap: 1rem; width: max-content; animation: scroll 90s linear infinite; }
+    .track { display: flex; gap: 1rem; width: max-content; will-change: transform; animation: scroll 90s linear infinite; }
     .row.rev .track { animation-direction: reverse; animation-duration: 110s; }
-    .track img { width: 150px; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 14px; box-shadow: 0 14px 30px rgba(0, 0, 0, 0.5); }
+    .track img { width: 150px; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 14px; }
     .shade { position: fixed; inset: 0; background: radial-gradient(circle at center, rgba(7, 17, 31, 0.5), rgba(7, 17, 31, 0.93) 78%); }
     .shade.contained { position: absolute; background: rgba(7, 17, 31, 0.5); }
     @media (min-width: 992px) { .track img { width: 190px; } }

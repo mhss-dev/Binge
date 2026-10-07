@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, ChangeDetectorRef, signal, ElementRef, ViewChild } from '@angular/core';
+import { Component, HostListener, ChangeDetectorRef, signal, ElementRef, ViewChild, inject, NgZone, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { nearBottom, watchScroll } from '../scroll.util';
 import { DiscoverService } from '../discover.service';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
@@ -21,6 +23,8 @@ import { Toast } from 'bootstrap';
   styleUrl: './top-rated.component.css'
 })
 export class TopRatedComponent {
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly scrollWatch = watchScroll(inject(NgZone), inject(DestroyRef), () => !this.isLoading && this.hasMore && nearBottom(), () => this.loadFilms(this.currentPage + 1));
   @ViewChild('toastElement', { static: false }) toastElement!: ElementRef;
 
   toastMessage: string = '';
@@ -40,7 +44,6 @@ export class TopRatedComponent {
   isWatched: boolean = false;
   isLoggedIn = false;
   nickname: string | null = null;
-  isButtonVisible = signal(false);
 
   constructor(private movieService: MovieService,
     private route: ActivatedRoute,
@@ -61,7 +64,7 @@ export class TopRatedComponent {
       this.titleService.setTitle('Binge • social & découverte de films');
     });
 
-    this.authService.isLoggedIn$.subscribe(status => {
+    this.authService.isLoggedIn$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(status => {
       this.isLoggedIn = status;
       if (this.isLoggedIn) {
         this.getNickname();
@@ -145,26 +148,7 @@ export class TopRatedComponent {
     });
   }
 
-  @HostListener('window:scroll', ['$event'])
-  onScroll(event: Event): void {
-    if (this.isLoading || !this.hasMore) return;
 
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-    const bodyHeight = document.documentElement.scrollHeight;
-
-    if (scrollTop + windowHeight >= bodyHeight - 100) {
-      this.loadFilms(this.currentPage + 1);
-    }
-
-    const scrollPercentage = (scrollTop / (bodyHeight - windowHeight)) * 100;
-
-    this.isButtonVisible.set(scrollPercentage > 45);
-  }
-
-  scrollToTop(): void {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
 
   // saveScrollPosition(): void {
   //   sessionStorage.setItem('scrollPosition', window.scrollY.toString());

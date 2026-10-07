@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, inject, NgZone, DestroyRef } from '@angular/core';
+import { watchScroll } from '../scroll.util';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { NotificationService } from 'app/notifications.service';
@@ -14,6 +15,7 @@ import { SearchPaletteService } from '../search-palette/search-palette.service';
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
+  private readonly scrollWatch = watchScroll(inject(NgZone), inject(DestroyRef), () => (window.scrollY > 50) !== this.isScrolled, () => (this.isScrolled = window.scrollY > 50));
   isLoggedIn = false;
   nickname: string | null = null;
   isLogoVisible = true;
@@ -120,10 +122,6 @@ export class NavbarComponent {
     return this.typeMapping[type] || '';
   }
 
-  @HostListener('window:scroll', [])
-  onWindowScroll(): void {
-    this.isScrolled = window.scrollY > 50;
-  }
 
   toggleNavbar(): void {
     this.isNavbarCollapsed = !this.isNavbarCollapsed;

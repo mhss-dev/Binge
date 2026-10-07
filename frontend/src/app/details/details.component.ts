@@ -1,4 +1,5 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DiscoverService } from '../discover.service';
 import {
   ActivatedRoute,
@@ -22,6 +23,9 @@ import { DomSanitizer, SafeResourceUrl, Title, Meta } from '@angular/platform-br
   styles: [':host { display: block; }'],
 })
 export class DetailsComponent {
+  private readonly onTrailerHidden = () => this.resetTrailer();
+  private readonly onTrailerShown = () => this.updateTrailerUrl();
+  private readonly destroyRef = inject(DestroyRef);
   imageUrl(path: string | null | undefined, size: string, fallback = ''): string {
     return path && /^\/[A-Za-z0-9_.-]{1,100}\.(jpg|jpeg|png|webp)$/.test(path) ? `https://image.tmdb.org/t/p/${size}${path}` : fallback;
   }
@@ -84,7 +88,7 @@ export class DetailsComponent {
       }
     });
 
-    this.authService.isLoggedIn$.subscribe((status) => {
+    this.authService.isLoggedIn$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((status) => {
       this.isLoggedIn = status;
     });
 
@@ -93,15 +97,15 @@ export class DetailsComponent {
   ngAfterViewInit(): void {
     const modalElement = document.getElementById('trailerModal');
     if (modalElement) {
-      modalElement.addEventListener('hidden.bs.modal', this.resetTrailer.bind(this));
-      modalElement.addEventListener('shown.bs.modal', this.updateTrailerUrl.bind(this));
+      modalElement.addEventListener('hidden.bs.modal', this.onTrailerHidden);
+      modalElement.addEventListener('shown.bs.modal', this.onTrailerShown);
     }
   }
   ngOnDestroy(): void {
     const modalElement = document.getElementById('trailerModal');
     if (modalElement) {
-      modalElement.removeEventListener('hidden.bs.modal', this.resetTrailer.bind(this));
-      modalElement.removeEventListener('shown.bs.modal', this.updateTrailerUrl.bind(this));
+      modalElement.removeEventListener('hidden.bs.modal', this.onTrailerHidden);
+      modalElement.removeEventListener('shown.bs.modal', this.onTrailerShown);
     }
   }
   
@@ -328,6 +332,10 @@ private chunkMovies(movies: any[]): any[][] {
 
   toggleOverview(): void {
     this.overviewExpanded = !this.overviewExpanded;
+  }
+
+  slide(track: HTMLElement, direction: number): void {
+    track.scrollBy({ left: direction * track.clientWidth * 0.85, behavior: 'smooth' });
   }
 
   selectPanel(panel: 'cast' | 'similar'): void {

@@ -1,4 +1,5 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, inject, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Meta } from '@angular/platform-browser';
@@ -26,6 +27,7 @@ type Phase = 'loading' | 'missing' | 'ended' | 'join' | 'play';
   styleUrl: './match-room.component.css',
 })
 export class MatchRoomComponent implements OnInit, OnDestroy {
+  private readonly destroyRef = inject(DestroyRef);
   readonly genres = MATCH_GENRES;
   readonly imageBase = 'https://image.tmdb.org/t/p/';
   readonly noPoster = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGPgl9YFAACUAFiZIJ/AAAAAAElFTkSuQmCC';
@@ -90,7 +92,7 @@ export class MatchRoomComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.meta.addTag({ name: 'robots', content: 'noindex, nofollow' });
     this.code = (this.route.snapshot.paramMap.get('code') ?? '').toLowerCase();
-    this.authService.isLoggedIn$.subscribe((status) => (this.isLoggedIn = status));
+    this.authService.isLoggedIn$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((status) => (this.isLoggedIn = status));
     this.loadInfo();
   }
 
