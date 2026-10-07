@@ -55,7 +55,7 @@
         </div>
         <div class="people">
           <span *ngFor="let p of state?.participants ?? info?.participants ?? []" class="person" [class.me]="p.me">
-            {{ p.name }}<small> · {{ p.swiped }}</small>
+            <img [src]="avatar(p)" alt="" />{{ p.name }}<small> · {{ p.swiped }}</small>
           </span>
         </div>
         <div class="room-actions">
@@ -174,7 +174,7 @@
       <div class="mt-card">
         <div class="mt-pair">
           <ng-container *ngFor="let p of pairPeople; let last = last">
-            <span class="mt-av" [class.alt]="!p.me">{{ initial(p.name) }}</span>
+            <img class="mt-av" [src]="avatar(p)" [alt]="p.name" />
             <span *ngIf="!last" class="mt-heart">♥</span>
           </ng-container>
         </div>

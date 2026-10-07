@@ -29,6 +29,7 @@
 .room-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 .people { display: flex; gap: 0.4rem; flex-wrap: wrap; }
 .person { padding: 0.2rem 0.7rem; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); font-size: 0.88rem; }
+.person img { width: 1.4rem; height: 1.4rem; border-radius: 50%; object-fit: cover; vertical-align: middle; margin-right: 0.4rem; }
 .person.me { border-color: var(--accent); }
 .person small { color: var(--muted); }
 .link-input { font-size: 0.8rem; color: var(--muted); }

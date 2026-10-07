@@ -117,8 +117,8 @@ export class MatchRoomComponent implements OnInit, OnDestroy {
     return [...mine, ...others].slice(0, 4);
   }
 
-  initial(name: string): string {
-    return name ? name.trim().charAt(0).toUpperCase() : '?';
+  avatar(person: MatchParticipant): string {
+    return /^assets\/images\/(?:[1-9]|1\d|2[0-4])\.png$/.test(person.avatar_url) ? person.avatar_url : 'assets/images/7.png';
   }
 
   get topCard(): MatchCard | null {
