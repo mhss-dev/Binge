@@ -228,6 +228,8 @@ export class TopRatedComponent {
         const movie = this.films.find(m => m.id === movieId);
         if (movie) {
           movie.isFavorite = true;
+          movie.isWatched = true;
+          movie.isWatchlist = false;
           this.cdr.detectChanges();
         }
       },
@@ -401,7 +403,7 @@ export class TopRatedComponent {
         const movie = this.films.find(m => m.id === movieId);
         if (movie) {
           movie.isWatched = true;
-          this.removeFromWatchlist(movieId);
+          movie.isWatchlist = false;
           this.cdr.detectChanges();
         }
       },

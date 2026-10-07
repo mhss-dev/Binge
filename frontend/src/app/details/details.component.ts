@@ -400,6 +400,8 @@ private chunkMovies(movies: any[]): any[][] {
       next: () => {
         console.log('Film ajouté aux favoris');
         this.isFavorite = true;
+        this.isWatched = true;
+        this.isWatchlist = false;
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -497,6 +499,7 @@ private chunkMovies(movies: any[]): any[][] {
       next: () => {
         console.log('Film ajouté aux films regardés');
         this.isWatched = true;
+        this.isWatchlist = false;
         this.cdr.detectChanges();
       },
       error: (err) => {
