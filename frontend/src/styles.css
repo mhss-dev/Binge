@@ -519,7 +519,7 @@ html body .nav-shell .nav-pill.active { background: rgba(255, 255, 255, 0.1); bo
 .pf-social button:hover { color: var(--text); }
 @media (min-width: 992px) { .pf-social { justify-content: flex-start; } }
 
-.room { display: grid; gap: 1.4rem; width: min(100%, 980px); margin: 0 auto; }
+.room { display: grid; gap: 1.4rem; width: min(100%, 1100px); margin: 0 auto; }
 .room > * { min-width: 0; }
 .room-head { display: grid; gap: 1.1rem; align-content: start; padding-bottom: 1.1rem; border-bottom: 1px solid var(--border); }
 .room-head .eyebrow { margin: 0; }
@@ -545,6 +545,6 @@ html body .nav-shell .nav-pill.active { background: rgba(255, 255, 255, 0.1); bo
 .mt-rail { scroll-behavior: smooth; display: flex; gap: 0.7rem; overflow-x: auto; padding-bottom: 0.5rem; scroll-snap-type: x proximity; scrollbar-width: thin; }
 .mt-tile { flex: none; width: 118px; aspect-ratio: 2 / 3; border-radius: 12px; overflow: hidden; background: var(--surface-strong); scroll-snap-align: start; }
 .mt-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
-@media (min-width: 992px) { .mt-tile { width: 124px; } }
+@media (min-width: 992px) { .mt-tile { width: clamp(110px, 9vw, 170px); } }
 .mt-carousel .fc-arrow { top: calc(50% - 1.4rem); }
 @media (max-width: 640px) { .mt-carousel .fc-arrow { display: grid; width: 2.3rem; height: 2.3rem; } }

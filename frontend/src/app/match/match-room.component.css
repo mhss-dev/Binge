@@ -53,5 +53,5 @@
 .round.pass { color: var(--danger); border-color: var(--danger); }
 .round.pass:hover { background: rgba(255, 107, 129, 0.14); }
 .hint { color: var(--muted); font-size: 0.82rem; text-align: center; margin: 0.2rem 0 0; }
-@media (min-width: 992px) { .deck { width: clamp(190px, calc((100svh - 25rem) * 0.667), 320px); margin: 0.2rem auto 1rem; } }
+@media (min-width: 992px) { .deck { width: clamp(190px, min(30vw, calc((100svh - 25rem) * 0.667)), 460px); margin: 0.2rem auto 1rem; } }
 @media (prefers-reduced-motion: reduce) { .movie-card.top { transition: none; } }
