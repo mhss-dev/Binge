@@ -1,6 +1,6 @@
 .match-page { min-height: 100svh; padding: 6.5rem 0 3rem; display: grid; gap: 1rem; align-content: start; }
 .match-page.centered { align-content: center; }
-.match-panel { display: grid; gap: 0.7rem; align-content: start; }
+.match-panel { display: grid; gap: 0.7rem; align-content: start; padding: 1.3rem; border-radius: var(--radius-xl); }
 .match-panel h1, .match-panel h2 { margin: 0; line-height: 1.1; }
 .match-panel h1 { font-size: 1.7rem; }
 .match-panel h2 { font-size: 1.15rem; }
@@ -24,8 +24,10 @@
 .waiting { padding: 0.7rem 1rem; border-radius: var(--radius-md); background: rgba(255, 179, 71, 0.1); color: var(--accent-soft); font-size: 0.9rem; }
 .room { display: grid; gap: 0.9rem; grid-template-columns: minmax(0, 1fr); }
 .room > * { min-width: 0; }
-.room-head h1 { font-size: 1.6rem; }
-.room-actions .match-ghost.danger { margin-top: 0; }
+.room-head h1 { font-size: 1.6rem; overflow-wrap: anywhere; }
+.room-foot { display: flex; justify-content: center; padding-top: 0.5rem; }
+.room-foot .match-ghost.danger { margin-top: 0; border-color: transparent; opacity: 0.8; }
+.room-foot .match-ghost.danger:hover { border-color: var(--danger); opacity: 1; }
 .room-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 .people { display: flex; gap: 0.4rem; flex-wrap: wrap; }
 .person { padding: 0.2rem 0.7rem; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); font-size: 0.88rem; }
@@ -69,6 +71,7 @@
   .room .room-notes { grid-area: notes; }
   .room .play { grid-area: play; }
   .room .matches { grid-area: matches; }
+  .room .room-foot { grid-column: 1 / -1; }
   .room[data-tab] .play, .room[data-tab] .matches { display: grid; }
   .room-tabs { display: none; }
   .deck { width: min(100%, 360px); margin-top: 0.8rem; }

@@ -62,7 +62,6 @@
           <button type="button" class="match-ghost" (click)="share()">Inviter</button>
           <button type="button" class="match-ghost" (click)="copyLink()">{{ copied ? 'Lien copié' : 'Copier le lien' }}</button>
           <button *ngIf="state?.session?.mine_to_manage" type="button" class="match-ghost" (click)="startEditGenres()">Genres</button>
-          <button *ngIf="state?.session?.mine_to_manage && alone" type="button" class="match-ghost danger" (click)="endRoom()">Supprimer le salon</button>
         </div>
         <input class="match-input link-input" type="text" readonly [value]="link" aria-label="Lien d'invitation" (focus)="selectLink($event)" />
       </div>
@@ -163,8 +162,11 @@
               </div>
             </div>
           </div>
-          <button *ngIf="state?.session?.mine_to_manage" type="button" class="match-ghost danger" (click)="endRoom()">Terminer le salon</button>
         </div>
+      </div>
+
+      <div *ngIf="state?.session?.mine_to_manage" class="room-foot">
+        <button type="button" class="match-ghost danger" (click)="endRoom()">{{ alone ? "Supprimer le salon" : "Terminer le salon" }}</button>
       </div>
     </div>
 
