@@ -9,7 +9,7 @@ import { MatchService, MySession } from './match.service';
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './match-home.component.html',
-  styleUrl: './match.component.css',
+  styleUrl: './match-home.component.css',
 })
 export class MatchHomeComponent implements OnInit {
   creating = false;

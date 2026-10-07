@@ -145,13 +145,13 @@
         </div>
         <div *ngIf="matches.length > 0" class="match-panel glass-panel">
           <h2>Vos matchs ({{ matches.length }})</h2>
-          <div *ngFor="let entry of matches" class="match-row" [class.picked]="entry.picked">
+          <div *ngFor="let entry of matches" class="mt-row" [class.picked]="entry.picked">
             <img referrerpolicy="no-referrer" [src]="poster(entry.movie.poster_path, 'w185')" [alt]="entry.movie.title" loading="lazy" />
-            <div class="match-row-body">
+            <div class="mt-row-body">
               <strong>{{ entry.movie.title }}</strong>
               <span>{{ year(entry.movie.release_date) }}</span>
-              <span *ngIf="entry.picked" class="badge">On le regarde</span>
-              <div class="match-row-actions">
+              <span *ngIf="entry.picked" class="mt-badge">On le regarde</span>
+              <div class="mt-row-actions">
                 <button type="button" class="match-ghost" (click)="togglePick(entry)">{{ entry.picked ? 'Plus celui-là' : 'On le regarde' }}</button>
                 <a class="match-ghost" [routerLink]="['/film', entry.movie.id]">Fiche</a>
                 <button *ngIf="isLoggedIn" type="button" class="match-ghost" [disabled]="watchlisted.has(entry.movie.id)" (click)="addToWatchlist(entry.movie.id)">
@@ -165,21 +165,21 @@
       </div>
     </div>
 
-    <div *ngIf="celebration" class="celebration" [style.--bgimg]="'url(' + poster(celebration.poster_path, 'w342') + ')'" role="dialog" aria-modal="true" aria-label="Match">
-      <div class="confetti" aria-hidden="true">
+    <div *ngIf="celebration" class="mt-over" [style.--bgimg]="'url(' + poster(celebration.poster_path, 'w342') + ')'" role="dialog" aria-modal="true" aria-label="Match">
+      <div class="mt-confetti" aria-hidden="true">
         <i *ngFor="let piece of confetti" [style.--s]="piece.s" [style.--c]="piece.c" [style.--x]="piece.x" [style.--y]="piece.y" [style.--r]="piece.r"></i>
       </div>
-      <div class="celebration-card">
-        <div class="pair">
+      <div class="mt-card">
+        <div class="mt-pair">
           <ng-container *ngFor="let p of pairPeople; let last = last">
-            <span class="av" [class.alt]="!p.me">{{ initial(p.name) }}</span>
-            <span *ngIf="!last" class="heart">♥</span>
+            <span class="mt-av" [class.alt]="!p.me">{{ initial(p.name) }}</span>
+            <span *ngIf="!last" class="mt-heart">♥</span>
           </ng-container>
         </div>
-        <div class="big">C'est un match !</div>
-        <div class="poster"><img referrerpolicy="no-referrer" [src]="poster(celebration.poster_path, 'w342')" [alt]="celebration.title" /></div>
+        <div class="mt-big">C'est un match !</div>
+        <div class="mt-poster"><img referrerpolicy="no-referrer" [src]="poster(celebration.poster_path, 'w342')" [alt]="celebration.title" /></div>
         <h2>{{ celebration.title }}</h2>
-        <div class="celebration-buttons">
+        <div class="mt-buttons">
           <button type="button" class="match-primary" (click)="chooseMovie(celebration)">On le regarde !</button>
           <button type="button" class="match-ghost" (click)="closeCelebration()">Continuer à swiper</button>
           <a class="match-ghost" [routerLink]="['/film', celebration.id]" (click)="closeCelebration()">Voir la fiche</a>

@@ -23,7 +23,7 @@ type Phase = 'loading' | 'missing' | 'ended' | 'join' | 'play';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './match-room.component.html',
-  styleUrl: './match.component.css',
+  styleUrl: './match-room.component.css',
 })
 export class MatchRoomComponent implements OnInit, OnDestroy {
   readonly genres = MATCH_GENRES;
