@@ -1,100 +1,42 @@
-<section class="cards-page app-shell text-white">
-  <div class="cards-hero glass-panel" id="aucinema">
-    <div class="section-heading">
-      <div>
-        <p class="eyebrow">Explorer maintenant</p>
-        <h1>{{ title }}</h1>
-      </div>
-      <div class="hero-meta">
-        <span class="hero-pill">{{ getActiveLabel() }}</span>
-        <span class="hero-pill" *ngIf="minDate && maxDate">
-          Du {{ minDate | date : "dd/MM/yyyy" }} au {{ maxDate | date : "dd/MM/yyyy" }}
-        </span>
-      </div>
+<section id="aucinema" class="hm-section app-shell text-white">
+  <div class="hm-head">
+    <div>
+      <p class="eyebrow">Explorer maintenant</p>
+      <h2>{{ title }}</h2>
+      <p class="hm-caption" *ngIf="minDate && maxDate && currentTab !== 'toprated'">
+        Du {{ minDate | date : "dd/MM" }} au {{ maxDate | date : "dd/MM/yyyy" }}
+      </p>
     </div>
+    <a *ngIf="currentTab === 'toprated'" routerLink="/films/toprated" class="dv-link">Voir plus</a>
+  </div>
 
-    <div *ngIf="error" class="error-banner">{{ error }}</div>
+  <div *ngIf="error" class="mb-error">{{ error }}</div>
 
-    <div class="tab-scroller">
-      <button
-        *ngFor="let tab of tabOrder"
-        type="button"
-        class="toggle-button"
-        [class.active]="currentTab === tab"
-        (click)="selectTab(tab)"
-      >
-        {{
-          tab === "nowPlaying"
-            ? "Au cinéma"
-            : tab === "trending"
-              ? "Tendances"
-              : tab === "toprated"
-                ? "Top notés"
-                : "Bientôt"
-        }}
-      </button>
+  <div class="hm-controls">
+    <div class="dv-seg" role="group" aria-label="Catégorie">
+      <button type="button" *ngFor="let tab of tabOrder" [class.on]="currentTab === tab" (click)="selectTab(tab)">{{ tabLabel(tab) }}</button>
     </div>
-
-    <div class="cards-toolbar">
-      <div class="toolbar-copy">
-        <strong>{{ title }}</strong>
-        <span>Sélection mise à jour selon la catégorie choisie.</span>
-      </div>
-
-      <div class="toolbar-actions">
-        <div *ngIf="showRegionSelector()" class="filter-stack region-stack">
-          <span class="filter-caption">Pays</span>
-          <div class="select-shell region-shell">
-            <mat-select panelClass="app-select-panel" [(ngModel)]="selectedRegion" (selectionChange)="fetchMovieData()">
-              <mat-option value="BE">Belgique</mat-option>
-              <mat-option value="FR">France</mat-option>
-              <mat-option value="US">États-Unis</mat-option>
-            </mat-select>
-          </div>
-        </div>
-
-        <a *ngIf="currentTab === 'toprated'" routerLink="/films/toprated" class="ghost-link">
-          Voir plus
-        </a>
-      </div>
+    <div class="dv-seg" *ngIf="showRegionSelector()" role="group" aria-label="Pays">
+      <button type="button" *ngFor="let region of regions" [class.on]="selectedRegion === region.value" (click)="setRegion(region.value)">{{ region.label }}</button>
     </div>
   </div>
 
-  <div class="poster-grid cards-grid">
-    <article
-      *ngFor="let movie of getActiveMovies(); trackBy: trackByMovieId"
-      class="poster-card cards-poster"
-    >
-      <a [routerLink]="['/film', movie?.id]" class="poster-link">
-        <img
-          [src]="
-            movie?.poster_path
-              ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path
-              : 'https://placehold.co/500x750?text=Aucun+poster'
-          "
-          alt="{{ movie?.title || 'Inconnu' }}"
-        />
-        <div class="poster-overlay">
-          <p class="d-flex justify-content-between align-items-center w-100 mb-0">
-            <span *ngIf="movie?.vote_average">
-              {{ movie?.vote_average | number : "1.0-1" }}/10
-            </span>
-
-            <span *ngIf="movie?.release_date || movie?.first_air_date">
-              {{ (movie?.release_date || movie?.first_air_date) | date : "yyyy" }}
-            </span>
-          </p>
+  <div class="dv-grid">
+    <article *ngFor="let movie of getActiveMovies(); trackBy: trackByMovieId" class="dv-card">
+      <a [routerLink]="['/film', movie?.id]" class="dv-poster">
+        <img loading="lazy" [src]="imageUrl(movie?.poster_path)" alt="{{ movie?.title || 'Inconnu' }}" />
+        <div class="dv-info">
+          <strong>{{ movie?.title || "Titre inconnu" }}</strong>
+          <span>
+            <ng-container *ngIf="movie?.release_date || movie?.first_air_date">{{ (movie?.release_date || movie?.first_air_date) | date : "yyyy" }}</ng-container>
+            <ng-container *ngIf="movie?.vote_average"> · ★ {{ movie?.vote_average | number : "1.0-1" }}</ng-container>
+          </span>
         </div>
       </a>
     </article>
   </div>
 
-  <button
-    *ngIf="isButtonVisible()"
-    class="floating-action"
-    (click)="scrollToTop()"
-    aria-label="Retour en haut"
-  >
+  <button *ngIf="isButtonVisible()" class="floating-action" (click)="scrollToTop()" aria-label="Retour en haut">
     <i class="fa-solid fa-arrow-up"></i>
   </button>
 </section>

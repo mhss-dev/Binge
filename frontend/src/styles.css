@@ -390,3 +390,20 @@ html body .nav-shell .nav-pill.active { background: rgba(255, 255, 255, 0.1); bo
   .fc-person { width: 170px; }
 }
 @media (prefers-reduced-motion: reduce) { .fc-person img { transition: none; } }
+
+.hm-hero { position: relative; overflow: hidden; margin-top: -6rem; min-height: clamp(600px, 94vh, 900px); display: grid; align-items: end; background: var(--bg-elevated); }
+.hm-hero .dv-hero-inner { align-items: flex-end; padding-bottom: 5.5rem; }
+.hm-copy { display: grid; gap: 1rem; justify-items: start; max-width: 44rem; animation: dv-in 0.6s ease; }
+.hm-copy h1 { margin: 0; font-size: clamp(4rem, 15vw, 9rem); line-height: 0.88; letter-spacing: -0.04em; background: linear-gradient(90deg, #fff, var(--accent-soft)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hm-text { margin: 0; max-width: 34rem; color: rgba(245, 247, 251, 0.82); font-size: 1.1rem; line-height: 1.5; }
+.hm-featured { display: grid; gap: 0.1rem; margin-top: 0.6rem; padding-left: 0.9rem; border-left: 3px solid var(--accent); text-decoration: none; color: var(--text); }
+.hm-featured span { color: var(--accent-soft); font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; }
+.hm-featured strong { font-size: 1.15rem; }
+.hm-side { display: grid; gap: 1.2rem; justify-items: end; align-self: flex-end; }
+.hm-down { width: 3rem; height: 3rem; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.25); background: rgba(5, 11, 20, 0.5); color: var(--text); cursor: pointer; }
+.hm-down:hover { background: rgba(255, 255, 255, 0.14); }
+.hm-section { display: grid; gap: 1rem; padding: 0.5rem 0 5rem; }
+.hm-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
+.hm-head h2 { margin: 0; font-size: clamp(1.6rem, 4vw, 2.4rem); line-height: 1; letter-spacing: -0.02em; }
+.hm-caption { margin: 0.4rem 0 0; color: var(--muted); }
+.hm-controls { display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center; }

@@ -1,25 +1,37 @@
-<header
-  class="header"
-  [ngStyle]="{'background-image': 'url(https://image.tmdb.org/t/p/original/' + movie.backdrop_path + ')'}"
->
-  <div class="overlay"></div>
-  <div class="header-inner app-shell">
-    <div class="hero-copy">
+<header class="hm-hero">
+  <img
+    *ngFor="let film of films; let i = index"
+    class="dv-hero-bg"
+    [class.on]="i === index % films.length"
+    [src]="imageUrl(film.backdrop_path, 'w1280')"
+    alt=""
+  />
+  <div class="dv-hero-shade"></div>
+  <div class="dv-hero-inner">
+    <div class="hm-copy">
       <p class="eyebrow">Social movie tracker</p>
       <h1>Binge</h1>
-      <p class="hero-text">
-        Gardez un oeil sur les films que vous avez vus, ceux que vous voulez lancer ensuite, et ceux que vos amis recommandent.
-      </p>
-
-      <div class="hero-actions">
-        <a routerLink="/films" class="hero-link primary">Explorer le catalogue</a>
-        <a [routerLink]="['/film', movie?.id]" class="hero-link secondary featured-link">
-          <span class="featured-kicker">En vedette</span>
-          <strong>{{ movie?.title || 'Chargement...' }}</strong>
-        </a>
+      <p class="hm-text">Gardez un œil sur les films que vous avez vus, ceux que vous voulez lancer ensuite, et ceux que vos amis recommandent.</p>
+      <div class="dv-hero-actions">
+        <a routerLink="/films" class="dv-btn dv-btn-main"><i class="fa-solid fa-film"></i> Explorer le catalogue</a>
+        <a routerLink="/match" class="dv-btn"><i class="fa-solid fa-heart"></i> Lancer un match</a>
       </div>
-
-      <button class="scroll-hint" type="button" (click)="scrollTo('aucinema')" aria-label="Descendre">
+      <a *ngIf="movie" [routerLink]="['/film', movie.id]" class="hm-featured">
+        <span>En vedette</span>
+        <strong>{{ movie.title }}</strong>
+      </a>
+    </div>
+    <div class="hm-side">
+      <div class="dv-dots" *ngIf="films.length > 1">
+        <button
+          *ngFor="let film of films; let i = index"
+          type="button"
+          [class.on]="i === index % films.length"
+          [attr.aria-label]="'Afficher ' + film.title"
+          (click)="pick(i)"
+        ></button>
+      </div>
+      <button class="hm-down" type="button" (click)="scrollTo('aucinema')" aria-label="Descendre">
         <i class="fas fa-arrow-down"></i>
       </button>
     </div>

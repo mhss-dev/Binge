@@ -1,51 +1,44 @@
-import { Component } from '@angular/core';
-import { MovieService } from '../movie.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { interval, Subscription } from 'rxjs';
-import { DiscoverService } from 'app/discover.service';
-import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterLink } from '@angular/router';
+import { MovieService } from '../movie.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, NgbToastModule, RouterLink],
+  imports: [CommonModule, RouterLink],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  styles: [':host { display: block; }']
 })
-export class HeaderComponent {
-
-  movie: any = {};
-  error: string = '';
-  loading: boolean = true;
-
-
-  private subscription: Subscription = new Subscription();
-  private readonly BACKDROP_UPDATE_INTERVAL = 5000;
+export class HeaderComponent implements OnInit, OnDestroy {
+  films: any[] = [];
+  index = 0;
+  private timer: ReturnType<typeof setInterval> | null = null;
 
   constructor(private movieService: MovieService) {}
 
+  get movie(): any | null {
+    return this.films.length > 0 ? this.films[this.index % this.films.length] : null;
+  }
+
   ngOnInit(): void {
-    this.loadMovies();
-    this.setupBackgroundUpdater();
+    this.movieService.getNowPlayingMovies('BE').subscribe({
+      next: (data) => {
+        this.films = (data?.results ?? []).filter((film: { backdrop_path?: string | null }) => !!film.backdrop_path).slice(0, 6);
+        this.start();
+      },
+      error: (error) => console.error('Erreur lors de la récupération des films en cours', error),
+    });
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.stop();
   }
-  
 
-  loadMovies() {
-    this.movieService.getNowPlayingMovies().subscribe({
-      next: (data) => {        
-        this.movie = data.results[this.getRandomBackdrop(0, data.results.length -1)];                
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Erreur lors de la récupération des films en cours', error);
-        this.loading = false;
-      }
-    });
+  pick(index: number): void {
+    this.index = index;
+    this.stop();
+    this.start();
   }
 
   scrollTo(id: string): void {
@@ -54,15 +47,26 @@ export class HeaderComponent {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
-  private getRandomBackdrop(min: number, max: number): number {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+
+  imageUrl(path: string | null | undefined, size: string): string {
+    return path && /^\/[A-Za-z0-9_.-]{1,100}\.(jpg|jpeg|png|webp)$/.test(path) ? `https://image.tmdb.org/t/p/${size}${path}` : '';
   }
 
-  private setupBackgroundUpdater() {
-    this.subscription.add(
-      interval(this.BACKDROP_UPDATE_INTERVAL).subscribe(() => {
-        this.loadMovies();
-      })
-    );
+  private start(): void {
+    if (this.timer || this.films.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+    this.timer = setInterval(() => {
+      if (!document.hidden) {
+        this.index = (this.index + 1) % this.films.length;
+      }
+    }, 7000);
+  }
+
+  private stop(): void {
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
   }
 }

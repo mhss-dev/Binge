@@ -3,15 +3,13 @@ import { MovieService } from '../movie.service';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
-import { FormsModule } from '@angular/forms';
-import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-cards',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, MatSelectModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './cards.component.html',
-  styleUrl: './cards.component.css',
+  styles: [':host { display: block; }'],
 })
 export class CardsComponent implements OnInit {
   movies: any[] = [];
@@ -33,6 +31,11 @@ export class CardsComponent implements OnInit {
   selectedRegion = 'BE';
   currentPage = 1;
   readonly tabOrder = ['nowPlaying', 'trending', 'toprated', 'upcoming'];
+  readonly regions = [
+    { value: 'BE', label: 'Belgique' },
+    { value: 'FR', label: 'France' },
+    { value: 'US', label: 'États-Unis' },
+  ];
 
   constructor(private movieService: MovieService) {}
 
@@ -66,6 +69,21 @@ export class CardsComponent implements OnInit {
         console.log('Données des films récupérées avec succès');
       },
     });
+  }
+
+  tabLabel(tab: string): string {
+    return tab === 'nowPlaying' ? 'Au cinéma' : tab === 'trending' ? 'Tendances' : tab === 'toprated' ? 'Top notés' : 'Bientôt';
+  }
+
+  setRegion(region: string): void {
+    this.selectedRegion = region;
+    this.fetchMovieData();
+  }
+
+  imageUrl(path: string | null | undefined): string {
+    return path && /^\/[A-Za-z0-9_.-]{1,100}\.(jpg|jpeg|png|webp)$/.test(path)
+      ? `https://image.tmdb.org/t/p/w500${path}`
+      : 'https://placehold.co/500x750?text=Aucun+poster';
   }
 
   scrollToTop(): void {
