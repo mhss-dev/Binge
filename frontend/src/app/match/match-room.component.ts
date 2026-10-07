@@ -1,6 +1,7 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Meta } from '@angular/platform-browser';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { WatchlistService } from '../watchlist.service';
@@ -82,16 +83,19 @@ export class MatchRoomComponent implements OnInit, OnDestroy {
     private router: Router,
     private matchService: MatchService,
     private authService: AuthService,
-    private watchlistService: WatchlistService
+    private watchlistService: WatchlistService,
+    private meta: Meta
   ) {}
 
   ngOnInit(): void {
+    this.meta.addTag({ name: 'robots', content: 'noindex, nofollow' });
     this.code = (this.route.snapshot.paramMap.get('code') ?? '').toLowerCase();
     this.authService.isLoggedIn$.subscribe((status) => (this.isLoggedIn = status));
     this.loadInfo();
   }
 
   ngOnDestroy(): void {
+    this.meta.removeTag("name='robots'");
     if (this.poll) {
       clearInterval(this.poll);
     }
@@ -146,7 +150,7 @@ export class MatchRoomComponent implements OnInit, OnDestroy {
   }
 
   poster(path: string | null, size = 'w500'): string {
-    return path ? `${this.imageBase}${size}${path}` : this.noPoster;
+    return path && /^\/[A-Za-z0-9_.-]{1,100}\.(jpg|jpeg|png|webp)$/.test(path) ? `${this.imageBase}${size}${path}` : this.noPoster;
   }
 
   year(date: string): string {

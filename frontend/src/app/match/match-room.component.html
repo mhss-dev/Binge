@@ -104,7 +104,7 @@
 
         <div *ngIf="topCard" class="deck">
           <div *ngFor="let card of nextCards; let i = index" class="movie-card behind" [style.transform]="'scale(' + (0.95 - i * 0.04) + ') translateY(' + (14 + i * 12) + 'px)'">
-            <img [src]="poster(card.poster_path)" [alt]="card.title" loading="lazy" draggable="false" />
+            <img referrerpolicy="no-referrer" [src]="poster(card.poster_path)" [alt]="card.title" loading="lazy" draggable="false" />
           </div>
 
           <div
@@ -116,7 +116,7 @@
             (pointerup)="onUp()"
             (pointercancel)="onUp()"
           >
-            <img [src]="poster(topCard.poster_path)" [alt]="topCard.title" draggable="false" />
+            <img referrerpolicy="no-referrer" [src]="poster(topCard.poster_path)" [alt]="topCard.title" draggable="false" />
             <div class="stamp like" [style.opacity]="likeOpacity">J'AIME</div>
             <div class="stamp pass" [style.opacity]="passOpacity">PASSE</div>
             <div class="movie-info" [class.open]="showDetails">
@@ -146,7 +146,7 @@
         <div *ngIf="matches.length > 0" class="match-panel glass-panel">
           <h2>Vos matchs ({{ matches.length }})</h2>
           <div *ngFor="let entry of matches" class="match-row" [class.picked]="entry.picked">
-            <img [src]="poster(entry.movie.poster_path, 'w185')" [alt]="entry.movie.title" loading="lazy" />
+            <img referrerpolicy="no-referrer" [src]="poster(entry.movie.poster_path, 'w185')" [alt]="entry.movie.title" loading="lazy" />
             <div class="match-row-body">
               <strong>{{ entry.movie.title }}</strong>
               <span>{{ year(entry.movie.release_date) }}</span>
@@ -177,7 +177,7 @@
           </ng-container>
         </div>
         <div class="big">C'est un match !</div>
-        <div class="poster"><img [src]="poster(celebration.poster_path, 'w342')" [alt]="celebration.title" /></div>
+        <div class="poster"><img referrerpolicy="no-referrer" [src]="poster(celebration.poster_path, 'w342')" [alt]="celebration.title" /></div>
         <h2>{{ celebration.title }}</h2>
         <div class="celebration-buttons">
           <button type="button" class="match-primary" (click)="chooseMovie(celebration)">On le regarde !</button>
