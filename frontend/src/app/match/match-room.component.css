@@ -31,7 +31,7 @@
 .room-notes:empty { display: none; }
 .play { display: grid; justify-items: center; gap: 0.7rem; align-content: start; }
 .deck { position: relative; width: clamp(180px, min(76vw, calc((100svh - 24rem) * 0.667)), 300px); aspect-ratio: 2 / 3; margin: 0.4rem auto 1.5rem; }
-.movie-card { transition: transform 0.26s ease, filter 0.26s ease; position: absolute; inset: 0; border-radius: 26px; overflow: hidden; background: var(--surface-strong); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.07), 0 26px 60px rgba(0, 0, 0, 0.5); }
+.movie-card { transition: transform 0.26s var(--ease-out), filter 0.26s var(--ease-out); position: absolute; inset: 0; border-radius: 26px; overflow: hidden; background: var(--surface-strong); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.07), 0 26px 60px rgba(0, 0, 0, 0.5); }
 .movie-card img { width: 100%; height: 100%; object-fit: cover; display: block; user-select: none; -webkit-user-drag: none; }
 .movie-card.behind { filter: brightness(0.55); pointer-events: none; }
 .movie-card.top { touch-action: none; cursor: grab; }

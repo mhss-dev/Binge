@@ -19,6 +19,7 @@ export class SearchPaletteComponent implements OnInit, OnDestroy {
   @ViewChild("field") field?: ElementRef<HTMLInputElement>;
 
   isOpen = false;
+  byKeyboard = false;
   query = "";
   results: any[] = [];
   loading = false;
@@ -37,7 +38,7 @@ export class SearchPaletteComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.subscriptions.add(this.palette.opened$.subscribe(() => this.open()));
+    this.subscriptions.add(this.palette.opened$.subscribe(() => this.open(false)));
     this.subscriptions.add(
       this.typed
         .pipe(
@@ -72,7 +73,8 @@ export class SearchPaletteComponent implements OnInit, OnDestroy {
     document.body.style.overflow = "";
   }
 
-  open(): void {
+  open(byKeyboard = false): void {
+    this.byKeyboard = byKeyboard;
     this.isOpen = true;
     document.body.style.overflow = "hidden";
     this.cdr.detectChanges();
@@ -142,7 +144,7 @@ export class SearchPaletteComponent implements OnInit, OnDestroy {
       this.close();
     } else if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
       event.preventDefault();
-      this.isOpen ? this.close() : this.open();
+      this.isOpen ? this.close() : this.open(true);
     }
   }
 }

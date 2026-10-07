@@ -1,4 +1,4 @@
-<div *ngIf="isOpen" class="sp-over" (click)="close()">
+<div *ngIf="isOpen" class="sp-over" [class.sp-instant]="byKeyboard" (click)="close()">
   <div class="sp-box" role="dialog" aria-modal="true" aria-label="Recherche" (click)="$event.stopPropagation()">
     <div class="sp-field">
       <i class="fa-solid fa-magnifying-glass"></i>
