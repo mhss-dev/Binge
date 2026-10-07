@@ -121,7 +121,7 @@
               <div class="stamp like" [style.opacity]="likeOpacity">J'AIME</div>
               <div class="stamp pass" [style.opacity]="passOpacity">PASSE</div>
               <div class="movie-info" [class.open]="showDetails">
-                <strong>{{ card.title }}</strong>
+                <strong *ngIf="!card.poster_path">{{ card.title }}</strong>
                 <div class="meta">
                   <span>{{ year(card.release_date) }}</span>
                   <span *ngIf="card.vote_average" class="tag star">★ {{ card.vote_average }}</span>
@@ -147,17 +147,18 @@
         </div>
         <div *ngIf="matches.length > 0" class="match-panel glass-panel">
           <h2>Vos matchs ({{ matches.length }})</h2>
-          <div *ngFor="let entry of matches" class="mt-row" [class.picked]="entry.picked">
-            <img referrerpolicy="no-referrer" [src]="poster(entry.movie.poster_path, 'w185')" [alt]="entry.movie.title" loading="lazy" />
-            <div class="mt-row-body">
-              <strong>{{ entry.movie.title }}</strong>
-              <span>{{ year(entry.movie.release_date) }}</span>
-              <span *ngIf="entry.picked" class="mt-badge">On le regarde</span>
-              <div class="mt-row-actions">
-                <button type="button" class="match-ghost" (click)="togglePick(entry)">{{ entry.picked ? 'Plus celui-là' : 'On le regarde' }}</button>
-                <a class="match-ghost" [routerLink]="['/film', entry.movie.id]">Fiche</a>
-                <button *ngIf="isLoggedIn" type="button" class="match-ghost" [disabled]="watchlisted.has(entry.movie.id)" (click)="addToWatchlist(entry.movie.id)">
-                  {{ watchlisted.has(entry.movie.id) ? 'Ajouté' : '+ Watchlist' }}
+          <div class="mt-grid">
+            <div *ngFor="let entry of matches" class="mt-tile" [class.picked]="entry.picked">
+              <a [routerLink]="['/film', entry.movie.id]" class="mt-thumb" [attr.title]="entry.movie.title">
+                <img referrerpolicy="no-referrer" [src]="poster(entry.movie.poster_path, 'w185')" [alt]="entry.movie.title" loading="lazy" />
+                <span *ngIf="entry.picked" class="mt-badge"><i class="fa-solid fa-check"></i></span>
+              </a>
+              <div class="mt-tools">
+                <button type="button" [class.on]="entry.picked" (click)="togglePick(entry)" [attr.title]="entry.picked ? 'Plus celui-là' : 'On le regarde'" [attr.aria-label]="entry.picked ? 'Plus celui-là' : 'On le regarde'">
+                  <i class="fa-solid fa-play"></i>
+                </button>
+                <button *ngIf="isLoggedIn" type="button" [disabled]="watchlisted.has(entry.movie.id)" (click)="addToWatchlist(entry.movie.id)" [attr.title]="watchlisted.has(entry.movie.id) ? 'Dans la watchlist' : 'Ajouter à la watchlist'" [attr.aria-label]="watchlisted.has(entry.movie.id) ? 'Dans la watchlist' : 'Ajouter à la watchlist'">
+                  <i class="fa-solid" [ngClass]="watchlisted.has(entry.movie.id) ? 'fa-check' : 'fa-plus'"></i>
                 </button>
               </div>
             </div>
@@ -183,7 +184,7 @@
         </div>
         <div class="mt-big">C'est un match !</div>
         <div class="mt-poster"><img referrerpolicy="no-referrer" [src]="poster(celebration.poster_path, 'w342')" [alt]="celebration.title" /></div>
-        <h2>{{ celebration.title }}</h2>
+        <h2 *ngIf="!celebration.poster_path">{{ celebration.title }}</h2>
         <div class="mt-buttons">
           <button type="button" class="match-primary" (click)="chooseMovie(celebration)">On le regarde !</button>
           <button type="button" class="match-ghost" (click)="closeCelebration()">Continuer à swiper</button>
