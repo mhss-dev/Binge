@@ -316,7 +316,7 @@ html body .nav-shell .nav-pill.active { background: rgba(255, 255, 255, 0.1); bo
 .mb-hero { position: relative; overflow: hidden; width: 100vw; margin: -6rem 0 0 calc(50% - 50vw); background: radial-gradient(circle at 15% 10%, rgba(255, 122, 24, 0.26), transparent 45%), radial-gradient(circle at 90% 85%, rgba(77, 213, 161, 0.12), transparent 40%), linear-gradient(170deg, #0e1a2c, var(--bg)); }
 .mb-hero-inner { width: min(100% - 2rem, var(--max-content-width)); margin: 0 auto; padding: 8.5rem 0 4.5rem; display: grid; gap: 2.2rem; align-items: center; }
 .mb-hero-copy { display: grid; gap: 0.9rem; justify-items: start; }
-.mb-hero-copy h1 { margin: 0; font-size: clamp(2.8rem, 9vw, 6rem); line-height: 0.92; letter-spacing: -0.03em; background: linear-gradient(90deg, #fff, var(--accent-soft)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.mb-hero-copy h1 { margin: 0; padding: 0 0.06em 0.14em 0; font-size: clamp(2.8rem, 9vw, 6rem); line-height: 0.92; letter-spacing: -0.03em; background: linear-gradient(90deg, #fff, var(--accent-soft)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .mb-lead { margin: 0; max-width: 34rem; color: var(--muted); font-size: 1.05rem; line-height: 1.5; }
 .mb-podium { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.8rem; align-items: end; max-width: 460px; width: 100%; margin: 0 auto; }
 .mb-step { position: relative; display: grid; justify-items: center; gap: 0.2rem; padding: 1.4rem 0.5rem 1rem; border-radius: 22px; border: 1px solid var(--border); background: rgba(12, 22, 38, 0.8); text-decoration: none; color: var(--text); }
@@ -394,7 +394,7 @@ html body .nav-shell .nav-pill.active { background: rgba(255, 255, 255, 0.1); bo
 .hm-hero { position: relative; overflow: hidden; margin-top: -6rem; min-height: clamp(600px, 94vh, 900px); display: grid; align-items: end; background: var(--bg-elevated); }
 .hm-hero .dv-hero-inner { align-items: flex-end; padding-bottom: 5.5rem; }
 .hm-copy { display: grid; gap: 1rem; justify-items: start; max-width: 44rem; animation: dv-in 0.6s ease; }
-.hm-copy h1 { margin: 0; font-size: clamp(4rem, 15vw, 9rem); line-height: 0.88; letter-spacing: -0.04em; background: linear-gradient(90deg, #fff, var(--accent-soft)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hm-copy h1 { margin: 0; padding: 0 0.06em 0.14em 0; font-size: clamp(4rem, 15vw, 9rem); line-height: 0.88; letter-spacing: -0.04em; background: linear-gradient(90deg, #fff, var(--accent-soft)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .hm-text { margin: 0; max-width: 34rem; color: rgba(245, 247, 251, 0.82); font-size: 1.1rem; line-height: 1.5; }
 .hm-featured { display: grid; gap: 0.1rem; margin-top: 0.6rem; padding-left: 0.9rem; border-left: 3px solid var(--accent); text-decoration: none; color: var(--text); }
 .hm-featured span { color: var(--accent-soft); font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; }
