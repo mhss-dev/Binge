@@ -518,14 +518,16 @@ html body .nav-shell .nav-pill.active { background: rgba(255, 255, 255, 0.1); bo
 .pf-social button:hover { color: var(--text); }
 @media (min-width: 992px) { .pf-social { justify-content: flex-start; } }
 
-.mt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 0.7rem; }
-.mt-tile { display: grid; gap: 0.35rem; align-content: start; }
-.mt-thumb { position: relative; display: block; aspect-ratio: 2 / 3; border-radius: 12px; overflow: hidden; background: var(--surface-strong); }
+.mt-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.6rem; }
+@media (min-width: 640px) and (max-width: 991px) { .mt-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+.mt-tile { position: relative; border-radius: 14px; overflow: hidden; background: var(--surface-strong); aspect-ratio: 2 / 3; }
+.mt-thumb { display: block; width: 100%; height: 100%; }
 .mt-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.mt-tile.picked .mt-thumb { box-shadow: inset 0 0 0 3px var(--success); }
-.mt-badge { position: absolute; top: 0.35rem; right: 0.35rem; width: 1.4rem; height: 1.4rem; border-radius: 50%; display: grid; place-items: center; background: var(--success); color: #06281c; font-size: 0.65rem; }
-.mt-tools { display: flex; gap: 0.3rem; }
-.mt-tools button { flex: 1; height: 1.9rem; border-radius: 10px; border: 1px solid var(--border); background: transparent; color: var(--text); font-size: 0.72rem; cursor: pointer; }
-.mt-tools button:hover { border-color: var(--accent-soft); }
-.mt-tools button.on { background: var(--accent); border-color: var(--accent); color: #1b0f02; }
-.mt-tools button:disabled { opacity: 0.55; cursor: default; }
+.mt-tile::after { content: ""; position: absolute; inset: auto 0 0 0; height: 45%; background: linear-gradient(to top, rgba(5, 11, 20, 0.85), transparent); pointer-events: none; }
+.mt-tile.picked { box-shadow: 0 0 0 2px var(--success); }
+.mt-flag { position: absolute; top: 0.4rem; left: 0.4rem; z-index: 2; display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.15rem 0.5rem; border-radius: 999px; background: var(--success); color: #06281c; font-size: 0.68rem; font-weight: 700; }
+.mt-tools { position: absolute; z-index: 2; right: 0.4rem; bottom: 0.4rem; left: 0.4rem; display: flex; justify-content: flex-end; gap: 0.35rem; }
+.mt-tools button { width: 1.9rem; height: 1.9rem; border-radius: 50%; border: 0; background: rgba(7, 17, 31, 0.78); color: var(--text); font-size: 0.7rem; cursor: pointer; backdrop-filter: none; }
+.mt-tools button:hover { background: var(--accent); color: #1b0f02; }
+.mt-tools button.on { background: var(--accent); color: #1b0f02; }
+.mt-tools button:disabled { opacity: 0.6; cursor: default; background: rgba(7, 17, 31, 0.78); color: var(--success); }

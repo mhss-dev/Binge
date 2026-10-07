@@ -148,14 +148,14 @@
         <div *ngIf="matches.length > 0" class="match-panel glass-panel">
           <h2>Vos matchs ({{ matches.length }})</h2>
           <div class="mt-grid">
-            <div *ngFor="let entry of matches" class="mt-tile" [class.picked]="entry.picked">
+            <div *ngFor="let entry of orderedMatches" class="mt-tile" [class.picked]="entry.picked">
               <a [routerLink]="['/film', entry.movie.id]" class="mt-thumb" [attr.title]="entry.movie.title">
-                <img referrerpolicy="no-referrer" [src]="poster(entry.movie.poster_path, 'w185')" [alt]="entry.movie.title" loading="lazy" />
-                <span *ngIf="entry.picked" class="mt-badge"><i class="fa-solid fa-check"></i></span>
+                <img referrerpolicy="no-referrer" [src]="poster(entry.movie.poster_path, 'w342')" [alt]="entry.movie.title" loading="lazy" />
               </a>
+              <span *ngIf="entry.picked" class="mt-flag"><i class="fa-solid fa-circle-check"></i> On le regarde</span>
               <div class="mt-tools">
                 <button type="button" [class.on]="entry.picked" (click)="togglePick(entry)" [attr.title]="entry.picked ? 'Plus celui-là' : 'On le regarde'" [attr.aria-label]="entry.picked ? 'Plus celui-là' : 'On le regarde'">
-                  <i class="fa-solid fa-play"></i>
+                  <i class="fa-solid" [ngClass]="entry.picked ? 'fa-xmark' : 'fa-play'"></i>
                 </button>
                 <button *ngIf="isLoggedIn" type="button" [disabled]="watchlisted.has(entry.movie.id)" (click)="addToWatchlist(entry.movie.id)" [attr.title]="watchlisted.has(entry.movie.id) ? 'Dans la watchlist' : 'Ajouter à la watchlist'" [attr.aria-label]="watchlisted.has(entry.movie.id) ? 'Dans la watchlist' : 'Ajouter à la watchlist'">
                   <i class="fa-solid" [ngClass]="watchlisted.has(entry.movie.id) ? 'fa-check' : 'fa-plus'"></i>
