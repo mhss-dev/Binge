@@ -47,8 +47,8 @@
   </div>
 
   <ng-container *ngIf="phase === 'play'">
-    <div class="room" [attr.data-tab]="tab">
-      <div class="match-panel glass-panel room-head">
+    <div class="match-hero room">
+      <div class="room-head">
         <div>
           <p class="eyebrow">Match</p>
           <h1>{{ state?.session?.title || info?.session?.title || 'Match de films' }}</h1>
@@ -82,11 +82,6 @@
         </div>
       </div>
 
-      <div class="room-tabs">
-        <button type="button" class="chip" [class.active]="tab === 'swipe'" (click)="tab = 'swipe'">Swiper</button>
-        <button type="button" class="chip" [class.active]="tab === 'matches'" (click)="tab = 'matches'">Matchs ({{ matches.length }})</button>
-      </div>
-
       <div class="play">
         <div *ngIf="deckError" class="match-error">
           {{ deckError }}
@@ -99,7 +94,7 @@
           <h2>Vous avez fait le tour</h2>
           <p>Plus de film à proposer avec ces genres.</p>
           <button *ngIf="state?.session?.mine_to_manage" type="button" class="match-primary" (click)="startEditGenres()">Changer les genres</button>
-          <button type="button" class="match-ghost" (click)="tab = 'matches'">Voir vos matchs</button>
+          <button type="button" class="match-ghost" (click)="scrollToMatches()">Voir vos matchs</button>
         </div>
 
         <div *ngIf="topCard" class="deck">
@@ -140,20 +135,12 @@
         <p *ngIf="topCard" class="hint">Touche l'affiche pour le résumé · glisse ou utilise les flèches ← →</p>
       </div>
 
-      <div class="matches">
-        <div *ngIf="matches.length === 0" class="match-panel glass-panel match-center">
-          <h2>Vos matchs</h2>
-          <p>Pas encore de match. Dès que vous aimez le même film, il apparaît ici.</p>
-        </div>
-        <div *ngIf="matches.length > 0" class="match-panel glass-panel">
-          <h2>Vos matchs ({{ matches.length }})</h2>
-          <div class="mt-grid">
-            <div *ngFor="let entry of matches" class="mt-tile">
-              <a [routerLink]="['/film', entry.movie.id]" class="mt-thumb" [attr.title]="entry.movie.title">
-                <img referrerpolicy="no-referrer" [src]="poster(entry.movie.poster_path, 'w342')" [alt]="entry.movie.title" loading="lazy" />
-              </a>
-            </div>
-          </div>
+      <div *ngIf="matches.length > 0" id="matches" class="matches">
+        <h2 class="mt-title">Vos matchs ({{ matches.length }})</h2>
+        <div class="mt-rail">
+          <a *ngFor="let entry of matches" [routerLink]="['/film', entry.movie.id]" class="mt-tile" [attr.title]="entry.movie.title">
+            <img referrerpolicy="no-referrer" [src]="poster(entry.movie.poster_path, 'w342')" [alt]="entry.movie.title" loading="lazy" />
+          </a>
         </div>
       </div>
 

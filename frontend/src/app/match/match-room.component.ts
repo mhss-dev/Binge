@@ -42,7 +42,6 @@ export class MatchRoomComponent implements OnInit, OnDestroy {
   joinError = '';
   joining = false;
 
-  tab: 'swipe' | 'matches' = 'swipe';
   deck: MatchCard[] = [];
   exhausted = false;
   loadingDeck = false;
@@ -397,7 +396,7 @@ export class MatchRoomComponent implements OnInit, OnDestroy {
   @HostListener('window:keydown', ['$event'])
   onKey(event: KeyboardEvent): void {
     const target = event.target as HTMLElement | null;
-    if (this.phase !== 'play' || this.tab !== 'swipe' || this.celebration || (target && /INPUT|TEXTAREA|SELECT/.test(target.tagName))) {
+    if (this.phase !== 'play' || this.celebration || (target && /INPUT|TEXTAREA|SELECT/.test(target.tagName))) {
       return;
     }
     if (event.key === 'ArrowRight') {
@@ -459,6 +458,10 @@ export class MatchRoomComponent implements OnInit, OnDestroy {
       },
       error: () => (this.deckError = 'Impossible de changer les genres.'),
     });
+  }
+
+  scrollToMatches(): void {
+    document.getElementById('matches')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   endRoom(): void {

@@ -22,10 +22,7 @@
 .match-ghost.danger { color: var(--danger); border-color: var(--danger); margin-top: 0.8rem; justify-self: start; }
 .match-error { margin: 0.4rem 0; padding: 0.7rem 1rem; border-radius: var(--radius-md); background: rgba(255, 107, 129, 0.12); color: var(--danger); }
 .waiting { padding: 0.7rem 1rem; border-radius: var(--radius-md); background: rgba(255, 179, 71, 0.1); color: var(--accent-soft); font-size: 0.9rem; }
-.room { display: grid; gap: 0.9rem; grid-template-columns: minmax(0, 1fr); }
-.room > * { min-width: 0; }
-.room-head h1 { font-size: 1.6rem; overflow-wrap: anywhere; }
-.room-foot { display: flex; justify-content: center; padding-top: 0.5rem; }
+.room-foot { display: flex; justify-content: center; }
 .room-foot .match-ghost.danger { margin-top: 0; border-color: transparent; opacity: 0.8; }
 .room-foot .match-ghost.danger:hover { border-color: var(--danger); opacity: 1; }
 .room-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
@@ -38,9 +35,6 @@
 .link-input { font-size: 0.8rem; color: var(--muted); }
 .room-notes { display: grid; gap: 0.7rem; }
 .room-notes:empty { display: none; }
-.room-tabs { display: flex; gap: 0.5rem; }
-.room[data-tab="swipe"] .matches { display: none; }
-.room[data-tab="matches"] .play { display: none; }
 .play { display: grid; justify-items: center; gap: 0.7rem; align-content: start; }
 .deck { position: relative; width: min(78vw, 300px); aspect-ratio: 2 / 3; margin: 0.4rem auto 1.5rem; }
 .movie-card { transition: transform 0.26s ease, filter 0.26s ease; position: absolute; inset: 0; border-radius: 26px; overflow: hidden; background: var(--surface-strong); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.07), 0 26px 60px rgba(0, 0, 0, 0.5); }
@@ -65,15 +59,5 @@
 .round.pass { color: var(--danger); border-color: var(--danger); }
 .round.pass:hover { background: rgba(255, 107, 129, 0.14); }
 .hint { color: var(--muted); font-size: 0.82rem; text-align: center; margin: 0.2rem 0 0; }
-@media (min-width: 992px) {
-  .room { grid-template-columns: minmax(0, 1fr) 380px; grid-template-areas: "play head" "play notes" "play matches"; align-items: start; gap: 1rem 2.4rem; }
-  .room .room-head { grid-area: head; }
-  .room .room-notes { grid-area: notes; }
-  .room .play { grid-area: play; }
-  .room .matches { grid-area: matches; }
-  .room .room-foot { grid-column: 1 / -1; }
-  .room[data-tab] .play, .room[data-tab] .matches { display: grid; }
-  .room-tabs { display: none; }
-  .deck { width: min(100%, 360px); margin-top: 0.8rem; }
-}
+@media (min-width: 992px) { .deck { width: min(100%, 360px); margin-top: 0.8rem; } }
 @media (prefers-reduced-motion: reduce) { .movie-card.top { transition: none; } }
