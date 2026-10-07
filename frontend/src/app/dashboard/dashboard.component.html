@@ -46,22 +46,14 @@
           </button>
         </div>
 
-        <button
-          class="follow-action"
-          *ngIf="nickname && currentNickname && nickname !== currentNickname"
-          (click)="toggleFollow()"
-        >
-          {{ isFollowing ? 'Ne plus suivre' : 'Suivre' }}
-        </button>
-
-        <button
-          class="follow-action"
-          *ngIf="nickname && currentNickname && nickname !== currentNickname"
-          [disabled]="invitingToMatch"
-          (click)="inviteToMatch()"
-        >
-          Inviter à un match
-        </button>
+        <div class="d-flex flex-wrap gap-3" *ngIf="nickname && currentNickname && nickname !== currentNickname">
+          <button class="follow-action" (click)="toggleFollow()">
+            {{ isFollowing ? 'Ne plus suivre' : 'Suivre' }}
+          </button>
+          <button class="follow-action" [disabled]="invitingToMatch" (click)="inviteToMatch()">
+            Inviter à un match
+          </button>
+        </div>
       </div>
     </div>
   </div>
