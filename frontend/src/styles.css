@@ -452,12 +452,7 @@ html body .nav-shell .nav-pill.active { background: rgba(255, 255, 255, 0.1); bo
   .pf-tools { justify-content: flex-end; }
 }
 
-html body .nav-shell .topbar-actions .action-chip.nav-search { gap: 0.6rem; padding: 0.55rem 1.1rem; border: 1px solid var(--border); background: rgba(255, 255, 255, 0.05); color: var(--muted); font-size: 0.9rem; cursor: pointer; }
-html body .nav-shell .topbar-actions .action-chip.nav-search i { display: inline; color: var(--accent-soft); }
-html body .nav-shell .topbar-actions .action-chip.nav-search:hover { color: var(--text); border-color: rgba(255, 122, 24, 0.45); background: rgba(255, 255, 255, 0.08); }
-@media (min-width: 961px) { html body .nav-shell .topbar-actions .action-chip.nav-search { min-width: 11rem; } }
-@media (max-width: 960px) { html body .nav-shell .topbar-actions .action-chip.nav-search { width: 100%; justify-content: center; } }
-
+@media (min-width: 961px) { @media (max-width: 960px) { 
 .sp-over { position: fixed; inset: 0; z-index: 1200; display: flex; justify-content: center; align-items: flex-start; padding: 12vh 1rem 1rem; background: rgba(3, 7, 13, 0.72); backdrop-filter: blur(10px); animation: sp-fade 0.18s ease; }
 .sp-box { width: min(100%, 640px); max-height: 76vh; display: flex; flex-direction: column; overflow: hidden; border-radius: 24px; border: 1px solid var(--border); background: linear-gradient(180deg, rgba(20, 34, 56, 0.98), rgba(9, 18, 31, 0.98)); box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6); animation: sp-rise 0.22s ease; }
 .sp-field { display: flex; align-items: center; gap: 0.8rem; padding: 1rem 1.2rem; border-bottom: 1px solid var(--border); }

@@ -41,9 +41,8 @@
           </div>
 
           <div class="topbar-actions">
-            <button type="button" class="action-chip nav-search" aria-label="Rechercher un film" (click)="openSearch()">
+            <button type="button" class="action-chip icon-only" aria-label="Recherche" title="Recherche" (click)="openSearch()">
               <i class="fa-solid fa-magnifying-glass"></i>
-              <span>Rechercher</span>
             </button>
 
             <ng-container *ngIf="isLoggedIn; else guestButtons">
