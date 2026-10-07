@@ -1,184 +1,97 @@
-<section class="discover-page app-shell text-white">
-  <div class="discover-hero glass-panel">
-    <div class="discover-intro">
-      <div class="discover-copy-block">
-        <p class="eyebrow">Explorer vos goûts</p>
-        <h1>Découverte de vos goûts{{ nickname ? ", " + nickname : "" }}</h1>
-        <p class="discover-lead">
-          Naviguez dans le catalogue, filtrez rapidement et gérez vos listes
-          sans quitter la carte.
-        </p>
+<section class="dv-page app-shell text-white">
+  <div class="dv-hero" *ngIf="featured; else heroLoading">
+    <img
+      *ngFor="let film of featuredList; let i = index"
+      class="dv-hero-bg"
+      [class.on]="i === featuredIndex % featuredList.length"
+      [src]="imageUrl(film.backdrop_path, 'w1280')"
+      alt=""
+    />
+    <div class="dv-hero-shade"></div>
+    <div class="dv-hero-copy" *ngFor="let film of [featured]; trackBy: trackByMovieId">
+      <p class="eyebrow">À la une{{ nickname ? " · pour " + nickname : "" }}</p>
+      <h1>{{ film.title }}</h1>
+      <p class="dv-hero-meta">
+        <span *ngIf="film.release_date">{{ film.release_date | date : "yyyy" }}</span>
+        <span *ngIf="film.vote_average" class="dv-score">★ {{ film.vote_average | number : "1.0-1" }}</span>
+      </p>
+      <p class="dv-hero-text">{{ film.overview }}</p>
+      <div class="dv-hero-actions">
+        <a class="dv-btn dv-btn-main" [routerLink]="['/film', film.id]"><i class="fa-solid fa-play"></i> Voir la fiche</a>
+        <button type="button" class="dv-btn" [class.on]="film.isWatchlist" (click)="toggleWatchlist(film.id)"><i class="fa-solid fa-clock"></i> Watchlist</button>
+        <button type="button" class="dv-btn" [class.on]="film.isFavorite" (click)="toggleFavorite(film.id)"><i class="fa-solid fa-heart"></i> Favori</button>
       </div>
     </div>
+    <div class="dv-dots" *ngIf="featuredList.length > 1">
+      <button
+        *ngFor="let film of featuredList; let i = index"
+        type="button"
+        [class.on]="i === featuredIndex % featuredList.length"
+        [attr.aria-label]="'Afficher ' + film.title"
+        (click)="pickFeatured(i)"
+      ></button>
+    </div>
+  </div>
+  <ng-template #heroLoading><div class="dv-hero dv-skel"></div></ng-template>
 
-    <div class="filters-panel">
-      <form
-        class="search-wrap"
-        (keydown.enter)="searchFilms(searchQuery)"
-        (input)="searchFilms(searchQuery)"
-      >
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input
-          type="search"
-          placeholder="Trouvez un film"
-          aria-label="Recherche"
-          [(ngModel)]="searchQuery"
-          name="searchQuery"
-        />
-      </form>
-
-      <div class="filters-grid">
-        <div class="filter-stack">
-          <span class="filter-caption">Trier</span>
-          <div class="select-shell">
-            <mat-select
-              panelClass="app-select-panel"
-              [(ngModel)]="sortOption"
-              name="sortOption"
-              (selectionChange)="loadFilms(1)"
-            >
-              <mat-option value="popularity.desc">Popularité +</mat-option>
-              <mat-option value="popularity.asc">Popularité -</mat-option>
-              <mat-option value="primary_release_date.desc"
-                >Sortie récente</mat-option
-              >
-              <mat-option value="primary_release_date.asc"
-                >Sortie ancienne</mat-option
-              >
-            </mat-select>
-          </div>
-        </div>
-
-        <div class="filter-stack">
-          <span class="filter-caption">Genre</span>
-          <div class="select-shell">
-            <mat-select
-              panelClass="app-select-panel"
-              [(ngModel)]="selectedGenre"
-              name="genreOption"
-              (selectionChange)="loadFilms(1)"
-            >
-              <mat-option
-                *ngFor="let genre of genreOptions"
-                [value]="genre.value"
-                >{{ genre.label }}</mat-option
-              >
-            </mat-select>
-          </div>
-        </div>
-
-        <button
-          *ngIf="hasActiveFilters()"
-          type="button"
-          class="clear-filters"
-          (click)="clearFilters()"
-          aria-label="Réinitialiser les filtres"
-        >
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+  <div class="dv-bar">
+    <form class="dv-search" (submit)="$event.preventDefault()">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="search" placeholder="Trouvez un film" aria-label="Recherche" [(ngModel)]="searchQuery" name="searchQuery" (input)="onSearchInput()" />
+    </form>
+    <div class="dv-chips" role="group" aria-label="Genres">
+      <button type="button" *ngFor="let genre of genreOptions" [class.on]="selectedGenre === genre.value && !searchQuery" (click)="setGenre(genre.value)">{{ genre.label }}</button>
+    </div>
+    <div class="dv-row">
+      <div class="dv-seg" role="group" aria-label="Trier">
+        <button type="button" *ngFor="let option of sortOptions" [class.on]="sortOption === option.value" (click)="setSort(option.value)">{{ option.label }}</button>
+      </div>
+      <div class="dv-row-end">
+        <button *ngIf="hasActiveFilters()" type="button" class="dv-link" (click)="clearFilters()">Réinitialiser</button>
+        <button type="button" class="dv-btn dv-btn-main dv-surprise" [disabled]="films.length === 0" (click)="surprise()"><i class="fa-solid fa-dice"></i> Surprends-moi</button>
       </div>
     </div>
   </div>
 
-  <section class="discover-results">
-    <div class="section-heading discover-results-heading">
-      <div>
-        <p class="eyebrow">À explorer</p>
-        <h2>Films à parcourir</h2>
-      </div>
-      <span class="results-caption"
-        >{{ films.length }} affiches prêtes à trier</span
-      >
-    </div>
-
-    <div class="discover-grid">
-      <article
-        *ngFor="let movie of films; trackBy: trackByMovieId"
-        class="discover-card glass-panel"
-      >
-        <a [routerLink]="['/film', movie?.id]" class="discover-poster">
-          <img
-            [src]="
-              movie?.poster_path
-                ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path
-                : 'https://placehold.co/500x750?text=Aucun+poster+disponible'
-            "
-            alt="{{ movie?.title || 'Inconnu' }}"
-          />
-        </a>
-
-        <div class="discover-body">
-          <div class="discover-copy">
-            <h2>{{ movie?.title || "Titre inconnu" }}</h2>
-            <p>
-              <span *ngIf="movie?.release_date">{{
-                movie?.release_date | date : "yyyy"
-              }}</span>
-              <span *ngIf="movie?.vote_average"
-                >Note {{ movie?.vote_average | number : "1.0-1" }}/10</span
-              >
-            </p>
-          </div>
-
-          <div class="action-grid">
-            <button
-              class="action-tile"
-              [ngClass]="{ active: movie.isWatched }"
-              (click)="toggleWatched(movie.id)"
-              aria-label="Marquer comme vu"
-            >
-              <i class="fa-solid fa-eye"></i>
-              <span>Vu</span>
-            </button>
-            <button
-              class="action-tile"
-              [ngClass]="{ favorite: movie.isFavorite }"
-              (click)="toggleFavorite(movie.id)"
-              aria-label="Ajouter aux favoris"
-            >
-              <i class="fa-solid fa-heart"></i>
-              <span>Favori</span>
-            </button>
-            <button
-              class="action-tile"
-              [ngClass]="{ watchlist: movie.isWatchlist }"
-              (click)="toggleWatchlist(movie.id)"
-              aria-label="Ajouter à la watchlist"
-            >
-              <i class="fa-solid fa-clock"></i>
-              <span>Watchlist</span>
-            </button>
-          </div>
+  <div class="dv-grid">
+    <article *ngFor="let movie of films; trackBy: trackByMovieId" class="dv-card">
+      <a [routerLink]="['/film', movie?.id]" class="dv-poster">
+        <img loading="lazy" [src]="imageUrl(movie?.poster_path, 'w500')" alt="{{ movie?.title || 'Inconnu' }}" />
+        <div class="dv-badges">
+          <span *ngIf="movie.isWatched" title="Vu"><i class="fa-solid fa-eye"></i></span>
+          <span *ngIf="movie.isFavorite" title="Favori"><i class="fa-solid fa-heart"></i></span>
+          <span *ngIf="movie.isWatchlist" title="Dans la watchlist"><i class="fa-solid fa-clock"></i></span>
         </div>
-      </article>
-    </div>
-  </section>
+        <div class="dv-info">
+          <strong>{{ movie?.title || "Titre inconnu" }}</strong>
+          <span>
+            <ng-container *ngIf="movie?.release_date">{{ movie?.release_date | date : "yyyy" }}</ng-container>
+            <ng-container *ngIf="movie?.vote_average"> · ★ {{ movie?.vote_average | number : "1.0-1" }}</ng-container>
+          </span>
+        </div>
+      </a>
+      <div class="dv-actions">
+        <button type="button" [class.on]="movie.isWatched" (click)="toggleWatched(movie.id)" aria-label="Marquer comme vu" title="Vu"><i class="fa-solid fa-eye"></i></button>
+        <button type="button" [class.fav]="movie.isFavorite" (click)="toggleFavorite(movie.id)" aria-label="Ajouter aux favoris" title="Favori"><i class="fa-solid fa-heart"></i></button>
+        <button type="button" [class.on]="movie.isWatchlist" (click)="toggleWatchlist(movie.id)" aria-label="Ajouter à la watchlist" title="Watchlist"><i class="fa-solid fa-clock"></i></button>
+      </div>
+    </article>
 
-  <div
-    class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3 text-center"
-    *ngIf="toastMessage"
-  >
-    <div
-      class="toast align-items-center text-white border-0 d-flex justify-content-center discover-toast"
-      role="alert"
-      aria-live="assertive"
-      aria-atomic="true"
-      #toastElement
-    >
+    <div *ngFor="let item of skeletons" class="dv-card dv-skel" [hidden]="!(isLoading && films.length === 0)"></div>
+  </div>
+
+  <p class="dv-end" *ngIf="isLoading && films.length > 0">Chargement…</p>
+  <p class="dv-end" *ngIf="!isLoading && films.length === 0">Aucun film ne correspond. Essaie un autre genre ou une autre recherche.</p>
+
+  <div class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3 text-center" *ngIf="toastMessage">
+    <div class="toast align-items-center text-white border-0 d-flex justify-content-center discover-toast" role="alert" aria-live="assertive" aria-atomic="true" #toastElement>
       <div class="d-flex text-center">
-        <div class="toast-body text-center">
-          {{ toastMessage }}
-        </div>
+        <div class="toast-body text-center">{{ toastMessage }}</div>
       </div>
     </div>
   </div>
 
-  <button
-    *ngIf="isButtonVisible()"
-    class="floating-action"
-    (click)="scrollToTop()"
-    aria-label="Retour en haut"
-  >
+  <button *ngIf="isButtonVisible()" class="floating-action" (click)="scrollToTop()" aria-label="Retour en haut">
     <i class="fas fa-arrow-up"></i>
   </button>
 </section>

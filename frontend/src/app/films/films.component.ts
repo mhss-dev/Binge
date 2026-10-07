@@ -3,13 +3,12 @@ import {
   Component,
   HostListener,
   ChangeDetectorRef,
+  OnDestroy,
   signal,
   ViewChild,
   ElementRef,
 } from '@angular/core';
 import { DiscoverService } from '../discover.service';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSelectModule } from '@angular/material/select';
 
 import { FormsModule } from '@angular/forms';
 import {
@@ -27,11 +26,11 @@ import { Toast } from 'bootstrap';
 @Component({
   selector: 'app-films',
   standalone: true,
-  imports: [CommonModule, MatPaginatorModule, FormsModule, RouterLink, MatSelectModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './films.component.html',
-  styleUrl: './films.component.css',
+  styles: [':host { display: block; }'],
 })
-export class FilmsComponent {
+export class FilmsComponent implements OnDestroy {
   @ViewChild('toastElement', { static: false }) toastElement!: ElementRef;
 
   toastMessage: string = '';
@@ -55,6 +54,17 @@ export class FilmsComponent {
   sortOption: string = 'popularity.desc';
   isButtonVisible = signal(false);
   selectedGenre: string = '';
+  featuredIndex = 0;
+  readonly skeletons = Array.from({ length: 12 });
+  readonly sortOptions = [
+    { value: 'popularity.desc', label: 'Populaires' },
+    { value: 'primary_release_date.desc', label: 'Récents' },
+    { value: 'primary_release_date.asc', label: 'Anciens' },
+    { value: 'popularity.asc', label: 'Moins connus' },
+  ];
+  private loadToken = 0;
+  private searchTimer: ReturnType<typeof setTimeout> | null = null;
+  private featuredTimer: ReturnType<typeof setInterval> | null = null;
   readonly genreOptions = [
     { value: '', label: 'Tous les genres' },
     { value: '28', label: 'Action' },
@@ -106,17 +116,104 @@ export class FilmsComponent {
       }
     });
     localStorage.setItem('redirectUrl', window.location.pathname);
+    this.startFeatured();
+  }
+
+  ngOnDestroy(): void {
+    if (this.searchTimer) {
+      clearTimeout(this.searchTimer);
+    }
+    if (this.featuredTimer) {
+      clearInterval(this.featuredTimer);
+    }
+  }
+
+  get featuredList(): any[] {
+    return this.films.filter((film) => film.backdrop_path).slice(0, 5);
+  }
+
+  get featured(): any | null {
+    const list = this.featuredList;
+    return list.length > 0 ? list[this.featuredIndex % list.length] : null;
+  }
+
+  private startFeatured(): void {
+    if (this.featuredTimer || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+    this.featuredTimer = setInterval(() => {
+      const count = this.featuredList.length;
+      if (count > 1 && !document.hidden) {
+        this.featuredIndex = (this.featuredIndex + 1) % count;
+        this.cdr.detectChanges();
+      }
+    }, 7000);
+  }
+
+  pickFeatured(index: number): void {
+    this.featuredIndex = index;
+    if (this.featuredTimer) {
+      clearInterval(this.featuredTimer);
+      this.featuredTimer = null;
+    }
+    this.startFeatured();
+  }
+
+  imageUrl(path: string | null | undefined, size: string): string {
+    return path && /^\/[A-Za-z0-9_.-]{1,100}\.(jpg|jpeg|png|webp)$/.test(path)
+      ? `https://image.tmdb.org/t/p/${size}${path}`
+      : 'https://placehold.co/500x750?text=Aucun+poster+disponible';
+  }
+
+  reload(): void {
+    this.loadToken++;
+    this.isLoading = false;
+    this.hasMore = true;
+    this.currentPage = 1;
+    this.featuredIndex = 0;
+    this.films = [];
+    this.loadFilms(1);
+  }
+
+  setGenre(value: string): void {
+    this.selectedGenre = value;
+    this.searchQuery = '';
+    this.reload();
+  }
+
+  setSort(value: string): void {
+    this.sortOption = value;
+    this.searchQuery = '';
+    this.reload();
+  }
+
+  onSearchInput(): void {
+    if (this.searchTimer) {
+      clearTimeout(this.searchTimer);
+    }
+    this.searchTimer = setTimeout(() => this.searchFilms(this.searchQuery), 300);
+  }
+
+  surprise(): void {
+    const pool = this.films.filter((film) => film.id);
+    if (pool.length > 0) {
+      this.router.navigate(['/film', pool[Math.floor(Math.random() * pool.length)].id]);
+    }
   }
 
   loadFilms(page: number): void {
     if (this.isLoading || !this.hasMore) return;
 
     this.isLoading = true;
+    const token = this.loadToken;
 
     this.discoverService
       .getFilms(page, false, this.sortOption, this.selectedGenre)
       .subscribe({
         next: (data) => {
+          if (token !== this.loadToken) {
+            return;
+          }
           if (data.items && Array.isArray(data.items)) {
             this.films =
               page === 1 ? [...data.items] : [...this.films, ...data.items];
@@ -134,6 +231,9 @@ export class FilmsComponent {
           this.isLoading = false;
         },
         error: (err) => {
+          if (token !== this.loadToken) {
+            return;
+          }
           console.error(err);
           this.isLoading = false;
         },
@@ -158,15 +258,22 @@ export class FilmsComponent {
 
   searchFilms(query: string): void {
     if (!query?.trim()) {
-      this.loadFilms(1);
+      this.reload();
       return;
     }
 
+    this.loadToken++;
+    const token = this.loadToken;
     this.isLoading = true;
+    this.hasMore = false;
+    this.featuredIndex = 0;
     this.films = [];
 
     this.discoverService.searchFilms(query).subscribe({
       next: (data) => {
+        if (token !== this.loadToken) {
+          return;
+        }
         if (data.results && Array.isArray(data.results)) {
           this.films = this.shuffle(data.results);
         } else {
@@ -175,6 +282,9 @@ export class FilmsComponent {
         this.isLoading = false;
       },
       error: (err) => {
+        if (token !== this.loadToken) {
+          return;
+        }
         console.error('Erreur sur la searchbar :', err);
         this.isLoading = false;
       },
@@ -185,8 +295,7 @@ export class FilmsComponent {
     this.searchQuery = '';
     this.sortOption = 'popularity.desc';
     this.selectedGenre = '';
-    this.hasMore = true;
-    this.loadFilms(1);
+    this.reload();
   }
 
   hasActiveFilters(): boolean {
@@ -289,7 +398,9 @@ export class FilmsComponent {
         const movie = this.films.find((m) => m.id === movieId);
         if (movie) {
           movie.isFavorite = true;
-          this.showToast(movie.title + ` a été ajouté dans vos favoris`);
+          movie.isWatched = true;
+          movie.isWatchlist = false;
+          this.showToast(movie.title + ` a été ajouté dans vos favoris et vos vus`);
           this.cdr.detectChanges();
         }
       },
@@ -481,7 +592,7 @@ export class FilmsComponent {
         const movie = this.films.find((m) => m.id === movieId);
         if (movie) {
           movie.isWatched = true;
-          this.removeFromWatchlist(movieId);
+          movie.isWatchlist = false;
           this.showToast(movie.title + ` a été ajouté dans vos films vus !`);
           this.cdr.detectChanges();
         }
