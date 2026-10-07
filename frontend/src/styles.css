@@ -408,4 +408,4 @@ html body .nav-shell .nav-pill.active { background: rgba(255, 255, 255, 0.1); bo
 .hm-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
 .hm-head h2 { margin: 0; font-size: clamp(1.6rem, 4vw, 2.4rem); line-height: 1; letter-spacing: -0.02em; }
 .hm-caption { margin: 0.4rem 0 0; color: var(--muted); }
-.hm-controls { display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center; }
+.hm-controls { display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center; justify-content: space-between; }
