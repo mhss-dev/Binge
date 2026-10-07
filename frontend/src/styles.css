@@ -302,3 +302,13 @@ html body .nav-shell .nav-pill.active { background: rgba(255, 255, 255, 0.1); bo
   html body .nav-shell .avatar-img { width: 2.4rem; height: 2.4rem; }
   html body .nav-shell .action-chip.icon-only { width: 2.6rem; height: 2.6rem; }
 }
+
+@media (min-width: 961px) {
+  html body .nav-shell .topbar-inner { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; }
+  html body .nav-shell .topbar-panel { display: contents; }
+  html body .nav-shell .topbar-links { justify-self: center; gap: 1.8rem; }
+  html body .nav-shell .topbar-actions { justify-self: end; }
+  html body .nav-shell .nav-pill { background: transparent; border: 0; border-bottom: 2px solid transparent; border-radius: 0; padding: 0.4rem 0.1rem; color: var(--muted); font-weight: 600; letter-spacing: 0.03em; }
+  html body .nav-shell .nav-pill:hover { background: transparent; color: var(--text); border-bottom-color: rgba(255, 122, 24, 0.5); }
+  html body .nav-shell .nav-pill.active { background: transparent; color: var(--text); border-bottom-color: var(--accent); }
+}
