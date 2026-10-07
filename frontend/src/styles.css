@@ -231,7 +231,7 @@ textarea {
 .dv-dots button { width: 0.7rem; height: 0.7rem; padding: 0; border-radius: 999px; border: 0; background: rgba(255, 255, 255, 0.35); cursor: pointer; transition: width 0.25s ease, background 0.25s ease; }
 .dv-dots button.on { width: 1.8rem; background: var(--accent); }
 
-.dv-bar { margin-top: -2.4rem; position: sticky; top: 6.3rem; z-index: 20; display: grid; gap: 0.6rem; padding: 0.8rem; border-radius: 22px; border: 1px solid var(--border); background: rgba(7, 17, 31, 0.9); backdrop-filter: blur(12px); }
+.dv-bar { margin-top: -2.4rem; position: sticky; top: 6.3rem; transition: top 0.3s ease; z-index: 20; display: grid; gap: 0.6rem; padding: 0.8rem; border-radius: 22px; border: 1px solid var(--border); background: rgba(7, 17, 31, 0.9); backdrop-filter: blur(12px); }
 .dv-search { display: flex; align-items: center; gap: 0.6rem; padding: 0 0.9rem; min-height: 2.8rem; border-radius: 14px; border: 1px solid var(--border); background: rgba(255, 255, 255, 0.05); }
 .dv-search input { flex: 1; min-width: 0; background: transparent; border: 0; outline: none; color: var(--text); font-size: 1rem; }
 .dv-chips { display: flex; gap: 0.4rem; overflow-x: auto; scroll-snap-type: x proximity; padding-bottom: 0.2rem; scrollbar-width: none; }
@@ -288,3 +288,8 @@ textarea {
 .au-submit:hover { color: #1b0f02; filter: brightness(1.06); }
 .au-link { color: var(--accent-soft); }
 .au-link:hover { color: var(--text); text-decoration: underline; }
+
+html body .nav-shell .topbar { transition: background-color 0.25s ease, transform 0.3s ease; }
+html body .nav-shell .topbar.topbar-hidden { transform: translateY(-130%); }
+html.nav-hidden .dv-bar { top: 0.9rem; }
+@media (prefers-reduced-motion: reduce) { html body .nav-shell .topbar, .dv-bar { transition: none; } }

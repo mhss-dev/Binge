@@ -1,5 +1,5 @@
 <div class="nav-shell">
-  <nav class="topbar" [ngClass]="{ 'topbar-scrolled': isScrolled }">
+  <nav class="topbar" [ngClass]="{ 'topbar-scrolled': isScrolled, 'topbar-hidden': isHidden }">
     <div class="topbar-stack app-shell">
       <div class="topbar-inner glass-panel">
         <a routerLink="/home" class="brand-mark" *ngIf="isLogoVisible">
