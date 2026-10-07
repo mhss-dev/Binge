@@ -3,46 +3,19 @@
     <p class="eyebrow">Choisir ensemble</p>
     <h1>Match</h1>
     <p class="match-lead">
-      Crée un salon, envoie le lien à quelqu'un (pas besoin de compte), et swipez les mêmes films chacun de votre côté. Quand vous
+      Génère un lien, envoie-le à quelqu'un (pas besoin de compte), et swipez les mêmes films chacun de votre côté. Quand vous
       aimez tous les deux le même film, c'est un match. Et ça continue après le premier.
     </p>
-  </div>
-
-  <div class="match-panel glass-panel">
-    <h2>Nouveau salon</h2>
-
-    <label class="match-label" for="match-title">Nom du salon (facultatif)</label>
-    <input id="match-title" class="match-input" type="text" maxlength="24" placeholder="Soirée du vendredi" [(ngModel)]="title" />
-
-    <span class="match-label">Genres (jusqu'à 5, tous si rien n'est choisi)</span>
-    <div class="chip-row">
-      <button
-        *ngFor="let genre of genres"
-        type="button"
-        class="chip"
-        [class.active]="selectedGenres.includes(genre.id)"
-        (click)="toggleGenre(genre.id)"
-      >
-        {{ genre.label }}
-      </button>
-    </div>
-
-    <label class="match-label" for="match-year">Époque</label>
-    <select id="match-year" class="match-input" [(ngModel)]="yearFrom">
-      <option *ngFor="let year of years" [ngValue]="year.value">{{ year.label }}</option>
-    </select>
-
     <div *ngIf="error" class="match-error">{{ error }}</div>
-
     <button type="button" class="match-primary" [disabled]="creating" (click)="create()">
-      {{ creating ? 'Création…' : 'Créer le salon et obtenir le lien' }}
+      {{ creating ? 'Création…' : 'Générer un lien' }}
     </button>
   </div>
 
   <div class="match-panel glass-panel" *ngIf="sessions.length > 0">
     <h2>Mes salons en cours</h2>
     <a *ngFor="let session of sessions" class="session-row" [routerLink]="['/match', session.code]">
-      <strong>{{ session.title || 'Salon sans nom' }}</strong>
+      <strong>{{ session.title || 'Match de films' }}</strong>
       <span>{{ session.participants }} personne{{ session.participants > 1 ? 's' : '' }} · {{ session.matches }} match{{ session.matches > 1 ? 's' : '' }}</span>
     </a>
   </div>

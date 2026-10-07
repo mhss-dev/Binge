@@ -138,10 +138,10 @@ export class MatchService {
     return headers;
   }
 
-  createSession(title: string, filters: MatchFilters): Observable<{ session: MatchSession; participant_id: number }> {
-    return this.http.post<{ session: MatchSession; participant_id: number }>(
+  createSession(filters: MatchFilters = {}, invite?: string): Observable<{ session: MatchSession; participant_id: number; invited: boolean }> {
+    return this.http.post<{ session: MatchSession; participant_id: number; invited: boolean }>(
       `${this.apiUrl}/sessions`,
-      { title, filters },
+      { filters, invite },
       { headers: this.headers() }
     );
   }

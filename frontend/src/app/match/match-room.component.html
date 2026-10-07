@@ -59,7 +59,9 @@
       <div class="room-actions">
         <button type="button" class="match-ghost" (click)="share()">Inviter</button>
         <button type="button" class="match-ghost" (click)="copyLink()">{{ copied ? 'Lien copié' : 'Copier le lien' }}</button>
+        <button *ngIf="state?.session?.mine_to_manage" type="button" class="match-ghost" (click)="startEditGenres()">Genres</button>
       </div>
+      <input class="match-input link-input" type="text" readonly [value]="link" aria-label="Lien d'invitation" (focus)="selectLink($event)" />
     </div>
 
     <div class="room-tabs">

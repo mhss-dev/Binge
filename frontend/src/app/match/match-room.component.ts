@@ -376,6 +376,10 @@ export class MatchRoomComponent implements OnInit, OnDestroy {
     }
   }
 
+  selectLink(event: FocusEvent): void {
+    (event.target as HTMLInputElement).select();
+  }
+
   startEditGenres(): void {
     this.draftGenres = [...(this.state?.session.filters.genres ?? this.info?.session.filters.genres ?? [])];
     this.editingGenres = true;

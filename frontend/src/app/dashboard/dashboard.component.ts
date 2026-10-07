@@ -12,6 +12,7 @@ import { catchError, of, Subject, takeUntil } from 'rxjs';
 import { UserService } from 'app/services/user.service';
 import { MembersService } from 'app/members.service';
 import { Title } from '@angular/platform-browser';
+import { MatchService } from '../match/match.service';
 
 type ProfileSortOption = 'title_asc' | 'title_desc';
 
@@ -83,8 +84,25 @@ export class DashboardComponent implements OnDestroy {
     private userService: UserService,
     private route: ActivatedRoute,
     private memberservice: MembersService,
-    private titleService: Title
+    private titleService: Title,
+    private matchService: MatchService
   ) {}
+
+  invitingToMatch = false;
+
+  inviteToMatch(): void {
+    if (this.invitingToMatch) {
+      return;
+    }
+    this.invitingToMatch = true;
+    this.matchService.createSession({}, this.nickname).subscribe({
+      next: (res) => this.router.navigate(['/match', res.session.code]),
+      error: () => {
+        this.invitingToMatch = false;
+        this.errorMessage = 'Impossible de créer le match pour le moment.';
+      },
+    });
+  }
   
   ngOnInit(): void {
     this.loadProfile();

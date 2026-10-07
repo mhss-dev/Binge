@@ -53,6 +53,15 @@
         >
           {{ isFollowing ? 'Ne plus suivre' : 'Suivre' }}
         </button>
+
+        <button
+          class="follow-action"
+          *ngIf="nickname && currentNickname && nickname !== currentNickname"
+          [disabled]="invitingToMatch"
+          (click)="inviteToMatch()"
+        >
+          Inviter à un match
+        </button>
       </div>
     </div>
   </div>

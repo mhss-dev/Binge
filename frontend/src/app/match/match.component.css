@@ -57,3 +57,4 @@
 .celebration-card { width: min(92vw, 380px); padding: 1.4rem; border-radius: var(--radius-xl); text-align: center; display: grid; gap: 0.4rem; justify-items: center; background: var(--surface-strong); }
 .celebration-card img { width: 55%; border-radius: var(--radius-md); }
 .celebration-card .match-primary, .celebration-card .match-ghost { width: 100%; margin-top: 0.4rem; }
+.link-input { flex-basis: 100%; max-width: none; margin-top: 0.4rem; font-size: 0.85rem; color: var(--muted); }

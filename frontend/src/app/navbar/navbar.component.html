@@ -92,7 +92,10 @@
                     />
 
                     <div class="notification-copy">
-                      <a [routerLink]="['/film', notification.movie_id]" class="notification-link">
+                      <a *ngIf="notification.type === 'match' && notification.link" [routerLink]="notification.link" class="notification-link">
+                        {{ notification.message }}
+                      </a>
+                      <a *ngIf="notification.type !== 'match'" [routerLink]="['/film', notification.movie_id]" class="notification-link">
                         {{ notification.message }} {{ movieTitles[notification.movie_id] }} {{ getTypeText(notification.type) }}
                       </a>
                       <small>{{ notification.created_at | date : "dd/MM/YYYY" }}</small>
