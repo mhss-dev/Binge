@@ -9,6 +9,7 @@ import {
   MatchCard,
   MatchEntry,
   MatchMovie,
+  MatchParticipant,
   MatchService,
   SessionInfo,
   SessionState,
@@ -55,6 +56,18 @@ export class MatchRoomComponent implements OnInit, OnDestroy {
   editingGenres = false;
   draftGenres: number[] = [];
   watchlisted = new Set<number>();
+  readonly confetti = Array.from({ length: 34 }, (_, k) => {
+    const colors = ['#ffb347', '#ff7a18', '#4dd5a1', '#ff4f81', '#7cc4ff', '#ffffff'];
+    const angle = (k / 34) * Math.PI * 2 + (k % 3) * 0.2;
+    const distance = 110 + ((k * 37) % 120);
+    return {
+      s: `${6 + (k % 4) * 3}px`,
+      c: colors[k % colors.length],
+      x: `${Math.round(Math.cos(angle) * distance)}px`,
+      y: `${Math.round(Math.sin(angle) * distance - 40)}px`,
+      r: `${(k * 53) % 360}deg`,
+    };
+  });
 
   private startX = 0;
   private startY = 0;
@@ -86,6 +99,22 @@ export class MatchRoomComponent implements OnInit, OnDestroy {
 
   get link(): string {
     return `${window.location.origin}/match/${this.code}`;
+  }
+
+  get alone(): boolean {
+    const people = this.state ? this.state.participants : this.info ? this.info.participants : [];
+    return people.length < 2;
+  }
+
+  get pairPeople(): MatchParticipant[] {
+    const people = this.state ? this.state.participants : [];
+    const mine = people.filter((p) => p.me);
+    const others = people.filter((p) => !p.me);
+    return [...mine, ...others].slice(0, 4);
+  }
+
+  initial(name: string): string {
+    return name ? name.trim().charAt(0).toUpperCase() : '?';
   }
 
   get topCard(): MatchCard | null {

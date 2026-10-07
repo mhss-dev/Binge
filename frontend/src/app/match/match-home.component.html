@@ -1,15 +1,20 @@
 <section class="match-page app-shell text-white">
   <div class="match-hero glass-panel">
-    <p class="eyebrow">Choisir ensemble</p>
-    <h1>Match</h1>
-    <p class="match-lead">
-      Génère un lien, envoie-le à quelqu'un (pas besoin de compte), et swipez les mêmes films chacun de votre côté. Quand vous
-      aimez tous les deux le même film, c'est un match. Et ça continue après le premier.
-    </p>
-    <div *ngIf="error" class="match-error">{{ error }}</div>
-    <button type="button" class="match-primary" [disabled]="creating" (click)="create()">
-      {{ creating ? 'Création…' : 'Générer un lien' }}
-    </button>
+    <div class="hero-copy">
+      <p class="eyebrow">Choisir ensemble</p>
+      <h1>Match</h1>
+      <p class="match-lead">
+        Génère un lien, envoie-le à quelqu'un (pas besoin de compte) et swipez les mêmes films chacun de votre côté. Quand vous
+        aimez le même, c'est un match. Et ça continue après le premier.
+      </p>
+      <div *ngIf="error" class="match-error">{{ error }}</div>
+      <button type="button" class="match-primary" [disabled]="creating" (click)="create()">
+        {{ creating ? 'Création…' : 'Générer un lien' }}
+      </button>
+    </div>
+    <div *ngIf="fan.length === 3" class="fan" aria-hidden="true">
+      <img *ngFor="let url of fan" [src]="url" alt="" />
+    </div>
   </div>
 
   <div class="match-panel glass-panel" *ngIf="sessions.length > 0">

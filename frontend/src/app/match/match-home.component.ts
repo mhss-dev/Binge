@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
+import { MovieService } from '../movie.service';
 import { MatchService, MySession } from './match.service';
 
 @Component({
@@ -14,10 +15,21 @@ export class MatchHomeComponent implements OnInit {
   creating = false;
   error = '';
   sessions: MySession[] = [];
+  fan: string[] = [];
 
-  constructor(private matchService: MatchService, private router: Router) {}
+  constructor(private matchService: MatchService, private router: Router, private movieService: MovieService) {}
 
   ngOnInit(): void {
+    this.movieService.getTrending().subscribe({
+      next: (data) => {
+        const results: { poster_path?: string | null }[] = Array.isArray(data?.results) ? data.results : [];
+        this.fan = results
+          .filter((m) => !!m.poster_path)
+          .slice(0, 3)
+          .map((m) => `https://image.tmdb.org/t/p/w342${m.poster_path}`);
+      },
+      error: () => (this.fan = []),
+    });
     this.matchService.mySessions().subscribe({
       next: (sessions) => (this.sessions = sessions),
       error: () => (this.sessions = []),
