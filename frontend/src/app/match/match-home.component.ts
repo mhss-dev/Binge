@@ -36,6 +36,13 @@ export class MatchHomeComponent implements OnInit {
     });
   }
 
+  remove(session: MySession): void {
+    this.matchService.endSession(session.code).subscribe({
+      next: () => (this.sessions = this.sessions.filter((item) => item.code !== session.code)),
+      error: () => (this.error = 'Impossible de supprimer ce salon pour le moment.'),
+    });
+  }
+
   create(): void {
     if (this.creating) {
       return;

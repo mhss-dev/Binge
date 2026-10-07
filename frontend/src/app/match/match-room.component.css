@@ -25,6 +25,7 @@
 .room { display: grid; gap: 0.9rem; grid-template-columns: minmax(0, 1fr); }
 .room > * { min-width: 0; }
 .room-head h1 { font-size: 1.6rem; }
+.room-actions .match-ghost.danger { margin-top: 0; }
 .room-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 .people { display: flex; gap: 0.4rem; flex-wrap: wrap; }
 .person { padding: 0.2rem 0.7rem; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); font-size: 0.88rem; }

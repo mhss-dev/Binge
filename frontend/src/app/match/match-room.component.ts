@@ -460,7 +460,7 @@ export class MatchRoomComponent implements OnInit, OnDestroy {
   }
 
   endRoom(): void {
-    if (!window.confirm('Terminer ce salon pour tout le monde ?')) {
+    if (!this.alone && !window.confirm('Terminer ce salon pour tout le monde ?')) {
       return;
     }
     this.matchService.endSession(this.code).subscribe({

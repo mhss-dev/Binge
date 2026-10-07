@@ -81,6 +81,7 @@ export interface MySession {
   expires_at: string;
   participants: number;
   matches: number;
+  creator: boolean;
 }
 
 export interface JoinResult {
@@ -186,7 +187,7 @@ export class MatchService {
     return this.http.patch<{ session: MatchSession }>(`${this.apiUrl}/sessions/${code}`, { filters }, { headers: this.headers(code) });
   }
 
-  endSession(code: string): Observable<{ ended: boolean }> {
-    return this.http.delete<{ ended: boolean }>(`${this.apiUrl}/sessions/${code}`, { headers: this.headers(code) });
+  endSession(code: string): Observable<{ ended: boolean; deleted: boolean }> {
+    return this.http.delete<{ ended: boolean; deleted: boolean }>(`${this.apiUrl}/sessions/${code}`, { headers: this.headers(code) });
   }
 }

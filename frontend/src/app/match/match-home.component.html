@@ -27,9 +27,14 @@
 
   <div class="match-panel glass-panel" *ngIf="sessions.length > 0">
     <h2>Mes salons en cours</h2>
-    <a *ngFor="let session of sessions" class="session-row" [routerLink]="['/match', session.code]">
-      <strong>{{ session.title || 'Match de films' }}</strong>
-      <span>{{ session.participants }} personne{{ session.participants > 1 ? 's' : '' }} · {{ session.matches }} match{{ session.matches > 1 ? 's' : '' }}</span>
-    </a>
+    <div *ngFor="let session of sessions" class="session-row">
+      <a [routerLink]="['/match', session.code]" class="session-link">
+        <strong>{{ session.title || 'Match de films' }}</strong>
+        <span>{{ session.participants > 1 ? session.participants + ' personnes' : 'Personne d\'autre pour l\'instant' }} · {{ session.matches }} match{{ session.matches > 1 ? 's' : '' }}</span>
+      </a>
+      <button *ngIf="session.creator" type="button" class="session-delete" (click)="remove(session)" [attr.aria-label]="session.participants > 1 ? 'Terminer ce salon' : 'Supprimer ce salon'" [title]="session.participants > 1 ? 'Terminer ce salon' : 'Supprimer ce salon'">
+        <i class="fa-solid fa-trash"></i>
+      </button>
+    </div>
   </div>
 </section>
