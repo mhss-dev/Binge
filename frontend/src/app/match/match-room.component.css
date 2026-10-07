@@ -30,7 +30,7 @@
 .room-notes { display: grid; gap: 0.7rem; }
 .room-notes:empty { display: none; }
 .play { display: grid; justify-items: center; gap: 0.7rem; align-content: start; }
-.deck { position: relative; width: min(84vw, 340px); aspect-ratio: 2 / 3; margin: 0.4rem auto 1.5rem; }
+.deck { position: relative; width: min(76vw, 280px); aspect-ratio: 2 / 3; margin: 0.4rem auto 1.5rem; }
 .movie-card { transition: transform 0.26s ease, filter 0.26s ease; position: absolute; inset: 0; border-radius: 26px; overflow: hidden; background: var(--surface-strong); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.07), 0 26px 60px rgba(0, 0, 0, 0.5); }
 .movie-card img { width: 100%; height: 100%; object-fit: cover; display: block; user-select: none; -webkit-user-drag: none; }
 .movie-card.behind { filter: brightness(0.55); pointer-events: none; }
@@ -47,11 +47,11 @@
 .tag { padding: 0.1rem 0.55rem; border-radius: 999px; background: rgba(255, 255, 255, 0.09); font-size: 0.76rem; color: var(--text); }
 .tag.star { background: rgba(255, 179, 71, 0.18); color: var(--accent-soft); }
 .swipe-buttons { display: flex; gap: 2.2rem; }
-.round { width: 4.3rem; height: 4.3rem; border-radius: 50%; border: 2px solid; background: var(--surface); font-size: 1.4rem; cursor: pointer; transition: transform 0.15s ease, background 0.15s ease; }
+.round { width: 3.9rem; height: 3.9rem; border-radius: 50%; border: 2px solid; background: var(--surface); font-size: 1.4rem; cursor: pointer; transition: transform 0.15s ease, background 0.15s ease; }
 .round.like { color: var(--success); border-color: var(--success); }
 .round.like:hover { background: rgba(77, 213, 161, 0.14); }
 .round.pass { color: var(--danger); border-color: var(--danger); }
 .round.pass:hover { background: rgba(255, 107, 129, 0.14); }
 .hint { color: var(--muted); font-size: 0.82rem; text-align: center; margin: 0.2rem 0 0; }
-@media (min-width: 992px) { .deck { width: min(100%, 440px); margin-top: 0.8rem; } }
+@media (min-width: 992px) { .deck { width: min(100%, 320px); margin-top: 0.8rem; } }
 @media (prefers-reduced-motion: reduce) { .movie-card.top { transition: none; } }
