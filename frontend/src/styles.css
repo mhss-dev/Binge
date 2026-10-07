@@ -294,7 +294,6 @@ html body .nav-shell .nav-pill.active { background: rgba(255, 255, 255, 0.1); bo
   html body .nav-shell .topbar-links { gap: 0.3rem; }
   html body .nav-shell .nav-pill { padding: 0.55rem 1rem; }
   html body .nav-shell .nav-pill i, html body .nav-shell .topbar-actions .action-chip:not(.icon-only) i { display: none; }
-  html body .nav-shell .nav-pill-home { display: none; }
   html body .nav-shell .profile-copy { display: none; }
   html body .nav-shell .profile-trigger { padding: 0.2rem; }
   html body .nav-shell .profile-trigger::after { display: none; }
