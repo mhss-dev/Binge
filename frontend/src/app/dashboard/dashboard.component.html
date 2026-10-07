@@ -132,77 +132,43 @@
 
   <div class="modal fade profile-modal" id="profileUpdateModal" tabindex="-1" aria-labelledby="profileUpdateModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content modal-surface">
-        <div class="modal-header modal-head">
+      <div class="modal-content pm-surface">
+        <div class="pm-head">
           <h2 id="profileUpdateModalLabel">Modifier le profil</h2>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="pm-close" data-bs-dismiss="modal" aria-label="Fermer"><i class="fa-solid fa-xmark"></i></button>
         </div>
 
-        <div class="modal-body p-0">
-          <ul class="nav nav-tabs modal-tabs" id="updateTab" role="tablist">
-            <li class="nav-item" role="presentation">
-              <button class="nav-link active" id="nickname-tab" data-bs-toggle="tab" data-bs-target="#nicknameTabContent" type="button" role="tab">
-                Pseudo
-              </button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button class="nav-link" id="bio-tab" data-bs-toggle="tab" data-bs-target="#bioTabContent" type="button" role="tab">
-                Bio
-              </button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button class="nav-link" id="avatar-tab" data-bs-toggle="tab" data-bs-target="#avatarTabContent" type="button" role="tab">
-                Avatar
-              </button>
-            </li>
-          </ul>
+        <div class="pm-tabs" id="updateTab" role="tablist">
+          <button class="pm-tab active" id="nickname-tab" data-bs-toggle="tab" data-bs-target="#nicknameTabContent" type="button" role="tab">Pseudo</button>
+          <button class="pm-tab" id="bio-tab" data-bs-toggle="tab" data-bs-target="#bioTabContent" type="button" role="tab">Bio</button>
+          <button class="pm-tab" id="avatar-tab" data-bs-toggle="tab" data-bs-target="#avatarTabContent" type="button" role="tab">Avatar</button>
+        </div>
 
-          <div class="tab-content modal-content-body" id="updateTabContent">
-            <div class="tab-pane fade show active" id="nicknameTabContent" role="tabpanel" aria-labelledby="nickname-tab">
-              <div class="editor-panel">
-                <div class="editor-copy">
-                  <p class="editor-kicker">Identité</p>
-                  <h3>Mettre à jour le pseudo</h3>
-                  <p>Choisissez un nom court et reconnaissable pour votre profil.</p>
-                </div>
-                <div class="field-stack">
-                  <input type="text" class="profile-input" id="nicknameInputModal" [(ngModel)]="newNickname" (keydown.enter)="onSaveNewNickname()">
-                  <div *ngIf="errorMessage" class="field-error">{{ errorMessage }}</div>
-                </div>
-              </div>
-              <button type="button" class="save-button" data-bs-dismiss="modal" (click)="onSaveNewNickname()">Sauvegarder</button>
-            </div>
+        <div class="tab-content pm-body" id="updateTabContent">
+          <div class="tab-pane fade show active" id="nicknameTabContent" role="tabpanel" aria-labelledby="nickname-tab">
+            <label class="pm-label" for="nicknameInputModal">Pseudo</label>
+            <input type="text" class="pm-input" id="nicknameInputModal" maxlength="20" autocomplete="off" [(ngModel)]="newNickname" (keydown.enter)="onSaveNewNickname()">
+            <div class="pm-help"><span>Court et reconnaissable.</span><span>{{ newNickname.length }}/20</span></div>
+            <div *ngIf="errorMessage" class="pm-error">{{ errorMessage }}</div>
+            <button type="button" class="pm-save" data-bs-dismiss="modal" (click)="onSaveNewNickname()">Enregistrer</button>
+          </div>
 
-            <div class="tab-pane fade" id="bioTabContent" role="tabpanel" aria-labelledby="bio-tab">
-              <div class="editor-panel">
-                <div class="editor-copy">
-                  <p class="editor-kicker">Bio</p>
-                  <h3>Donnez une personnalité au profil</h3>
-                  <p>Une phrase suffit pour dire vos goûts ou votre humeur cinéma.</p>
-                </div>
-                <div class="field-stack">
-                  <textarea class="profile-input profile-textarea" id="bioInputModal" [(ngModel)]="newBio"></textarea>
-                  <div *ngIf="errorMessage" class="field-error">{{ errorMessage }}</div>
-                </div>
-              </div>
-              <button type="button" class="save-button" data-bs-dismiss="modal" (click)="onSaveNewBio()">Sauvegarder</button>
-            </div>
+          <div class="tab-pane fade" id="bioTabContent" role="tabpanel" aria-labelledby="bio-tab">
+            <label class="pm-label" for="bioInputModal">Bio</label>
+            <textarea class="pm-input pm-textarea" id="bioInputModal" maxlength="10" [(ngModel)]="newBio"></textarea>
+            <div class="pm-help"><span>Un mot ou deux suffisent.</span><span>{{ newBio.length }}/10</span></div>
+            <div *ngIf="errorMessage" class="pm-error">{{ errorMessage }}</div>
+            <button type="button" class="pm-save" data-bs-dismiss="modal" (click)="onSaveNewBio()">Enregistrer</button>
+          </div>
 
-            <div class="tab-pane fade" id="avatarTabContent" role="tabpanel" aria-labelledby="avatar-tab">
-              <div class="editor-panel avatar-editor">
-                <div class="editor-copy">
-                  <p class="editor-kicker">Avatar</p>
-                  <h3>Choisir une présence visuelle</h3>
-                  <p>Sélectionnez l'avatar qui représente le mieux votre profil.</p>
-                </div>
-                <div class="avatar-grid">
-                  <button *ngFor="let avatar of avatars" type="button" (click)="selectAvatar(avatar, $event)" class="avatar-option">
-                    <img [src]="avatar" alt="Avatar disponible">
-                  </button>
-                </div>
-              </div>
-              <button type="button" class="save-button mt-3" data-bs-dismiss="modal" (click)="saveAvatar()">Sauvegarder</button>
+          <div class="tab-pane fade" id="avatarTabContent" role="tabpanel" aria-labelledby="avatar-tab">
+            <p class="pm-label">Choisis ton avatar</p>
+            <div class="pm-avatars">
+              <button *ngFor="let avatar of avatars" type="button" class="pm-avatar" [class.selected]="(selectedAvatar || profileAvatar()) === avatar" (click)="selectAvatar(avatar)" aria-label="Avatar">
+                <img [src]="avatar" alt="">
+              </button>
             </div>
+            <button type="button" class="pm-save" data-bs-dismiss="modal" [disabled]="!selectedAvatar" (click)="saveAvatar()">Enregistrer</button>
           </div>
         </div>
       </div>
@@ -211,27 +177,20 @@
 
   <div class="modal fade profile-modal" id="followersModal" tabindex="-1" aria-labelledby="followersModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content modal-surface">
-        <div class="modal-header modal-head">
-          <h2 class="modal-title" id="followersModalLabel">Abonné{{ followersCount >= 2 ? 's' : '' }}</h2>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-content pm-surface">
+        <div class="pm-head">
+          <h2 id="followersModalLabel">Abonné{{ followersCount >= 2 ? "s" : "" }} <span class="pm-count">{{ followersCount }}</span></h2>
+          <button type="button" class="pm-close" data-bs-dismiss="modal" aria-label="Fermer"><i class="fa-solid fa-xmark"></i></button>
         </div>
-        <div class="modal-body modal-content-body">
-          <div *ngIf="followersList && followersList.length > 0; else noFollowers" class="member-mini-grid">
-            <button
-              *ngFor="let follower of followersList"
-              type="button"
-              class="member-mini"
-              (click)="goToProfile(follower.follower_nickname)"
-              data-bs-dismiss="modal"
-            >
-              <img [src]="follower.follower_avatar_url" alt="{{ follower.follower_nickname }}">
+        <div class="pm-body">
+          <div *ngIf="followersList && followersList.length > 0; else noFollowers" class="pm-people">
+            <button *ngFor="let follower of followersList" type="button" class="pm-person" (click)="goToProfile(follower.follower_nickname)" data-bs-dismiss="modal">
+              <img [src]="follower.follower_avatar_url" alt="">
               <span>{{ follower.follower_nickname }}</span>
+              <i class="fa-solid fa-chevron-right"></i>
             </button>
           </div>
-          <ng-template #noFollowers>
-            <p class="empty-modal">Aucun abonné pour le moment.</p>
-          </ng-template>
+          <ng-template #noFollowers><p class="pm-empty">Aucun abonné pour le moment.</p></ng-template>
         </div>
       </div>
     </div>
@@ -239,27 +198,20 @@
 
   <div class="modal fade profile-modal" id="followingsModal" tabindex="-1" aria-labelledby="followingsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content modal-surface">
-        <div class="modal-header modal-head">
-          <h2 class="modal-title" id="followingsModalLabel">Abonnement{{ followingCount >= 2 ? 's' : '' }}</h2>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-content pm-surface">
+        <div class="pm-head">
+          <h2 id="followingsModalLabel">Abonnement{{ followingCount >= 2 ? "s" : "" }} <span class="pm-count">{{ followingCount }}</span></h2>
+          <button type="button" class="pm-close" data-bs-dismiss="modal" aria-label="Fermer"><i class="fa-solid fa-xmark"></i></button>
         </div>
-        <div class="modal-body modal-content-body">
-          <div *ngIf="followingsList && followingsList.length > 0; else noFollowings" class="member-mini-grid">
-            <button
-              *ngFor="let following of followingsList"
-              type="button"
-              class="member-mini"
-              (click)="goToProfile(following.following_nickname)"
-              data-bs-dismiss="modal"
-            >
-              <img [src]="following.following_avatar_url" alt="{{ following.following_nickname }}">
+        <div class="pm-body">
+          <div *ngIf="followingsList && followingsList.length > 0; else noFollowings" class="pm-people">
+            <button *ngFor="let following of followingsList" type="button" class="pm-person" (click)="goToProfile(following.following_nickname)" data-bs-dismiss="modal">
+              <img [src]="following.following_avatar_url" alt="">
               <span>{{ following.following_nickname }}</span>
+              <i class="fa-solid fa-chevron-right"></i>
             </button>
           </div>
-          <ng-template #noFollowings>
-            <p class="empty-modal">Aucun abonnement pour le moment.</p>
-          </ng-template>
+          <ng-template #noFollowings><p class="pm-empty">Aucun abonnement pour le moment.</p></ng-template>
         </div>
       </div>
     </div>

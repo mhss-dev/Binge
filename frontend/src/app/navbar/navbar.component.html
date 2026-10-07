@@ -41,8 +41,9 @@
           </div>
 
           <div class="topbar-actions">
-            <button type="button" class="action-chip icon-only" aria-label="Recherche" title="Recherche" (click)="openSearch()">
+            <button type="button" class="action-chip nav-search" aria-label="Rechercher un film" (click)="openSearch()">
               <i class="fa-solid fa-magnifying-glass"></i>
+              <span>Rechercher</span>
             </button>
 
             <ng-container *ngIf="isLoggedIn; else guestButtons">
@@ -144,33 +145,6 @@
           </div>
         </div>
       </div>
-
-      <section *ngIf="isSearchOpen" class="search-drawer glass-panel">
-        <div class="search-panel-header">
-          <div>
-            <p class="eyebrow">Recherche rapide</p>
-            <h2>Quel film cherchez-vous ?</h2>
-          </div>
-          <button type="button" class="search-close" (click)="closeSearch()" aria-label="Fermer">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-
-        <div class="search-panel-body">
-          <input
-            #searchInput
-            type="text"
-            [(ngModel)]="searchQuery"
-            (keydown.enter)="searchFilms()"
-            placeholder="Ex : Dune, Parasite, Interstellar..."
-            class="search-field"
-            autofocus
-          />
-          <button type="button" class="search-submit" (click)="searchFilms()">
-            Lancer la recherche
-          </button>
-        </div>
-      </section>
     </div>
   </nav>
 </div>

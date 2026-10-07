@@ -1,31 +1,27 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { NotificationService } from 'app/notifications.service';
 import { DetailsService } from 'app/details.service';
+import { SearchPaletteService } from '../search-palette/search-palette.service';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, CommonModule, FormsModule],
+  imports: [RouterLink, RouterLinkActive, CommonModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
-  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
-
   isLoggedIn = false;
   nickname: string | null = null;
   isLogoVisible = true;
   isScrolled = false;
   isNavbarCollapsed = true;
-  searchQuery = '';
   avatar = '';
   unreadNotifications: any[] = [];
   movieTitles: any[] = [];
-  isSearchOpen = false;
   private wasLoggedIn = false;
 
   typeMapping: { [key: string]: string } = {
@@ -39,14 +35,9 @@ export class NavbarComponent {
     private router: Router,
     private cdr: ChangeDetectorRef,
     private notificationService: NotificationService,
-    private movieService: DetailsService
+    private movieService: DetailsService,
+    private searchPalette: SearchPaletteService
   ) {}
-
-  ngAfterViewInit(): void {
-    if (this.isSearchOpen) {
-      setTimeout(() => this.searchInput?.nativeElement.focus(), 50);
-    }
-  }
 
   ngOnInit(): void {
     this.authService.isLoggedIn$.subscribe({
@@ -86,17 +77,6 @@ export class NavbarComponent {
   private requiresLogin(url: string): boolean {
     const path = url.split('?')[0];
     return path === '/match' || path.startsWith('/membres') || path.startsWith('/profil/');
-  }
-
-  searchFilms(): void {
-    if (!this.searchQuery.trim()) {
-      return;
-    }
-
-    this.router.navigate(['/search'], {
-      queryParams: { query: this.searchQuery },
-    });
-    this.closeSearch();
   }
 
   fetchNotifications(): void {
@@ -145,13 +125,6 @@ export class NavbarComponent {
     this.isScrolled = window.scrollY > 50;
   }
 
-  @HostListener('document:keydown.escape')
-  onEscape(): void {
-    if (this.isSearchOpen) {
-      this.closeSearch();
-    }
-  }
-
   toggleNavbar(): void {
     this.isNavbarCollapsed = !this.isNavbarCollapsed;
     this.isLogoVisible = this.isNavbarCollapsed;
@@ -163,13 +136,8 @@ export class NavbarComponent {
   }
 
   openSearch(): void {
-    this.isSearchOpen = true;
     this.closeNavbar();
-    setTimeout(() => this.searchInput?.nativeElement.focus(), 50);
-  }
-
-  closeSearch(): void {
-    this.isSearchOpen = false;
+    this.searchPalette.open();
   }
 
   getNickname(): void {

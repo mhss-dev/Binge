@@ -7,12 +7,13 @@ import { FooterComponent } from './footer/footer.component';
 import { filter } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ScrollTopComponent } from './scroll-top/scroll-top.component';
+import { SearchPaletteComponent } from './search-palette/search-palette.component';
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NavbarComponent, RouterLink, RouterLinkActive, FooterComponent, CommonModule, ScrollTopComponent],
+  imports: [RouterOutlet, NavbarComponent, RouterLink, RouterLinkActive, FooterComponent, CommonModule, ScrollTopComponent, SearchPaletteComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

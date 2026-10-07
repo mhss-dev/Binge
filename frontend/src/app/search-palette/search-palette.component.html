@@ -1,0 +1,45 @@
+<div *ngIf="isOpen" class="sp-over" (click)="close()">
+  <div class="sp-box" role="dialog" aria-modal="true" aria-label="Recherche" (click)="$event.stopPropagation()">
+    <div class="sp-field">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input
+        #field
+        type="text"
+        [ngModel]="query"
+        (ngModelChange)="onType($event)"
+        (keydown)="onKey($event)"
+        placeholder="Rechercher un film"
+        autocomplete="off"
+        spellcheck="false"
+        aria-label="Rechercher un film"
+      />
+      <button *ngIf="query" type="button" class="sp-clear" (click)="clear()" aria-label="Effacer">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <button type="button" class="sp-esc" (click)="close()">Échap</button>
+    </div>
+
+    <ul *ngIf="results.length > 0" class="sp-list">
+      <li *ngFor="let movie of results; let i = index" class="sp-item" [class.active]="i === active" (mouseenter)="active = i" (click)="pick(movie)">
+        <img *ngIf="poster(movie.poster_path) as src; else noPoster" [src]="src" alt="" referrerpolicy="no-referrer" loading="lazy" />
+        <ng-template #noPoster><span class="sp-noposter"><i class="fa-solid fa-film"></i></span></ng-template>
+        <span class="sp-main">
+          <strong>{{ movie.title }}</strong>
+          <small>
+            {{ year(movie.release_date) || "Date inconnue" }}
+            <ng-container *ngIf="movie.vote_average"> · ★ {{ movie.vote_average | number : "1.1-1" }}</ng-container>
+          </small>
+        </span>
+        <i class="fa-solid fa-arrow-right sp-go"></i>
+      </li>
+    </ul>
+
+    <button *ngIf="results.length > 0" type="button" class="sp-all" (click)="showAll()">
+      Voir tous les résultats pour « {{ query.trim() }} »
+    </button>
+
+    <p *ngIf="loading && results.length === 0" class="sp-note">Recherche en cours…</p>
+    <p *ngIf="!loading && searched && results.length === 0" class="sp-note">Aucun film trouvé pour « {{ query.trim() }} ».</p>
+    <p *ngIf="!query.trim()" class="sp-note">Tape un titre, puis Entrée pour ouvrir la fiche. ↑ ↓ pour naviguer.</p>
+  </div>
+</div>

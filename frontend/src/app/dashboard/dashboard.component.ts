@@ -306,18 +306,10 @@ toggleFollow(): void {
 
   
 
-  selectAvatar(avatarUrl: string, event: MouseEvent): void {
+  selectAvatar(avatarUrl: string): void {
     this.selectedAvatar = avatarUrl;
-
-    const avatarOptions = document.querySelectorAll('.avatar-option');
-    avatarOptions.forEach(option => {
-        option.classList.remove('selected'); 
-    });
-
-    const target = event.currentTarget as HTMLElement;
-    target.classList.add('selected');
   }
-  
+
   saveAvatar(): void {
     if (this.selectedAvatar) {
       this.memberservice.updateAvatar(this.selectedAvatar).subscribe({
