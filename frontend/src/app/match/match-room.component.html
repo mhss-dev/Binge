@@ -47,16 +47,18 @@
   </div>
 
   <ng-container *ngIf="phase === 'play'">
-    <div class="match-hero room">
+    <div class="room">
       <div class="room-head">
-        <div>
+        <div class="room-title">
           <p class="eyebrow">Match</p>
           <h1>{{ state?.session?.title || info?.session?.title || 'Match de films' }}</h1>
         </div>
         <div class="people">
           <span *ngFor="let p of state?.participants ?? info?.participants ?? []" class="person" [class.me]="p.me" [class.away]="!p.active" [attr.title]="p.active ? null : 'Absent depuis un moment : les matchs ne l\'attendent pas'">
-            <img [src]="avatar(p)" alt="" />{{ p.name }}<small> · {{ p.swiped }}</small>
+            <img [src]="avatar(p)" alt="" />
+            <span class="pn"><b>{{ p.name }}</b><small>{{ p.swiped }} film{{ p.swiped > 1 ? 's' : '' }} swipé{{ p.swiped > 1 ? 's' : '' }}</small></span>
           </span>
+          <span class="person stat"><span class="pn"><b>{{ matches.length }}</b><small>match{{ matches.length > 1 ? 's' : '' }}</small></span></span>
         </div>
         <div class="room-actions">
           <button type="button" class="match-ghost" (click)="share()">Inviter</button>
