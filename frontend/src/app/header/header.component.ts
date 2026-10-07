@@ -41,6 +41,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.start();
   }
 
+  trackById(index: number, film: { id?: number }): number {
+    return film.id ?? index;
+  }
+
   scrollTo(id: string): void {
     const element = document.querySelector(`#${id}`);
     if (element) {

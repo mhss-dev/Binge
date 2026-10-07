@@ -396,10 +396,17 @@ html body .nav-shell .nav-pill.active { background: rgba(255, 255, 255, 0.1); bo
 .hm-copy { display: grid; gap: 1rem; justify-items: start; max-width: 44rem; animation: dv-in 0.6s ease; }
 .hm-copy h1 { margin: 0; padding: 0 0.06em 0.14em 0; font-size: clamp(4rem, 15vw, 9rem); line-height: 0.88; letter-spacing: -0.04em; background: linear-gradient(90deg, #fff, var(--accent-soft)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .hm-text { margin: 0; max-width: 34rem; color: rgba(245, 247, 251, 0.82); font-size: 1.1rem; line-height: 1.5; }
-.hm-featured { display: grid; gap: 0.1rem; margin-top: 0.6rem; padding-left: 0.9rem; border-left: 3px solid var(--accent); text-decoration: none; color: var(--text); }
-.hm-featured span { color: var(--accent-soft); font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; }
-.hm-featured strong { font-size: 1.15rem; }
-.hm-side { display: grid; gap: 1.2rem; justify-items: end; align-self: flex-end; }
+.hm-hero .dv-hero-inner { flex-wrap: wrap; align-items: flex-end; }
+.hm-side { display: grid; gap: 1.2rem; justify-items: stretch; align-self: flex-end; width: 100%; }
+.hm-featured { display: flex; gap: 0.9rem; align-items: center; padding: 0.7rem; border-radius: 20px; border: 1px solid var(--border); background: rgba(10, 19, 33, 0.72); backdrop-filter: blur(14px); text-decoration: none; color: var(--text); animation: dv-in 0.6s ease; }
+.hm-featured img { width: 4.6rem; flex: none; border-radius: 12px; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5); }
+.hm-featured div { display: grid; gap: 0.15rem; min-width: 0; }
+.hm-featured strong { font-size: 1.05rem; line-height: 1.15; }
+.hm-featured small { color: var(--muted); }
+.hm-kicker { color: var(--accent-soft); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; }
+.hm-featured em { margin-top: 0.3rem; font-style: normal; color: var(--accent-soft); font-size: 0.9rem; }
+.hm-down { display: none; }
+@media (min-width: 992px) { .hm-side { width: 340px; justify-items: end; } .hm-featured { width: 100%; } .hm-down { display: block; } }
 .hm-down { width: 3rem; height: 3rem; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.25); background: rgba(5, 11, 20, 0.5); color: var(--text); cursor: pointer; }
 .hm-down:hover { background: rgba(255, 255, 255, 0.14); }
 .hm-section { display: grid; gap: 1rem; padding: 0.5rem 0 5rem; }

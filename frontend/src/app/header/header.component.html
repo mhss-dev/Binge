@@ -14,14 +14,24 @@
       <p class="hm-text">Gardez un œil sur les films que vous avez vus, ceux que vous voulez lancer ensuite, et ceux que vos amis recommandent.</p>
       <div class="dv-hero-actions">
         <a routerLink="/films" class="dv-btn dv-btn-main"><i class="fa-solid fa-film"></i> Explorer le catalogue</a>
-        <a routerLink="/match" class="dv-btn"><i class="fa-solid fa-heart"></i> Lancer un match</a>
+        <button type="button" class="dv-btn" (click)="scrollTo('aucinema')"><i class="fa-solid fa-ticket"></i> À l'affiche</button>
       </div>
-      <a *ngIf="movie" [routerLink]="['/film', movie.id]" class="hm-featured">
-        <span>En vedette</span>
-        <strong>{{ movie.title }}</strong>
-      </a>
     </div>
     <div class="hm-side">
+      <ng-container *ngFor="let film of movie ? [movie] : []; trackBy: trackById">
+        <a [routerLink]="['/film', film.id]" class="hm-featured">
+          <img *ngIf="imageUrl(film.poster_path, 'w185')" [src]="imageUrl(film.poster_path, 'w185')" alt="" />
+          <div>
+            <span class="hm-kicker">En vedette</span>
+            <strong>{{ film.title }}</strong>
+            <small>
+              <ng-container *ngIf="film.release_date">{{ film.release_date | date : "yyyy" }}</ng-container>
+              <ng-container *ngIf="film.vote_average"> · ★ {{ film.vote_average | number : "1.0-1" }}</ng-container>
+            </small>
+            <em>Voir la fiche <i class="fa-solid fa-arrow-right"></i></em>
+          </div>
+        </a>
+      </ng-container>
       <div class="dv-dots" *ngIf="films.length > 1">
         <button
           *ngFor="let film of films; let i = index"
