@@ -578,3 +578,4 @@ html body .nav-shell .nav-pill.active { background: rgba(255, 255, 255, 0.1); bo
 .mh-session-link span { color: var(--muted); font-size: 0.9rem; }
 .mh-delete { flex: none; width: 2.3rem; height: 2.3rem; border-radius: 50%; border: 1px solid var(--border); background: transparent; color: var(--danger); cursor: pointer; }
 .mh-delete:hover { background: rgba(255, 107, 129, 0.12); border-color: var(--danger); }
+.mh-page::after { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(circle at center, rgba(7, 17, 31, 0.55), rgba(7, 17, 31, 0.92) 85%); }
