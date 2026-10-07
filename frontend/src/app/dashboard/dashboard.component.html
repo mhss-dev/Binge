@@ -1,6 +1,7 @@
 <section class="pf-page app-shell text-white">
   <div class="pf-hero">
-    <img class="pf-glow" [src]="profileAvatar()" alt="" aria-hidden="true" />
+    <app-poster-wall *ngIf="wallPosters.length > 0; else glow" [posters]="wallPosters" [contained]="true"></app-poster-wall>
+    <ng-template #glow><img class="pf-glow" [src]="profileAvatar()" alt="" aria-hidden="true" /></ng-template>
     <div class="pf-shade"></div>
     <div class="pf-inner">
       <div class="pf-avatar" [class.editable]="isOwn" [attr.data-bs-toggle]="isOwn ? 'modal' : null" [attr.data-bs-target]="isOwn ? '#profileUpdateModal' : null">
@@ -264,7 +265,4 @@
     </div>
   </div>
 
-  <button *ngIf="isButtonVisible()" class="floating-action" (click)="scrollToTop()" aria-label="Retour en haut">
-    <i class="fas fa-arrow-up"></i>
-  </button>
 </section>

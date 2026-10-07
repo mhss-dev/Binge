@@ -6,12 +6,13 @@ import { CardsComponent } from './cards/cards.component';
 import { FooterComponent } from './footer/footer.component';
 import { filter } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ScrollTopComponent } from './scroll-top/scroll-top.component';
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NavbarComponent, RouterLink, RouterLinkActive, FooterComponent, CommonModule],
+  imports: [RouterOutlet, NavbarComponent, RouterLink, RouterLinkActive, FooterComponent, CommonModule, ScrollTopComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

@@ -12,13 +12,14 @@ import { UserService } from 'app/services/user.service';
 import { MembersService } from 'app/members.service';
 import { Title } from '@angular/platform-browser';
 import { MatchService } from '../match/match.service';
+import { PosterWallComponent } from '../poster-wall/poster-wall.component';
 
 type ProfileSortOption = 'title_asc' | 'title_desc';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, PosterWallComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
@@ -67,6 +68,29 @@ export class DashboardComponent implements OnDestroy {
   setProfileSort(value: string): void {
     this.profileSortOption = value as ProfileSortOption;
     this.onWatchedSortChange();
+  }
+
+  private wallKey = '';
+  private wallList: string[] = [];
+
+  get wallPosters(): string[] {
+    const key = `${this.favorites.length}:${this.watched.length}`;
+    if (key !== this.wallKey) {
+      this.wallKey = key;
+      const seen = new Set<number>();
+      const out: string[] = [];
+      for (const movie of [...this.favorites, ...this.watched]) {
+        if (movie?.poster_path && !seen.has(movie.id)) {
+          seen.add(movie.id);
+          out.push(this.poster(movie.poster_path));
+        }
+        if (out.length >= 45) {
+          break;
+        }
+      }
+      this.wallList = out;
+    }
+    return this.wallList;
   }
 
   get isOwn(): boolean {
