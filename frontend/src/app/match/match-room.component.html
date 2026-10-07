@@ -103,31 +103,33 @@
         </div>
 
         <div *ngIf="topCard" class="deck">
-          <div *ngFor="let card of nextCards; let i = index" class="movie-card behind" [style.transform]="'scale(' + (0.95 - i * 0.04) + ') translateY(' + (14 + i * 12) + 'px)'">
-            <img referrerpolicy="no-referrer" [src]="poster(card.poster_path)" [alt]="card.title" loading="lazy" draggable="false" />
-          </div>
-
           <div
-            class="movie-card top"
-            [class.dragging]="dragging"
-            [style.transform]="cardTransform"
-            (pointerdown)="onDown($event)"
-            (pointermove)="onMove($event)"
-            (pointerup)="onUp()"
-            (pointercancel)="onUp()"
+            *ngFor="let card of visibleCards; let i = index; trackBy: trackCard"
+            class="movie-card"
+            [class.top]="i === 0"
+            [class.behind]="i > 0"
+            [class.dragging]="i === 0 && dragging"
+            [style.transform]="cardTransformAt(i)"
+            [style.z-index]="10 - i"
+            (pointerdown)="i === 0 ? onDown($event) : null"
+            (pointermove)="i === 0 ? onMove($event) : null"
+            (pointerup)="i === 0 ? onUp() : null"
+            (pointercancel)="i === 0 ? onUp() : null"
           >
-            <img referrerpolicy="no-referrer" [src]="poster(topCard.poster_path)" [alt]="topCard.title" draggable="false" />
-            <div class="stamp like" [style.opacity]="likeOpacity">J'AIME</div>
-            <div class="stamp pass" [style.opacity]="passOpacity">PASSE</div>
-            <div class="movie-info" [class.open]="showDetails">
-              <strong>{{ topCard.title }}</strong>
-              <div class="meta">
-                <span>{{ year(topCard.release_date) }}</span>
-                <span *ngIf="topCard.vote_average" class="tag star">★ {{ topCard.vote_average }}</span>
-                <span *ngFor="let id of topCard.genre_ids.slice(0, 3)" class="tag">{{ genreLabel(id) }}</span>
+            <img referrerpolicy="no-referrer" [src]="poster(card.poster_path)" [alt]="card.title" draggable="false" />
+            <ng-container *ngIf="i === 0">
+              <div class="stamp like" [style.opacity]="likeOpacity">J'AIME</div>
+              <div class="stamp pass" [style.opacity]="passOpacity">PASSE</div>
+              <div class="movie-info" [class.open]="showDetails">
+                <strong>{{ card.title }}</strong>
+                <div class="meta">
+                  <span>{{ year(card.release_date) }}</span>
+                  <span *ngIf="card.vote_average" class="tag star">★ {{ card.vote_average }}</span>
+                  <span *ngFor="let id of card.genre_ids.slice(0, 3)" class="tag">{{ genreLabel(id) }}</span>
+                </div>
+                <p *ngIf="showDetails">{{ card.overview || 'Pas de résumé disponible.' }}</p>
               </div>
-              <p *ngIf="showDetails">{{ topCard.overview || 'Pas de résumé disponible.' }}</p>
-            </div>
+            </ng-container>
           </div>
         </div>
 

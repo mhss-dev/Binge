@@ -125,8 +125,27 @@ export class MatchRoomComponent implements OnInit, OnDestroy {
     return this.deck.length > 0 ? this.deck[0] : null;
   }
 
-  get nextCards(): MatchCard[] {
-    return this.deck.slice(1, 3);
+  get visibleCards(): MatchCard[] {
+    return this.deck.slice(0, 3);
+  }
+
+  trackCard(_index: number, card: MatchCard): number {
+    return card.id;
+  }
+
+  cardTransformAt(index: number): string {
+    if (index === 0) {
+      return this.cardTransform;
+    }
+    return `scale(${0.95 - (index - 1) * 0.04}) translateY(${14 + (index - 1) * 12}px)`;
+  }
+
+  private preload(cards: MatchCard[]): void {
+    for (const card of cards) {
+      const image = new Image();
+      image.referrerPolicy = 'no-referrer';
+      image.src = this.poster(card.poster_path);
+    }
   }
 
   get matches(): MatchEntry[] {
@@ -295,6 +314,7 @@ export class MatchRoomComponent implements OnInit, OnDestroy {
       next: (res) => {
         const fresh = res.cards.filter((card) => !this.shown.has(card.id));
         fresh.forEach((card) => this.shown.add(card.id));
+        this.preload(fresh);
         this.deck = [...this.deck, ...fresh];
         this.loadingDeck = false;
         if (res.cards.length === 0 && this.deck.length === 0) {
