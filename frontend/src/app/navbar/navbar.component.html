@@ -31,6 +31,10 @@
               <i class="fa-solid fa-film"></i>
               <span>Découverte</span>
             </a>
+            <a *ngIf="isLoggedIn" routerLink="/match" class="nav-pill" (click)="closeNavbar()">
+              <i class="fa-solid fa-heart"></i>
+              <span>Match</span>
+            </a>
             <a *ngIf="isLoggedIn" routerLink="/membres" class="nav-pill" (click)="closeNavbar()">
               <i class="fa-solid fa-user-group"></i>
               <span>Membres</span>

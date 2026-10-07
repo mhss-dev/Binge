@@ -1,0 +1,172 @@
+<section class="match-page app-shell text-white">
+  <div *ngIf="phase === 'loading'" class="match-panel glass-panel match-center">
+    <p>Chargement du salon…</p>
+  </div>
+
+  <div *ngIf="phase === 'missing'" class="match-panel glass-panel match-center">
+    <h1>Salon introuvable</h1>
+    <p>Le lien est peut-être incomplet, ou le salon a été supprimé.</p>
+    <a routerLink="/match" class="match-primary">Créer un salon</a>
+  </div>
+
+  <div *ngIf="phase === 'ended'" class="match-panel glass-panel match-center">
+    <h1>Ce salon est terminé</h1>
+    <p>Les salons restent ouverts 7 jours, ou jusqu'à ce que le créateur y mette fin.</p>
+    <a routerLink="/match" class="match-primary">Créer un nouveau salon</a>
+  </div>
+
+  <div *ngIf="phase === 'join' && info" class="match-panel glass-panel match-center">
+    <p class="eyebrow">Invitation</p>
+    <h1>{{ info.session.title || 'Match de films' }}</h1>
+    <p *ngIf="info.participants.length > 0">
+      Déjà là :
+      <strong *ngFor="let p of info.participants; let last = last">{{ p.name }}{{ last ? '' : ', ' }}</strong>
+    </p>
+    <p>Vous swipez les mêmes films chacun de votre côté ; quand vous aimez le même, c'est un match.</p>
+
+    <ng-container *ngIf="!info.full; else fullRoom">
+      <input
+        *ngIf="!isLoggedIn"
+        class="match-input"
+        type="text"
+        maxlength="24"
+        placeholder="Ton pseudo"
+        [(ngModel)]="guestName"
+        (keyup.enter)="join()"
+        aria-label="Ton pseudo"
+      />
+      <div *ngIf="joinError" class="match-error">{{ joinError }}</div>
+      <button type="button" class="match-primary" [disabled]="joining" (click)="join()">
+        {{ isLoggedIn ? 'Rejoindre avec mon compte' : 'Rejoindre sans compte' }}
+      </button>
+    </ng-container>
+    <ng-template #fullRoom>
+      <div class="match-error">Ce salon est complet.</div>
+    </ng-template>
+  </div>
+
+  <ng-container *ngIf="phase === 'play'">
+    <div class="room-head glass-panel">
+      <div>
+        <p class="eyebrow">Match</p>
+        <h1>{{ state?.session?.title || info?.session?.title || 'Match de films' }}</h1>
+        <div class="people">
+          <span *ngFor="let p of state?.participants ?? info?.participants ?? []" class="person" [class.me]="p.me">
+            {{ p.name }}<small> · {{ p.swiped }}</small>
+          </span>
+        </div>
+      </div>
+      <div class="room-actions">
+        <button type="button" class="match-ghost" (click)="share()">Inviter</button>
+        <button type="button" class="match-ghost" (click)="copyLink()">{{ copied ? 'Lien copié' : 'Copier le lien' }}</button>
+      </div>
+    </div>
+
+    <div class="room-tabs">
+      <button type="button" class="chip" [class.active]="tab === 'swipe'" (click)="tab = 'swipe'">Swiper</button>
+      <button type="button" class="chip" [class.active]="tab === 'matches'" (click)="tab = 'matches'">
+        Matchs ({{ matches.length }})
+      </button>
+    </div>
+
+    <div *ngIf="tab === 'swipe'" class="swipe-zone">
+      <div *ngIf="deckError" class="match-error">
+        {{ deckError }}
+        <button type="button" class="match-ghost" (click)="fetchDeck()">Réessayer</button>
+      </div>
+
+      <div *ngIf="!topCard && loadingDeck" class="match-center"><p>Chargement des films…</p></div>
+
+      <div *ngIf="!topCard && !loadingDeck && exhausted" class="match-panel glass-panel match-center">
+        <h2>Vous avez fait le tour</h2>
+        <p>Plus de film à proposer avec ces genres.</p>
+        <ng-container *ngIf="state?.session?.mine_to_manage">
+          <button type="button" class="match-primary" (click)="startEditGenres()">Changer les genres</button>
+        </ng-container>
+        <button type="button" class="match-ghost" (click)="tab = 'matches'">Voir vos matchs</button>
+      </div>
+
+      <div *ngIf="topCard" class="deck">
+        <div *ngFor="let card of nextCards; let i = index" class="movie-card behind" [style.transform]="'scale(' + (0.95 - i * 0.04) + ') translateY(' + (14 + i * 12) + 'px)'">
+          <img [src]="poster(card.poster_path)" [alt]="card.title" loading="lazy" draggable="false" />
+        </div>
+
+        <div
+          class="movie-card top"
+          [class.dragging]="dragging"
+          [style.transform]="cardTransform"
+          (pointerdown)="onDown($event)"
+          (pointermove)="onMove($event)"
+          (pointerup)="onUp()"
+          (pointercancel)="onUp()"
+        >
+          <img [src]="poster(topCard.poster_path)" [alt]="topCard.title" draggable="false" />
+          <div class="stamp like" [style.opacity]="likeOpacity">J'AIME</div>
+          <div class="stamp pass" [style.opacity]="passOpacity">PASSE</div>
+          <div class="movie-info" [class.open]="showDetails">
+            <strong>{{ topCard.title }}</strong>
+            <span>
+              {{ year(topCard.release_date) }}
+              <ng-container *ngIf="topCard.vote_average"> · ★ {{ topCard.vote_average }}</ng-container>
+            </span>
+            <span class="genre-line">
+              <ng-container *ngFor="let id of topCard.genre_ids.slice(0, 3); let last = last">{{ genreLabel(id) }}{{ last ? '' : ' · ' }}</ng-container>
+            </span>
+            <p *ngIf="showDetails">{{ topCard.overview || 'Pas de résumé disponible.' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="topCard" class="swipe-buttons">
+        <button type="button" class="round pass" aria-label="Passer" (click)="swipe(false)">✕</button>
+        <button type="button" class="round like" aria-label="J'aime" (click)="swipe(true)">♥</button>
+      </div>
+      <p *ngIf="topCard" class="hint">Touche l'affiche pour le résumé · glisse ou utilise les flèches ← →</p>
+
+      <div *ngIf="editingGenres" class="match-panel glass-panel">
+        <h2>Genres</h2>
+        <div class="chip-row">
+          <button *ngFor="let genre of genres" type="button" class="chip" [class.active]="draftGenres.includes(genre.id)" (click)="toggleDraft(genre.id)">
+            {{ genre.label }}
+          </button>
+        </div>
+        <button type="button" class="match-primary" (click)="applyGenres()">Appliquer</button>
+        <button type="button" class="match-ghost" (click)="editingGenres = false">Annuler</button>
+      </div>
+    </div>
+
+    <div *ngIf="tab === 'matches'" class="match-panel glass-panel">
+      <div *ngIf="matches.length === 0" class="match-center">
+        <h2>Pas encore de match</h2>
+        <p>Continuez à swiper : dès que vous aimez le même film, il apparaît ici.</p>
+      </div>
+      <div *ngFor="let entry of matches" class="match-row" [class.picked]="entry.picked">
+        <img [src]="poster(entry.movie.poster_path, 'w185')" [alt]="entry.movie.title" loading="lazy" />
+        <div class="match-row-body">
+          <strong>{{ entry.movie.title }}</strong>
+          <span>{{ year(entry.movie.release_date) }}</span>
+          <span *ngIf="entry.picked" class="badge">On le regarde</span>
+          <div class="match-row-actions">
+            <button type="button" class="match-ghost" (click)="togglePick(entry)">{{ entry.picked ? 'Plus celui-là' : 'On le regarde' }}</button>
+            <a class="match-ghost" [routerLink]="['/film', entry.movie.id]">Fiche</a>
+            <button *ngIf="isLoggedIn" type="button" class="match-ghost" [disabled]="watchlisted.has(entry.movie.id)" (click)="addToWatchlist(entry.movie.id)">
+              {{ watchlisted.has(entry.movie.id) ? 'Ajouté' : '+ Watchlist' }}
+            </button>
+          </div>
+        </div>
+      </div>
+      <button *ngIf="state?.session?.mine_to_manage" type="button" class="match-ghost danger" (click)="endRoom()">Terminer le salon</button>
+    </div>
+
+    <div *ngIf="celebration" class="celebration" role="dialog" aria-modal="true" aria-label="Match">
+      <div class="celebration-card glass-panel">
+        <p class="eyebrow">C'est un match !</p>
+        <img [src]="poster(celebration.poster_path, 'w342')" [alt]="celebration.title" />
+        <h2>{{ celebration.title }}</h2>
+        <button type="button" class="match-primary" (click)="chooseMovie(celebration)">On le regarde !</button>
+        <button type="button" class="match-ghost" (click)="closeCelebration()">Continuer à swiper</button>
+        <a class="match-ghost" [routerLink]="['/film', celebration.id]" (click)="closeCelebration()">Voir la fiche</a>
+      </div>
+    </div>
+  </ng-container>
+</section>

@@ -12,6 +12,8 @@ import { CardsComponent } from './cards/cards.component';
 import { SearchComponent } from './search/search.component';
 import { TopRatedComponent } from './top-rated/top-rated.component';
 import { SeriesComponent } from './series/series.component';
+import { MatchHomeComponent } from './match/match-home.component';
+import { MatchRoomComponent } from './match/match-room.component';
 
 export const routes: Routes = [
     { path: 'home', component: HomeComponent },
@@ -19,6 +21,8 @@ export const routes: Routes = [
     { path: 'series', component: SeriesComponent },
     { path: 'films/toprated', component: TopRatedComponent },
     { path: 'actuellement-cinema', component: CardsComponent },
+    { path: 'match', component: MatchHomeComponent, canActivate:[AuthGuard] },
+    { path: 'match/:code', component: MatchRoomComponent },
     { path: 'membres', component: MembersComponent, canActivate:[AuthGuard] },
     { path: 'film/:id', component: DetailsComponent },
     { path: 'acteur/:id', component: ActorComponent },
