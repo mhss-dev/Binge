@@ -13,8 +13,7 @@
 .chip-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .chip { padding: 0.45rem 0.95rem; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--text); cursor: pointer; }
 .chip.active { background: var(--accent); border-color: var(--accent); color: #1b0f02; font-weight: 700; }
-.match-primary { display: inline-block; padding: 0.85rem 1.4rem; border: 0; border-radius: var(--radius-md); background: linear-gradient(135deg, var(--accent-soft), var(--accent)); color: #1b0f02; font-weight: 700; cursor: pointer; text-decoration: none; box-shadow: 0 10px 30px rgba(255, 122, 24, 0.28); transition: transform 0.15s ease; }
-.match-primary:hover { transform: translateY(-1px); }
+.match-primary { display: inline-block; padding: 0.85rem 1.4rem; border: 0; border-radius: var(--radius-md); background: linear-gradient(135deg, var(--accent-soft), var(--accent)); color: #1b0f02; font-weight: 700; cursor: pointer; text-decoration: none; box-shadow: 0 10px 30px rgba(255, 122, 24, 0.28); }
 .match-primary:disabled { opacity: 0.6; cursor: default; }
 .match-primary.small { padding: 0.55rem 1rem; }
 .match-ghost { display: inline-block; padding: 0.55rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--border); background: transparent; color: var(--text); cursor: pointer; text-decoration: none; font-size: 0.9rem; }

@@ -221,8 +221,8 @@ textarea {
 .dv-score { padding: 0.1rem 0.6rem; border-radius: 999px; background: rgba(255, 179, 71, 0.18); color: var(--accent-soft); }
 .dv-hero-text { margin: 0; font-size: 1.05rem; max-width: 40rem; color: rgba(245, 247, 251, 0.82); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
 .dv-hero-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.4rem; }
-.dv-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.1rem; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.08); color: var(--text); font-weight: 600; text-decoration: none; cursor: pointer; backdrop-filter: blur(6px); transition: transform 0.15s ease, background 0.15s ease; }
-.dv-btn:hover { transform: translateY(-1px); background: rgba(255, 255, 255, 0.16); }
+.dv-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.1rem; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.08); color: var(--text); font-weight: 600; text-decoration: none; cursor: pointer; backdrop-filter: blur(6px); transition: background 0.15s ease; }
+.dv-btn:hover { background: rgba(255, 255, 255, 0.16); }
 .dv-btn.on { background: rgba(255, 122, 24, 0.25); border-color: var(--accent); color: var(--accent-soft); }
 .dv-btn-main { background: linear-gradient(135deg, var(--accent-soft), var(--accent)); border: 0; color: #1b0f02; box-shadow: 0 10px 30px rgba(255, 122, 24, 0.28); }
 .dv-btn-main:hover { background: linear-gradient(135deg, var(--accent-soft), var(--accent)); }
@@ -247,8 +247,8 @@ textarea {
 .dv-surprise { padding: 0.5rem 1rem; backdrop-filter: none; }
 
 .dv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; }
-.dv-card { position: relative; aspect-ratio: 2 / 3; border-radius: 18px; overflow: hidden; background: var(--surface-strong); box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35); transition: transform 0.2s ease, box-shadow 0.2s ease; }
-.dv-card:hover { transform: translateY(-4px); box-shadow: 0 20px 44px rgba(0, 0, 0, 0.5); }
+.dv-card { position: relative; aspect-ratio: 2 / 3; border-radius: 18px; overflow: hidden; background: var(--surface-strong); box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35); transition: box-shadow 0.2s ease; }
+.dv-card:hover { box-shadow: 0 20px 44px rgba(0, 0, 0, 0.5); }
 .dv-card.dv-skel { animation: dv-pulse 1.4s ease-in-out infinite; box-shadow: none; }
 .dv-poster { position: absolute; inset: 0; display: block; }
 .dv-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -262,7 +262,7 @@ textarea {
 .dv-actions button:hover { transform: scale(1.12); }
 .dv-actions button.on { background: var(--accent); border-color: var(--accent); color: #1b0f02; }
 .dv-actions button.fav { background: var(--danger); border-color: var(--danger); color: #2a0610; }
-@media (hover: hover) { .dv-actions { opacity: 0; transform: translateX(6px); transition: opacity 0.15s ease, transform 0.15s ease; } .dv-card:hover .dv-actions, .dv-actions:focus-within { opacity: 1; transform: none; } }
+@media (hover: hover) { .dv-actions { opacity: 0; transition: opacity 0.15s ease; } .dv-card:hover .dv-actions, .dv-actions:focus-within { opacity: 1; } }
 .dv-end { text-align: center; color: var(--muted); margin: 0; }
 
 @media (min-width: 992px) {
@@ -382,8 +382,7 @@ html body .nav-shell .nav-pill.active { background: rgba(255, 255, 255, 0.1); bo
 .fc-sections { display: grid; gap: 1.2rem; padding: 1.5rem 0 5rem; }
 .fc-strip { display: flex; gap: 0.9rem; overflow-x: auto; scroll-snap-type: x proximity; padding-bottom: 0.8rem; scrollbar-width: thin; }
 .fc-person { flex: none; width: 150px; scroll-snap-align: start; display: grid; gap: 0.3rem; align-content: start; text-decoration: none; color: var(--text); }
-.fc-person img { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 16px; background: var(--surface-strong); transition: transform 0.2s ease; }
-.fc-person:hover img { transform: translateY(-4px); }
+.fc-person img { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 16px; background: var(--surface-strong); }
 .fc-person strong { font-size: 0.92rem; line-height: 1.2; }
 .fc-person span { color: var(--muted); font-size: 0.8rem; }
 @media (min-width: 992px) {

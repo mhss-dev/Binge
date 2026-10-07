@@ -1,8 +1,7 @@
 .match-page { min-height: 100svh; padding: 6.5rem 0 3rem; display: grid; gap: 1rem; align-content: start; }
 .match-panel { padding: 1.3rem; border-radius: var(--radius-xl); display: grid; gap: 0.7rem; align-content: start; }
 .match-panel h2 { margin: 0; font-size: 1.15rem; line-height: 1.1; }
-.match-primary { display: inline-block; padding: 0.85rem 1.4rem; border: 0; border-radius: var(--radius-md); background: linear-gradient(135deg, var(--accent-soft), var(--accent)); color: #1b0f02; font-weight: 700; cursor: pointer; text-decoration: none; box-shadow: 0 10px 30px rgba(255, 122, 24, 0.28); transition: transform 0.15s ease; }
-.match-primary:hover { transform: translateY(-1px); }
+.match-primary { display: inline-block; padding: 0.85rem 1.4rem; border: 0; border-radius: var(--radius-md); background: linear-gradient(135deg, var(--accent-soft), var(--accent)); color: #1b0f02; font-weight: 700; cursor: pointer; text-decoration: none; box-shadow: 0 10px 30px rgba(255, 122, 24, 0.28); }
 .match-primary:disabled { opacity: 0.6; cursor: default; }
 .match-primary.big { padding: 1rem 2rem; font-size: 1.1rem; border-radius: 16px; }
 .match-error { margin: 0.4rem 0; padding: 0.7rem 1rem; border-radius: var(--radius-md); background: rgba(255, 107, 129, 0.12); color: var(--danger); }
