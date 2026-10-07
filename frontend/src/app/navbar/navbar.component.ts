@@ -20,8 +20,6 @@ export class NavbarComponent {
   nickname: string | null = null;
   isLogoVisible = true;
   isScrolled = false;
-  isHidden = false;
-  private lastScroll = 0;
   isNavbarCollapsed = true;
   searchQuery = '';
   avatar = '';
@@ -144,20 +142,7 @@ export class NavbarComponent {
 
   @HostListener('window:scroll', [])
   onWindowScroll(): void {
-    const y = window.scrollY;
-    this.isScrolled = y > 50;
-    const delta = y - this.lastScroll;
-    if (Math.abs(delta) > 6) {
-      this.setHidden(delta > 0 && y > 160 && this.isNavbarCollapsed && !this.isSearchOpen);
-      this.lastScroll = y;
-    }
-  }
-
-  private setHidden(hidden: boolean): void {
-    if (this.isHidden !== hidden) {
-      this.isHidden = hidden;
-      document.documentElement.classList.toggle('nav-hidden', hidden);
-    }
+    this.isScrolled = window.scrollY > 50;
   }
 
   @HostListener('document:keydown.escape')
@@ -168,7 +153,6 @@ export class NavbarComponent {
   }
 
   toggleNavbar(): void {
-    this.setHidden(false);
     this.isNavbarCollapsed = !this.isNavbarCollapsed;
     this.isLogoVisible = this.isNavbarCollapsed;
   }
@@ -179,7 +163,6 @@ export class NavbarComponent {
   }
 
   openSearch(): void {
-    this.setHidden(false);
     this.isSearchOpen = true;
     this.closeNavbar();
     setTimeout(() => this.searchInput?.nativeElement.focus(), 50);
