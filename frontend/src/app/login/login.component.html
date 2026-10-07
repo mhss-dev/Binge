@@ -1,20 +1,13 @@
-<div class="lg-page d-flex flex-column min-vh-100">
-  <div class="lg-wall" aria-hidden="true" *ngIf="wall.length > 0">
-    <div class="lg-row" *ngFor="let row of wall; let i = index" [class.rev]="i % 2 === 1">
-      <div class="lg-track">
-        <img *ngFor="let url of row" [src]="url" alt="" referrerpolicy="no-referrer" />
-      </div>
-    </div>
-  </div>
-  <div class="lg-shade"></div>
-<div class="container my-auto lg-front">
+<div class="au-page d-flex flex-column min-vh-100">
+  <app-poster-wall></app-poster-wall>
+<div class="container my-auto au-front">
       <div class="row justify-content-center align-items-center">
         <div class="col-lg-4 col-md-6">
-          <div class="login-container shadow">
+          <div class="au-card">
             <div class="text-center mb-4">
               <p class="eyebrow">Bon retour</p>
               <h2 class="fw-bold">Connexion</h2>
-              <p class="lg-sub">Accédez à votre collection de films</p>
+              <p class="au-sub">Accédez à votre collection de films</p>
               <div *ngIf="loginMessage" class="alert {{ alertType }} mt-3" role="alert">
                 {{ loginMessage }}
               </div>
@@ -33,9 +26,9 @@
                   </button>
                 </div>
               </div>
-              <button type="submit" class="btn lg-submit w-100 rounded-pill py-2 mt-3">Se connecter</button>
+              <button type="submit" class="btn au-submit w-100 rounded-pill py-2 mt-3">Se connecter</button>
               <div class="text-center mt-3">
-                <a href="/register" class="lg-link">Pas encore inscrit ?</a>
+                <a href="/register" class="au-link">Pas encore inscrit ?</a>
               </div>
             </form>
           </div>

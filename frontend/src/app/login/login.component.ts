@@ -1,44 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MovieService } from 'app/movie.service';
-import { catchError, forkJoin, of } from 'rxjs';
+import { PosterWallComponent } from '../poster-wall/poster-wall.component';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PosterWallComponent],
   standalone: true,
 
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  templateUrl: './login.component.html'
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   username: string = '';
   password: string = '';
   loginMessage: string = '';
   alertType: string = '';
   passwordType: string = 'password';
-  wall: string[][] = [];
 
-  constructor(private authService: AuthService, private router: Router, private movieService: MovieService) {}
-
-  ngOnInit(): void {
-    const page = (n: number) => this.movieService.getNowPlayingMovies('BE', n).pipe(catchError(() => of({ results: [] })));
-    forkJoin([page(1), page(2)]).subscribe(([first, second]) => {
-      const posters: string[] = [...(first?.results ?? []), ...(second?.results ?? [])]
-        .map((movie: { poster_path?: string | null }) => movie.poster_path ?? '')
-        .filter((path: string) => /^\/[A-Za-z0-9_.-]{1,100}\.(jpg|jpeg|png|webp)$/.test(path))
-        .map((path: string) => `https://image.tmdb.org/t/p/w342${path}`);
-      if (posters.length < 9) {
-        return;
-      }
-      const rows: string[][] = [[], [], []];
-      posters.forEach((url, index) => rows[index % 3].push(url));
-      this.wall = rows.map((row) => [...row, ...row]);
-    });
-  }
+  constructor(private authService: AuthService, private router: Router) {}
 
   onLogin(): void {
     this.authService.login(this.username, this.password).subscribe({

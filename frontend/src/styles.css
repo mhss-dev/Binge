@@ -272,3 +272,18 @@ textarea {
 @keyframes dv-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 @keyframes dv-pulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 0.9; } }
 @media (prefers-reduced-motion: reduce) { .dv-hero-bg, .dv-hero-copy, .dv-card, .dv-skel { animation: none; transition: none; } }
+
+.au-page { position: relative; overflow: hidden; background: var(--bg); }
+.au-front { position: relative; z-index: 1; padding-block: 6rem 3rem; }
+.au-card { background: rgba(10, 19, 33, 0.82); backdrop-filter: blur(14px); border: 1px solid rgba(255, 255, 255, 0.12); color: var(--text); padding: 40px; border-radius: 22px; max-width: 100%; box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5); }
+.au-sub { color: var(--muted); margin: 0; }
+.au-card .form-label { color: var(--muted); }
+.au-card .form-control { background: rgba(255, 255, 255, 0.07); border-color: rgba(255, 255, 255, 0.14); color: var(--text); }
+.au-card .form-control::placeholder { color: rgba(245, 247, 251, 0.45); }
+.au-card .form-control:focus { background: rgba(255, 255, 255, 0.1); border-color: var(--accent); color: var(--text); box-shadow: 0 0 0 0.2rem rgba(255, 122, 24, 0.2); }
+.au-card .input-group { position: relative; }
+.au-card .toggle-password { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); border: none; background: transparent; cursor: pointer; color: var(--muted); z-index: 5; }
+.au-submit { background: linear-gradient(135deg, var(--accent-soft), var(--accent)); border: 0; color: #1b0f02; font-weight: 700; box-shadow: 0 10px 30px rgba(255, 122, 24, 0.28); }
+.au-submit:hover { color: #1b0f02; filter: brightness(1.06); }
+.au-link { color: var(--accent-soft); }
+.au-link:hover { color: var(--text); text-decoration: underline; }

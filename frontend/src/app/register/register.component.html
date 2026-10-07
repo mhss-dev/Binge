@@ -1,47 +1,43 @@
-<div class="d-flex flex-column min-vh-100"
-     [ngStyle]="{
-       'background-image': 'linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0)), url(https://image.tmdb.org/t/p/original//hfTyu2VPBqLRPo2DauW8q7bh9bm.jpg)',
-       'background-size': 'cover',
-       'background-position': 'center',
-       'background-attachment': 'fixed'
-     }">
-  <div class="container my-auto">
+<div class="au-page d-flex flex-column min-vh-100">
+  <app-poster-wall></app-poster-wall>
+  <div class="container my-auto au-front">
     <div class="row justify-content-center align-items-center">
-      <div class="col-lg-5">
-        <div class="register-container p-5 shadow">
+      <div class="col-lg-5 col-md-8">
+        <div class="au-card">
           <div class="text-center mb-4">
-            <h2>Inscription</h2>
-            <p class="text-muted">Retrouvez vos films, favoris et watchlist en un clic !</p>
-            <div *ngIf="registerMessage" class="alert {{ alertType }}" role="alert">
+            <p class="eyebrow">Bienvenue</p>
+            <h2 class="fw-bold">Inscription</h2>
+            <p class="au-sub">Retrouvez vos films, favoris et watchlist en un clic !</p>
+            <div *ngIf="registerMessage" class="alert {{ alertType }} mt-3" role="alert">
               {{ registerMessage }}
             </div>
           </div>
           <form (ngSubmit)="onRegister()">
-            <div class="mb-4">
+            <div class="mb-3">
               <label for="username" class="form-label">Nom de compte :</label>
-              <input type="text" id="username" class="form-control" [(ngModel)]="username" name="username" required placeholder="Votre nom de compte">
+              <input type="text" id="username" class="form-control rounded-pill" [(ngModel)]="username" name="username" required placeholder="Votre nom de compte">
             </div>
-            
-            <div class="mb-4 position-relative">
+
+            <div class="mb-3 position-relative">
               <label for="password" class="form-label">Mot de passe :</label>
-              <input [type]="passwordType" id="password" class="form-control" [(ngModel)]="password" name="password" required placeholder="Votre mot de passe">
-              <i class="fa" [ngClass]="passwordType === 'password' ? 'fa-eye-slash' : 'fa-eye'" 
-                 (click)="togglePassword()" 
-                 style="position: absolute; right: 10px; top: 60%;  cursor: pointer;">
-              </i>
+              <div class="input-group">
+                <input [type]="passwordType" id="password" class="form-control rounded-pill" [(ngModel)]="password" name="password" required placeholder="Votre mot de passe">
+                <button type="button" class="btn toggle-password" (click)="togglePassword()" aria-label="Afficher ou masquer le mot de passe">
+                  <i class="fa" [ngClass]="passwordType === 'password' ? 'fa-eye-slash' : 'fa-eye'"></i>
+                </button>
+              </div>
             </div>
-          
-            <div class="mb-4">
+
+            <div class="mb-3">
               <label for="nickname" class="form-label">Pseudo :</label>
-              <input type="text" id="nickname" class="form-control" [(ngModel)]="nickname" name="nickname" required placeholder="Votre pseudo">
+              <input type="text" id="nickname" class="form-control rounded-pill" [(ngModel)]="nickname" name="nickname" required placeholder="Votre pseudo">
             </div>
-            
-            <button type="submit" class="btn btn-dark w-100 mt-3">S'inscrire</button>
+
+            <button type="submit" class="btn au-submit w-100 rounded-pill py-2 mt-3">S'inscrire</button>
             <div class="text-center mt-3">
-              <a class="text-dark" href="/login">Vous avez déjà un compte ?</a>
+              <a class="au-link" href="/login">Vous avez déjà un compte ?</a>
             </div>
           </form>
-          
         </div>
       </div>
     </div>
