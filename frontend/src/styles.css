@@ -518,7 +518,7 @@ html body .nav-shell .nav-pill.active { background: rgba(255, 255, 255, 0.1); bo
 .pf-social button:hover { color: var(--text); }
 @media (min-width: 992px) { .pf-social { justify-content: flex-start; } }
 
-.mt-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.6rem; }
+.mt-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.6rem; max-height: min(60vh, 32rem); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; padding: 0.15rem; }
 @media (min-width: 640px) and (max-width: 991px) { .mt-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
 .mt-tile { position: relative; border-radius: 14px; overflow: hidden; background: var(--surface-strong); aspect-ratio: 2 / 3; }
 .mt-thumb { display: block; width: 100%; height: 100%; }
