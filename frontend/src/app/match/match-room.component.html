@@ -53,12 +53,22 @@
           <p class="eyebrow">Match</p>
           <h1>{{ state?.session?.title || info?.session?.title || 'Match de films' }}</h1>
         </div>
+        <ng-template #who let-p>
+          <img [src]="avatar(p)" alt="" />
+          <b>{{ p.name }}</b>
+          <small>{{ p.swiped }}</small>
+        </ng-template>
         <div class="people">
-          <span *ngFor="let p of state?.participants ?? info?.participants ?? []" class="person" [class.me]="p.me" [class.away]="!p.active" [attr.title]="p.active ? null : 'Absent depuis un moment : les matchs ne l\'attendent pas'">
-            <img [src]="avatar(p)" alt="" />
-            <b>{{ p.name }}</b>
-            <small>{{ p.swiped }}</small>
-          </span>
+          <ng-container *ngFor="let p of state?.participants ?? info?.participants ?? []">
+            <a *ngIf="p.registered; else plain" class="person link" [class.me]="p.me" [class.away]="!p.active" [routerLink]="['/profil', p.name]">
+              <ng-container *ngTemplateOutlet="who; context: { $implicit: p }"></ng-container>
+            </a>
+            <ng-template #plain>
+              <span class="person" [class.me]="p.me" [class.away]="!p.active" [attr.title]="p.active ? null : 'Absent depuis un moment : les matchs ne l\'attendent pas'">
+                <ng-container *ngTemplateOutlet="who; context: { $implicit: p }"></ng-container>
+              </span>
+            </ng-template>
+          </ng-container>
         </div>
         <div class="room-actions">
           <button type="button" class="match-ghost" (click)="share()">Inviter</button>
@@ -138,10 +148,14 @@
 
       <div *ngIf="matches.length > 0" id="matches" class="matches">
         <h2 class="mt-title">Vos matchs ({{ matches.length }})</h2>
-        <div class="mt-rail">
-          <a *ngFor="let entry of matches" [routerLink]="['/film', entry.movie.id]" class="mt-tile" [attr.title]="entry.movie.title">
-            <img referrerpolicy="no-referrer" [src]="poster(entry.movie.poster_path, 'w342')" [alt]="entry.movie.title" loading="lazy" />
-          </a>
+        <div class="fc-carousel mt-carousel">
+          <button type="button" class="fc-arrow prev" (click)="slide(rail, -1)" aria-label="Précédent"><i class="fa-solid fa-chevron-left"></i></button>
+          <div #rail class="mt-rail">
+            <a *ngFor="let entry of matches" [routerLink]="['/film', entry.movie.id]" class="mt-tile" [attr.title]="entry.movie.title">
+              <img referrerpolicy="no-referrer" [src]="poster(entry.movie.poster_path, 'w342')" [alt]="entry.movie.title" loading="lazy" />
+            </a>
+          </div>
+          <button type="button" class="fc-arrow next" (click)="slide(rail, 1)" aria-label="Suivant"><i class="fa-solid fa-chevron-right"></i></button>
         </div>
       </div>
 

@@ -460,6 +460,10 @@ export class MatchRoomComponent implements OnInit, OnDestroy {
     });
   }
 
+  slide(track: HTMLElement, direction: number): void {
+    track.scrollBy({ left: direction * track.clientWidth * 0.85, behavior: 'smooth' });
+  }
+
   scrollToMatches(): void {
     document.getElementById('matches')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
