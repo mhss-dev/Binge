@@ -69,9 +69,9 @@
         <input type="search" placeholder="Chercher dans ce profil" [(ngModel)]="dashboardSearchQuery" name="dashboardSearchQuery" aria-label="Rechercher un film dans le profil courant" />
         <button *ngIf="dashboardSearchQuery" type="button" class="pf-clear" (click)="clearDashboardSearch()" aria-label="Effacer la recherche"><i class="fa-solid fa-xmark"></i></button>
       </label>
-      <div class="dv-seg" role="group" aria-label="Trier les films du profil">
-        <button type="button" *ngFor="let option of watchedSortOptions" [class.on]="profileSortOption === option.value" (click)="setProfileSort(option.value)">{{ option.label }}</button>
-      </div>
+      <select class="dv-select" aria-label="Trier les films du profil" [ngModel]="profileSortOption" (ngModelChange)="setProfileSort($event)" name="profileSort">
+        <option *ngFor="let option of watchedSortOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
     </div>
   </div>
 

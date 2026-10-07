@@ -14,7 +14,7 @@ import { Title } from '@angular/platform-browser';
 import { MatchService } from '../match/match.service';
 import { PosterWallComponent } from '../poster-wall/poster-wall.component';
 
-type ProfileSortOption = 'title_asc' | 'title_desc';
+type ProfileSortOption = 'added_desc' | 'added_asc' | 'title_asc' | 'title_desc';
 
 @Component({
   selector: 'app-dashboard',
@@ -112,8 +112,10 @@ export class DashboardComponent implements OnDestroy {
   }
 
   dashboardSearchQuery: string = '';
-  profileSortOption: ProfileSortOption = 'title_asc';
+  profileSortOption: ProfileSortOption = 'added_desc';
   readonly watchedSortOptions = [
+    { value: 'added_desc', label: 'Ajoutés récemment' },
+    { value: 'added_asc', label: 'Ajoutés en premier' },
     { value: 'title_asc', label: 'Titre A-Z' },
     { value: 'title_desc', label: 'Titre Z-A' },
   ];
@@ -555,6 +557,12 @@ paginatedWatched() {
 }
 
 sortProfileMovies(movies: any[]): any[] {
+  if (this.profileSortOption === 'added_desc') {
+    return movies;
+  }
+  if (this.profileSortOption === 'added_asc') {
+    return [...movies].reverse();
+  }
   return [...movies].sort((movieA, movieB) => {
     const titleA = this.normalizeMovieTitle(movieA);
     const titleB = this.normalizeMovieTitle(movieB);
