@@ -1,59 +1,54 @@
-<section class="members-page app-shell text-white">
-  <div class="members-hero glass-panel">
-    <div class="members-intro">
-      <div class="members-copy">
+<section class="mb-page app-shell text-white">
+  <div class="mb-hero">
+    <div class="mb-hero-inner">
+      <div class="mb-hero-copy">
         <p class="eyebrow">Communauté</p>
-        <h1>Les membres Binge</h1>
-        <p class="members-lead">
-          Explorez les profils, découvrez les habitudes de visionnage de la communauté et trouvez de nouvelles personnes à suivre.
-        </p>
+        <h1>Les membres</h1>
+        <p class="mb-lead">Découvre ce que regardent les autres, suis les profils qui te ressemblent et lance un match en un tap.</p>
       </div>
 
-      <div class="members-summary">
-        <span class="summary-pill">{{ members.length }} profils</span>
-        <span class="summary-pill">Fans de cinéma</span>
-        <span class="summary-pill">Découverte sociale</span>
+      <div class="mb-podium" *ngIf="podiumOrder.length === 3">
+        <a *ngFor="let step of podiumOrder" class="mb-step" [class.first]="step.rank === 1" [routerLink]="['/profil', step.member.nickname]">
+          <i *ngIf="step.rank === 1" class="fa-solid fa-crown"></i>
+          <img [src]="avatar(step.member)" [alt]="step.member.nickname" />
+          <strong>{{ step.member.nickname }}</strong>
+          <span>{{ step.member.watched_count || 0 }} vus</span>
+          <b class="mb-rank">{{ step.rank }}</b>
+        </a>
       </div>
     </div>
   </div>
 
-  <section class="members-results">
-    <div class="section-heading members-heading">
-      <div>
-        <p class="eyebrow">À rencontrer</p>
-        <h2>Des profils à parcourir</h2>
-      </div>
-      <span class="results-caption">Classement par activité visionnée</span>
+  <div class="mb-bar">
+    <label class="mb-search">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="search" placeholder="Chercher un membre" aria-label="Chercher un membre" [(ngModel)]="query" name="query" />
+    </label>
+    <div class="mb-sorts" role="group" aria-label="Trier">
+      <button type="button" *ngFor="let option of sorts" [class.on]="sort === option.value" (click)="sort = option.value">{{ option.label }}</button>
     </div>
+  </div>
 
-    <div class="members-grid">
-      <a *ngFor="let member of members" [routerLink]="['/profil', member.nickname]" class="member-card glass-panel">
-        <div class="member-avatar-wrap">
-          <img [src]="member.avatar_url" alt="{{ member.nickname }}" class="member-avatar" />
-        </div>
+  <div *ngIf="error" class="mb-error">{{ error }}</div>
 
-        <div class="member-body">
-          <h3>{{ member.nickname }}</h3>
-
-          <div class="member-stats">
-            <div class="member-stat watched">
-              <i class="fa-solid fa-film"></i>
-              <span>{{ member.watched_count }}</span>
-              <small>Vus</small>
-            </div>
-            <div class="member-stat favorite">
-              <i class="fa-solid fa-heart"></i>
-              <span>{{ member.favorites_count }}</span>
-              <small>Favoris</small>
-            </div>
-            <div class="member-stat watchlist">
-              <i class="fa-solid fa-clock"></i>
-              <span>{{ member.watchlist_count }}</span>
-              <small>Watchlist</small>
-            </div>
+  <div class="mb-grid">
+    <article *ngFor="let member of filtered; trackBy: trackByNickname" class="mb-card">
+      <a class="mb-main" [routerLink]="['/profil', member.nickname]">
+        <img [src]="avatar(member)" [alt]="member.nickname" loading="lazy" />
+        <div class="mb-id">
+          <strong>{{ member.nickname }} <span *ngIf="member.nickname === me" class="mb-me">Toi</span></strong>
+          <div class="mb-stats">
+            <span title="Films vus"><i class="fa-solid fa-eye"></i>{{ member.watched_count || 0 }}</span>
+            <span title="Favoris"><i class="fa-solid fa-heart"></i>{{ member.favorites_count || 0 }}</span>
+            <span title="Watchlist"><i class="fa-solid fa-clock"></i>{{ member.watchlist_count || 0 }}</span>
           </div>
         </div>
       </a>
-    </div>
-  </section>
+      <button *ngIf="member.nickname !== me" type="button" class="mb-invite" [disabled]="inviting === member.nickname" (click)="invite(member.nickname)" title="Inviter à un match" [attr.aria-label]="'Inviter ' + member.nickname + ' à un match'">
+        <i class="fa-solid fa-heart"></i> Match
+      </button>
+    </article>
+  </div>
+
+  <p class="mb-end" *ngIf="members.length > 0 && filtered.length === 0">Aucun membre ne correspond à « {{ query }} ».</p>
 </section>
