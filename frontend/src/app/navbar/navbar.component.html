@@ -6,7 +6,6 @@
           <span class="brand-dot"></span>
           <span class="brand-copy">
             <strong>Binge</strong>
-            <small>films, séries, amis</small>
           </span>
         </a>
 
@@ -23,19 +22,19 @@
 
         <div id="navbarNav" class="topbar-panel" [ngClass]="{ 'is-open': !isNavbarCollapsed }">
           <div class="topbar-links">
-            <a routerLink="/home" class="nav-pill" (click)="closeNavbar()">
+            <a routerLink="/home" routerLinkActive="active" class="nav-pill nav-pill-home" (click)="closeNavbar()">
               <i class="fa-solid fa-house"></i>
               <span>Accueil</span>
             </a>
-            <a routerLink="/films" class="nav-pill" (click)="closeNavbar()">
+            <a routerLink="/films" routerLinkActive="active" class="nav-pill" (click)="closeNavbar()">
               <i class="fa-solid fa-film"></i>
               <span>Découverte</span>
             </a>
-            <a *ngIf="isLoggedIn" routerLink="/match" class="nav-pill" (click)="closeNavbar()">
+            <a *ngIf="isLoggedIn" routerLink="/match" routerLinkActive="active" class="nav-pill" (click)="closeNavbar()">
               <i class="fa-solid fa-heart"></i>
               <span>Match</span>
             </a>
-            <a *ngIf="isLoggedIn" routerLink="/membres" class="nav-pill" (click)="closeNavbar()">
+            <a *ngIf="isLoggedIn" routerLink="/membres" routerLinkActive="active" class="nav-pill" (click)="closeNavbar()">
               <i class="fa-solid fa-user-group"></i>
               <span>Membres</span>
             </a>
@@ -110,6 +109,8 @@
                   id="profileDropdown"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
+                  [attr.aria-label]="'Menu de ' + nickname"
+                  [attr.title]="nickname"
                 >
                   <img [src]="avatar" class="avatar-img" alt="Avatar" />
                   <span class="profile-copy">

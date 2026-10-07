@@ -287,3 +287,18 @@ textarea {
 .au-submit:hover { color: #1b0f02; filter: brightness(1.06); }
 .au-link { color: var(--accent-soft); }
 .au-link:hover { color: var(--text); text-decoration: underline; }
+
+html body .nav-shell .nav-pill.active { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 122, 24, 0.45); }
+@media (min-width: 961px) {
+  html body .nav-shell .topbar-inner { gap: 0.8rem; padding: 0.5rem 0.9rem; }
+  html body .nav-shell .brand-mark { min-width: auto; }
+  html body .nav-shell .topbar-links { gap: 0.3rem; }
+  html body .nav-shell .nav-pill { padding: 0.55rem 1rem; }
+  html body .nav-shell .nav-pill i, html body .nav-shell .topbar-actions .action-chip:not(.icon-only) i { display: none; }
+  html body .nav-shell .nav-pill-home { display: none; }
+  html body .nav-shell .profile-copy { display: none; }
+  html body .nav-shell .profile-trigger { padding: 0.2rem; }
+  html body .nav-shell .profile-trigger::after { display: none; }
+  html body .nav-shell .avatar-img { width: 2.4rem; height: 2.4rem; }
+  html body .nav-shell .action-chip.icon-only { width: 2.6rem; height: 2.6rem; }
+}
