@@ -1,13 +1,7 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  HostListener,
-  ChangeDetectorRef,
-  OnDestroy,
-  signal,
-  ViewChild,
-  ElementRef,
-} from '@angular/core';
+import { Component, HostListener, ChangeDetectorRef, OnDestroy, signal, ViewChild, ElementRef, inject, NgZone, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { nearBottom, watchScroll } from '../scroll.util';
 import { DiscoverService } from '../discover.service';
 
 import { FormsModule } from '@angular/forms';
@@ -31,6 +25,8 @@ import { Toast } from 'bootstrap';
   styles: [':host { display: block; }'],
 })
 export class FilmsComponent implements OnDestroy {
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly scrollWatch = watchScroll(inject(NgZone), inject(DestroyRef), () => !this.isLoading && this.hasMore && nearBottom(), () => this.loadFilms(this.currentPage + 1));
   @ViewChild('toastElement', { static: false }) toastElement!: ElementRef;
 
   toastMessage: string = '';
@@ -52,7 +48,6 @@ export class FilmsComponent implements OnDestroy {
   isLoggedIn = false;
   nickname: string | null = null;
   sortOption: string = 'popularity.desc';
-  isButtonVisible = signal(false);
   selectedGenre: string = '';
   featuredIndex = 0;
   readonly skeletons = Array.from({ length: 12 });
@@ -107,7 +102,7 @@ export class FilmsComponent implements OnDestroy {
       this.titleService.setTitle('Binge • social & découverte de films');
     });
 
-    this.authService.isLoggedIn$.subscribe((status) => {
+    this.authService.isLoggedIn$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((status) => {
       this.isLoggedIn = status;
       if (this.isLoggedIn) {
         this.getNickname();
@@ -192,13 +187,6 @@ export class FilmsComponent implements OnDestroy {
       clearTimeout(this.searchTimer);
     }
     this.searchTimer = setTimeout(() => this.searchFilms(this.searchQuery), 300);
-  }
-
-  surprise(): void {
-    const pool = this.films.filter((film) => film.id);
-    if (pool.length > 0) {
-      this.router.navigate(['/film', pool[Math.floor(Math.random() * pool.length)].id]);
-    }
   }
 
   loadFilms(page: number): void {
@@ -306,27 +294,7 @@ export class FilmsComponent implements OnDestroy {
     return movie.id ?? index;
   }
 
-  @HostListener('window:scroll', ['$event'])
-  onScroll(event: Event): void {
-    if (this.isLoading || !this.hasMore) return;
 
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    const windowHeight =
-      window.innerHeight || document.documentElement.clientHeight;
-    const bodyHeight = document.documentElement.scrollHeight;
-
-    if (scrollTop + windowHeight >= bodyHeight - 100) {
-      this.loadFilms(this.currentPage + 1);
-    }
-
-    const scrollPercentage = (scrollTop / (bodyHeight - windowHeight)) * 100;
-
-    this.isButtonVisible.set(scrollPercentage > 45);
-  }
-
-  scrollToTop(): void {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
 
   // saveScrollPosition(): void {
   //   sessionStorage.setItem('scrollPosition', window.scrollY.toString());

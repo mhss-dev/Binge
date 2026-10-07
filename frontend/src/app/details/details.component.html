@@ -83,39 +83,47 @@
       <button type="button" [class.on]="activePanel === 'similar'" (click)="selectPanel('similar')">Recommandations</button>
     </div>
 
-    <div *ngIf="activePanel === 'cast'" class="fc-strip">
-      <a
-        *ngFor="let actor of getLeadCast()"
-        class="fc-person"
-        [routerLink]="['/', actor.gender === 1 ? 'actrice' : 'acteur', actor.id]"
-      >
-        <img
-          loading="lazy"
-          [src]="imageUrl(actor.profile_path, 'w342', 'https://m.media-amazon.com/images/G/01/imdbpro/help/outline._CB1537462849_.png')"
-          [alt]="actor.name || 'Inconnu'"
-        />
-        <strong>{{ actor.name || "Inconnu" }}</strong>
-        <span>{{ actor.character || "Rôle inconnu" }}</span>
-      </a>
-    </div>
-
-    <div *ngIf="activePanel === 'similar'" class="dv-grid">
-      <article *ngFor="let similarMovie of getRecommendationList()" class="dv-card">
-        <a [routerLink]="['/film', similarMovie.id]" class="dv-poster" [attr.title]="similarMovie.title">
+    <div *ngIf="activePanel === 'cast'" class="fc-carousel">
+      <button type="button" class="fc-arrow prev" (click)="slide(strip, -1)" aria-label="Précédent"><i class="fa-solid fa-chevron-left"></i></button>
+      <div #strip class="fc-strip">
+        <a
+          *ngFor="let actor of getLeadCast()"
+          class="fc-person"
+          [routerLink]="['/', actor.gender === 1 ? 'actrice' : 'acteur', actor.id]"
+        >
           <img
             loading="lazy"
-            [src]="imageUrl(similarMovie.poster_path, 'w500', 'https://placehold.co/500x750?text=Aucun+poster+disponible')"
-            [alt]="similarMovie.title || 'Inconnu'"
+            [src]="imageUrl(actor.profile_path, 'w342', 'https://m.media-amazon.com/images/G/01/imdbpro/help/outline._CB1537462849_.png')"
+            [alt]="actor.name || 'Inconnu'"
           />
-          <div class="dv-info">
-            <strong *ngIf="!similarMovie.poster_path">{{ similarMovie.title || "Titre inconnu" }}</strong>
-            <span>
-              <ng-container *ngIf="similarMovie.release_date">{{ similarMovie.release_date | date : "yyyy" }}</ng-container>
-              <ng-container *ngIf="similarMovie.vote_average"> · ★ {{ similarMovie.vote_average | number : "1.0-1" }}</ng-container>
-            </span>
-          </div>
+          <strong>{{ actor.name || "Inconnu" }}</strong>
+          <span>{{ actor.character || "Rôle inconnu" }}</span>
         </a>
-      </article>
+      </div>
+      <button type="button" class="fc-arrow next" (click)="slide(strip, 1)" aria-label="Suivant"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+
+    <div *ngIf="activePanel === 'similar'" class="fc-carousel">
+      <button type="button" class="fc-arrow prev" (click)="slide(rail, -1)" aria-label="Précédent"><i class="fa-solid fa-chevron-left"></i></button>
+      <div #rail class="fc-strip">
+        <article *ngFor="let similarMovie of getRecommendationList()" class="dv-card fc-rec">
+          <a [routerLink]="['/film', similarMovie.id]" class="dv-poster" [attr.title]="similarMovie.title">
+            <img
+              loading="lazy"
+              [src]="imageUrl(similarMovie.poster_path, 'w500', 'https://placehold.co/500x750?text=Aucun+poster+disponible')"
+              [alt]="similarMovie.title || 'Inconnu'"
+            />
+            <div class="dv-info">
+              <strong *ngIf="!similarMovie.poster_path">{{ similarMovie.title || "Titre inconnu" }}</strong>
+              <span>
+                <ng-container *ngIf="similarMovie.release_date">{{ similarMovie.release_date | date : "yyyy" }}</ng-container>
+                <ng-container *ngIf="similarMovie.vote_average"> · ★ {{ similarMovie.vote_average | number : "1.0-1" }}</ng-container>
+              </span>
+            </div>
+          </a>
+        </article>
+      </div>
+      <button type="button" class="fc-arrow next" (click)="slide(rail, 1)" aria-label="Suivant"><i class="fa-solid fa-chevron-right"></i></button>
     </div>
   </div>
 

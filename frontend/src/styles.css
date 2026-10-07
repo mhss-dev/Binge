@@ -244,7 +244,6 @@ textarea {
 .dv-seg button { padding: 0.4rem 0.8rem; border: 0; border-radius: 9px; background: transparent; color: var(--muted); cursor: pointer; white-space: nowrap; }
 .dv-seg button.on { background: rgba(255, 255, 255, 0.12); color: var(--text); }
 .dv-link { background: transparent; border: 0; color: var(--accent-soft); cursor: pointer; text-decoration: underline; }
-.dv-surprise { padding: 0.5rem 1rem; backdrop-filter: none; }
 
 .dv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; }
 .dv-card { position: relative; aspect-ratio: 2 / 3; border-radius: 18px; overflow: hidden; background: var(--surface-strong); box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35); transition: box-shadow 0.2s ease; }
@@ -459,7 +458,6 @@ html body .nav-shell .nav-pill.active { background: rgba(255, 255, 255, 0.1); bo
 .sp-field input::placeholder { color: rgba(245, 247, 251, 0.4); }
 .sp-clear { width: 1.8rem; height: 1.8rem; flex: none; border: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.08); color: var(--muted); cursor: pointer; }
 .sp-clear:hover { color: var(--text); }
-.sp-esc { flex: none; padding: 0.2rem 0.55rem; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--muted); font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; }
 .sp-list { list-style: none; margin: 0; padding: 0.5rem; display: grid; gap: 0.2rem; overflow-y: auto; }
 .sp-item { display: grid; grid-template-columns: 2.8rem minmax(0, 1fr) auto; gap: 0.9rem; align-items: center; padding: 0.5rem 0.7rem; border-radius: 14px; cursor: pointer; }
 .sp-item.active { background: rgba(255, 122, 24, 0.12); box-shadow: inset 0 0 0 1px rgba(255, 122, 24, 0.35); }
@@ -474,7 +472,7 @@ html body .nav-shell .nav-pill.active { background: rgba(255, 255, 255, 0.1); bo
 .sp-note { margin: 0; padding: 1.5rem 1.3rem; color: var(--muted); text-align: center; font-size: 0.92rem; }
 @keyframes sp-fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes sp-rise { from { opacity: 0; transform: translateY(-12px) scale(0.98); } to { opacity: 1; transform: none; } }
-@media (max-width: 640px) { .sp-over { padding-top: 5rem; } .sp-esc { display: none; } .sp-go { display: none; } .sp-item { grid-template-columns: 2.8rem minmax(0, 1fr); } }
+@media (max-width: 640px) { .sp-over { padding-top: 5rem; } .sp-go { display: none; } .sp-item { grid-template-columns: 2.8rem minmax(0, 1fr); } }
 @media (prefers-reduced-motion: reduce) { .sp-over, .sp-box { animation: none; } }
 
 .pm-surface { border-radius: 26px; border: 1px solid var(--border); background: linear-gradient(180deg, rgba(20, 34, 56, 0.99), rgba(8, 16, 29, 0.99)); color: var(--text); overflow: hidden; box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6); }
@@ -510,3 +508,19 @@ html body .nav-shell .nav-pill.active { background: rgba(255, 255, 255, 0.1); bo
 .pm-person i { color: var(--muted); font-size: 0.8rem; }
 .pm-empty { margin: 0; padding: 1.5rem 0; text-align: center; color: var(--muted); }
 @media (max-width: 640px) { .pm-head { padding: 1.1rem 1.1rem 0.8rem; } .pm-tabs { margin: 0 1.1rem; } .pm-body { padding: 1.1rem 1.1rem 1.3rem; } }
+
+.fc-carousel { position: relative; }
+.fc-carousel .fc-strip { scrollbar-width: none; scroll-behavior: smooth; }
+.fc-carousel .fc-strip::-webkit-scrollbar { display: none; }
+.fc-rec { flex: none; width: 150px; scroll-snap-align: start; }
+.fc-arrow { position: absolute; top: calc(50% - 1.6rem); z-index: 2; width: 2.8rem; height: 2.8rem; border-radius: 50%; border: 1px solid var(--border); background: rgba(7, 17, 31, 0.88); color: var(--text); display: grid; place-items: center; cursor: pointer; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45); }
+.fc-arrow:hover { border-color: var(--accent); color: var(--accent-soft); }
+.fc-arrow.prev { left: -0.9rem; }
+.fc-arrow.next { right: -0.9rem; }
+@media (min-width: 992px) { .fc-rec { width: 170px; } }
+@media (max-width: 640px) { .fc-arrow { display: none; } }
+.pf-social { display: flex; align-items: center; gap: 0.6rem; justify-content: center; margin-top: 0.2rem; color: var(--muted); font-size: 0.95rem; }
+.pf-social button { padding: 0; border: 0; background: transparent; color: var(--muted); cursor: pointer; }
+.pf-social button b { color: var(--text); font-variant-numeric: tabular-nums; }
+.pf-social button:hover { color: var(--text); }
+@media (min-width: 992px) { .pf-social { justify-content: flex-start; } }

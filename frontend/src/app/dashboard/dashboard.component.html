@@ -19,8 +19,12 @@
           <div><b>{{ watched.length }}</b><span>Vus</span></div>
           <div><b>{{ favorites.length }}</b><span>Favoris</span></div>
           <div><b>{{ watchlist.length }}</b><span>Watchlist</span></div>
-          <button type="button" data-bs-toggle="modal" data-bs-target="#followersModal"><b>{{ followersCount }}</b><span>Abonné{{ followersCount >= 2 ? 's' : '' }}</span></button>
-          <button type="button" data-bs-toggle="modal" data-bs-target="#followingsModal"><b>{{ followingCount }}</b><span>Abonnement{{ followingCount >= 2 ? 's' : '' }}</span></button>
+        </div>
+
+        <div class="pf-social">
+          <button type="button" data-bs-toggle="modal" data-bs-target="#followersModal"><b>{{ followersCount }}</b> abonné{{ followersCount >= 2 ? "s" : "" }}</button>
+          <span aria-hidden="true">·</span>
+          <button type="button" data-bs-toggle="modal" data-bs-target="#followingsModal"><b>{{ followingCount }}</b> abonnement{{ followingCount >= 2 ? "s" : "" }}</button>
         </div>
 
         <div class="pf-actions">
