@@ -11,11 +11,8 @@
         <img
           [src]="movie?.poster_path ? 'https://image.tmdb.org/t/p/w500/' + movie?.poster_path : 'https://placehold.co/500x750?text=Aucun+poster+disponible'"
           alt="{{ movie?.title || 'Inconnu' }}"
+          [attr.title]="movie?.title"
         />
-        <div class="search-overlay">
-          <h2>{{ movie?.title || 'Titre inconnu' }}</h2>
-          <p>{{ movie?.release_date | date : "yyyy" }}</p>
-        </div>
       </a>
     </article>
   </div>
