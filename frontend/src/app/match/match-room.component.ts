@@ -89,10 +89,6 @@ export class MatchRoomComponent implements OnInit, OnDestroy {
     private meta: Meta
   ) {}
 
-  get orderedMatches(): any[] {
-    return [...this.matches].sort((a: any, b: any) => Number(!!b.picked) - Number(!!a.picked));
-  }
-
   ngOnInit(): void {
     this.meta.addTag({ name: 'robots', content: 'noindex, nofollow' });
     this.code = (this.route.snapshot.paramMap.get('code') ?? '').toLowerCase();
