@@ -19,9 +19,13 @@ import { DomSanitizer, SafeResourceUrl, Title, Meta } from '@angular/platform-br
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './details.component.html',
-  styleUrl: './details.component.css',
+  styles: [':host { display: block; }'],
 })
 export class DetailsComponent {
+  imageUrl(path: string | null | undefined, size: string, fallback = ''): string {
+    return path && /^\/[A-Za-z0-9_.-]{1,100}\.(jpg|jpeg|png|webp)$/.test(path) ? `https://image.tmdb.org/t/p/${size}${path}` : fallback;
+  }
+
   movie: any = null;
   collection: any;
 

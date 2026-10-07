@@ -1,253 +1,129 @@
-<section class="movie-page text-white">
-  <div
-    class="movie-banner"
-    [style.backgroundImage]="
-      'url(https://image.tmdb.org/t/p/original/' + movie?.backdrop_path + ')'
-    "
-  >
-    <div class="movie-backdrop"></div>
+<section class="fc-page text-white">
+  <div class="fc-hero">
+    <img *ngIf="movie?.backdrop_path" class="fc-bg" [src]="imageUrl(movie?.backdrop_path, 'w1280')" alt="" />
+    <div class="fc-shade"></div>
 
-    <div class="movie-content app-shell">
-      <div class="movie-hero glass-panel">
-        <div class="movie-copy">
-          <p class="eyebrow">Fiche film</p>
+    <div class="fc-inner">
+      <img
+        *ngIf="movie?.poster_path"
+        class="fc-poster"
+        [src]="imageUrl(movie?.poster_path, 'w500')"
+        [alt]="movie?.title || 'Affiche'"
+      />
+
+      <div class="fc-copy">
+        <p class="eyebrow">Fiche film</p>
+        <img *ngIf="logoUrl; else titleText" [src]="logoUrl" [alt]="movie?.title || movie?.original_title || 'Titre du film'" class="fc-logo" />
+        <ng-template #titleText>
+          <h1>{{ movie?.title || movie?.original_title }}</h1>
+        </ng-template>
+        <p class="fc-tagline" *ngIf="movie?.tagline">{{ movie?.tagline }}</p>
+
+        <div class="fc-facts">
+          <span class="dv-score">★ {{ movie?.vote_average | number : "1.0-1" }}</span>
+          <span>{{ movie?.vote_count | number : "1.0-0" }} avis</span>
+          <span>{{ getReleaseYear() }}</span>
+          <span>{{ formatRuntime(movie?.runtime) }}</span>
+        </div>
+
+        <div class="fc-genres">
+          <span *ngFor="let genre of movie?.genres" class="fc-genre">{{ genre.name }}</span>
+        </div>
+
+        <p class="fc-synopsis" [class.open]="overviewExpanded">{{ getOverview() }}</p>
+        <button *ngIf="canToggleOverview()" type="button" class="dv-link" (click)="toggleOverview()">
+          {{ overviewExpanded ? "Voir moins" : "Lire plus" }}
+        </button>
+
+        <p class="fc-director" *ngIf="getReal().length > 0">
+          Réalisation :
+          <ng-container *ngFor="let director of getReal(); let i = index">
+            <a [routerLink]="['/realisateur', director.id]">{{ director.name }}</a><span *ngIf="i < getReal().length - 1">, </span>
+          </ng-container>
+        </p>
+
+        <div class="fc-actions">
+          <button class="dv-btn dv-btn-main" [disabled]="!trailerKey" data-bs-toggle="modal" data-bs-target="#trailerModal">
+            <i class="fa-solid fa-play"></i> Bande-annonce
+          </button>
+          <button class="dv-btn" [class.on]="isWatched" (click)="toggleWatched()">
+            <i class="fa-solid fa-eye"></i> {{ isWatched ? "Vu" : "Marquer vu" }}
+          </button>
+          <button class="dv-btn" [class.on]="isFavorite" (click)="toggleFavorite()">
+            <i class="fa-solid fa-heart"></i> {{ isFavorite ? "Favori" : "Ajouter aux favoris" }}
+          </button>
+          <button class="dv-btn" [class.on]="isWatchlist" (click)="toggleWatchlist()">
+            <i class="fa-solid fa-clock"></i> {{ isWatchlist ? "Dans la watchlist" : "Watchlist" }}
+          </button>
+          <button class="dv-btn" (click)="copyPageLink()" aria-label="Copier le lien" title="Copier le lien">
+            <i class="fa-solid fa-link"></i> {{ copiedLink ? "Lien copié" : "" }}
+          </button>
+        </div>
+
+        <div *ngIf="!isLoggedIn" class="fc-hint">Connectez-vous pour ajouter ce film à vos listes.</div>
+
+        <div *ngIf="watchProviders" class="fc-providers">
+          <span>Disponible sur · {{ getProviderRegionLabel() }}</span>
+          <div class="fc-providers-row">
+            <img
+              *ngFor="let provider of combinedProviders()"
+              [src]="imageUrl(provider.logo_path, 'w92')"
+              [alt]="provider.provider_name"
+              [title]="provider.provider_name"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fc-sections app-shell">
+    <div class="dv-seg" role="group" aria-label="Sections">
+      <button type="button" [class.on]="activePanel === 'cast'" (click)="selectPanel('cast')">Distribution</button>
+      <button type="button" [class.on]="activePanel === 'similar'" (click)="selectPanel('similar')">Recommandations</button>
+    </div>
+
+    <div *ngIf="activePanel === 'cast'" class="fc-strip">
+      <a
+        *ngFor="let actor of getLeadCast()"
+        class="fc-person"
+        [routerLink]="['/', actor.gender === 1 ? 'actrice' : 'acteur', actor.id]"
+      >
+        <img
+          loading="lazy"
+          [src]="imageUrl(actor.profile_path, 'w342', 'https://m.media-amazon.com/images/G/01/imdbpro/help/outline._CB1537462849_.png')"
+          [alt]="actor.name || 'Inconnu'"
+        />
+        <strong>{{ actor.name || "Inconnu" }}</strong>
+        <span>{{ actor.character || "Rôle inconnu" }}</span>
+      </a>
+    </div>
+
+    <div *ngIf="activePanel === 'similar'" class="dv-grid">
+      <article *ngFor="let similarMovie of getRecommendationList()" class="dv-card">
+        <a [routerLink]="['/film', similarMovie.id]" class="dv-poster">
           <img
-            *ngIf="logoUrl; else titleText"
-            [src]="logoUrl"
-            [alt]="movie?.title || movie?.original_title || 'Titre du film'"
-            class="movie-title-logo"
+            loading="lazy"
+            [src]="imageUrl(similarMovie.poster_path, 'w500', 'https://placehold.co/500x750?text=Aucun+poster+disponible')"
+            [alt]="similarMovie.title || 'Inconnu'"
           />
-          <ng-template #titleText>
-            <h1>{{ movie?.title || movie?.original_title }}</h1>
-          </ng-template>
-          <p class="movie-tagline" *ngIf="movie?.tagline">
-            {{ movie?.tagline }}
-          </p>
-
-          <div class="facts-row">
-            <span class="fact-pill rating-pill">
-              {{ movie?.vote_average | number : "1.0-0" }}/10
+          <div class="dv-info">
+            <strong>{{ similarMovie.title || "Titre inconnu" }}</strong>
+            <span>
+              <ng-container *ngIf="similarMovie.release_date">{{ similarMovie.release_date | date : "yyyy" }}</ng-container>
+              <ng-container *ngIf="similarMovie.vote_average"> · ★ {{ similarMovie.vote_average | number : "1.0-1" }}</ng-container>
             </span>
-            <span class="fact-pill"
-              >{{ movie?.vote_count | number : "1.0-0" }} avis</span
-            >
-            <span class="fact-pill">{{ getReleaseYear() }}</span>
-            <span class="fact-pill">{{ formatRuntime(movie?.runtime) }}</span>
           </div>
-
-          <div class="genre-row">
-            <span *ngFor="let genre of movie?.genres" class="genre-pill">{{
-              genre.name
-            }}</span>
-          </div>
-
-          <p class="movie-meta">
-            Réalisation :
-            <ng-container *ngFor="let director of getReal(); let i = index">
-              <a [routerLink]="['/realisateur', director.id]">{{
-                director.name
-              }}</a>
-              <span *ngIf="i < getReal().length - 1">, </span>
-            </ng-container>
-          </p>
-
-          <div *ngIf="watchProviders" class="providers-block">
-            <div class="providers-header">
-              <strong>Disponible sur</strong>
-              <span>{{ getProviderRegionLabel() }}</span>
-            </div>
-            <div class="providers-row">
-              <div
-                *ngFor="let provider of combinedProviders()"
-                class="provider-item"
-              >
-                <img
-                  [src]="'https://image.tmdb.org/t/p/w45' + provider.logo_path"
-                  [alt]="provider.provider_name"
-                  class="providers-logo"
-                />
-                <small>{{ provider.provider_name }}</small>
-              </div>
-            </div>
-          </div>
-
-          <div class="action-row">
-            <button
-              class="hero-action"
-              [ngClass]="{ active: isWatched }"
-              (click)="toggleWatched()"
-            >
-              <i class="fa-solid fa-eye"></i>
-              <span>{{
-                isWatched ? "Retirer des vus" : "Ajouter aux vus"
-              }}</span>
-            </button>
-            <button
-              class="hero-action"
-              [ngClass]="{ favorite: isFavorite }"
-              (click)="toggleFavorite()"
-            >
-              <i class="fa-solid fa-heart"></i>
-              <span>{{
-                isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"
-              }}</span>
-            </button>
-            <button
-              class="hero-action"
-              [ngClass]="{ watchlist: isWatchlist }"
-              (click)="toggleWatchlist()"
-            >
-              <i class="fa-solid fa-clock"></i>
-              <span>{{
-                isWatchlist
-                  ? "Retirer de la watchlist"
-                  : "Ajouter à la watchlist"
-              }}</span>
-            </button>
-            <button
-              class="hero-action"
-              [disabled]="!trailerKey"
-              data-bs-toggle="modal"
-              data-bs-target="#trailerModal"
-            >
-              <i class="fa-solid fa-play"></i>
-              <span>Bande-annonce</span>
-            </button>
-            <button class="hero-action subtle" (click)="copyPageLink()">
-              <i class="fa-solid fa-link"></i>
-              <span>{{ copiedLink ? "Lien copié" : "Copier le lien" }}</span>
-            </button>
-          </div>
-
-          <div *ngIf="!isLoggedIn" class="login-hint">
-            Connectez-vous pour ajouter ce film à vos listes.
-          </div>
-        </div>
-
-        <aside class="movie-sidebar">
-          <div class="summary-card">
-            <h2>Synopsis</h2>
-            <p class="movie-description">{{ getOverview() }}</p>
-            <button
-              *ngIf="canToggleOverview()"
-              type="button"
-              class="text-toggle"
-              (click)="toggleOverview()"
-            >
-              {{ overviewExpanded ? "Voir moins" : "Lire plus" }}
-            </button>
-          </div>
-        </aside>
-      </div>
+        </a>
+      </article>
     </div>
   </div>
 
-  <div class="movie-sections app-shell">
-    <div class="panel-switcher">
-      <button
-        type="button"
-        class="panel-tab"
-        [class.active]="activePanel === 'cast'"
-        (click)="selectPanel('cast')"
-      >
-        Distribution
-      </button>
-      <button
-        type="button"
-        class="panel-tab"
-        [class.active]="activePanel === 'similar'"
-        (click)="selectPanel('similar')"
-      >
-        Recommandations
-      </button>
-    </div>
-
-    <section *ngIf="activePanel === 'cast'" class="content-panel glass-panel">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Casting</p>
-          <h2>Les visages du film</h2>
-        </div>
-        <span class="panel-counter">{{ getLeadCast().length }} personnes</span>
-      </div>
-
-      <div class="media-strip">
-        <article *ngFor="let actor of getLeadCast()" class="media-card">
-          <a
-            [routerLink]="[
-              '/',
-              actor.gender === 1 ? 'actrice' : 'acteur',
-              actor.id
-            ]"
-            class="media-link"
-          >
-            <img
-              [src]="
-                actor.profile_path
-                  ? 'https://image.tmdb.org/t/p/w500' + actor.profile_path
-                  : 'https://m.media-amazon.com/images/G/01/imdbpro/help/outline._CB1537462849_.png'
-              "
-              alt="{{ actor.name || 'Inconnu' }}"
-            />
-            <div class="media-overlay">
-              <h3>{{ actor.name || "Inconnu" }}</h3>
-              <p>{{ actor.character || "Rôle inconnu" }}</p>
-            </div>
-          </a>
-        </article>
-      </div>
-    </section>
-
-    <section
-      *ngIf="activePanel === 'similar'"
-      class="content-panel glass-panel"
-    >
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">À voir aussi</p>
-          <h2>Recommandations proches</h2>
-        </div>
-        <span class="panel-counter"
-          >{{ getRecommendationList().length }} suggestions</span
-        >
-      </div>
-
-      <div class="media-strip">
-        <article
-          *ngFor="let similarMovie of getRecommendationList()"
-          class="media-card"
-        >
-          <a [routerLink]="['/film', similarMovie.id]" class="media-link">
-            <img
-              [src]="
-                similarMovie.poster_path
-                  ? 'https://image.tmdb.org/t/p/w500' + similarMovie.poster_path
-                  : 'https://m.media-amazon.com/images/G/01/imdbpro/help/outline._CB1537462849_.png'
-              "
-              alt="{{ similarMovie.title || 'Inconnu' }}"
-            />
-          </a>
-        </article>
-      </div>
-    </section>
-  </div>
-
-  <div
-    class="modal fade"
-    id="trailerModal"
-    tabindex="-1"
-    aria-labelledby="trailerModalLabel"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="trailerModal" tabindex="-1" aria-labelledby="trailerModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl">
       <div class="modal-content trailer-modal-content bg-black">
         <div class="trailer-header">
-          <button
-            type="button"
-            class="btn-close btn-close-white"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="ratio ratio-16x9" *ngIf="trailerUrl">
