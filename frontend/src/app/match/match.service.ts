@@ -24,6 +24,7 @@ export interface MatchParticipant {
   name: string;
   registered: boolean;
   avatar_url: string;
+  active: boolean;
   swiped: number;
   me: boolean;
 }
