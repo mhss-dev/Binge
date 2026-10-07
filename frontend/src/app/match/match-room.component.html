@@ -1,4 +1,4 @@
-<section class="match-page app-shell text-white">
+<section class="match-page app-shell text-white" [class.centered]="phase !== 'play'">
   <div *ngIf="phase === 'loading'" class="match-panel glass-panel match-center">
     <p>Chargement du salon…</p>
   </div>

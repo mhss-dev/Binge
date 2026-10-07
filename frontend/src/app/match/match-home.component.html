@@ -1,20 +1,28 @@
 <section class="match-page app-shell text-white">
-  <div class="match-hero glass-panel">
+  <div class="match-hero">
     <div class="hero-copy">
       <p class="eyebrow">Choisir ensemble</p>
       <h1>Match</h1>
       <p class="match-lead">
-        Génère un lien, envoie-le à quelqu'un (pas besoin de compte) et swipez les mêmes films chacun de votre côté. Quand vous
-        aimez le même, c'est un match. Et ça continue après le premier.
+        Plus de « on regarde quoi ? » qui dure une heure. Génère un lien, envoie-le à quelqu'un, et swipez les mêmes films chacun de
+        votre côté. Quand vous aimez le même, c'est un match, et ça continue après le premier.
       </p>
       <div *ngIf="error" class="match-error">{{ error }}</div>
-      <button type="button" class="match-primary" [disabled]="creating" (click)="create()">
+      <button type="button" class="match-primary big" [disabled]="creating" (click)="create()">
         {{ creating ? 'Création…' : 'Générer un lien' }}
       </button>
+      <p class="hero-note">Gratuit. La personne invitée n'a pas besoin de compte.</p>
     </div>
-    <div *ngIf="fan.length === 3" class="fan" aria-hidden="true">
+
+    <div *ngIf="fan.length >= 3" class="collage" aria-hidden="true">
       <img *ngFor="let url of fan" referrerpolicy="no-referrer" [src]="url" alt="" />
     </div>
+
+    <ol class="hero-steps">
+      <li><b>1</b><span>Génère un lien</span></li>
+      <li><b>2</b><span>Envoie-le, sans compte pour l'invité</span></li>
+      <li><b>3</b><span>Swipez, matchez, regardez</span></li>
+    </ol>
   </div>
 
   <div class="match-panel glass-panel" *ngIf="sessions.length > 0">

@@ -25,7 +25,7 @@ export class MatchHomeComponent implements OnInit {
         const results: { poster_path?: string | null }[] = Array.isArray(data?.results) ? data.results : [];
         this.fan = results
           .filter((m) => !!m.poster_path && /^\/[A-Za-z0-9_.-]{1,100}\.(jpg|jpeg|png|webp)$/.test(m.poster_path))
-          .slice(0, 3)
+          .slice(0, 6)
           .map((m) => `https://image.tmdb.org/t/p/w342${m.poster_path}`);
       },
       error: () => (this.fan = []),

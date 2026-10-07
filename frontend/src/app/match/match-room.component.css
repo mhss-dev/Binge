@@ -1,4 +1,5 @@
-.match-page { padding: 6.5rem 0 3rem; display: grid; gap: 1rem; }
+.match-page { min-height: 100svh; padding: 6.5rem 0 3rem; display: grid; gap: 1rem; align-content: start; }
+.match-page.centered { align-content: center; }
 .match-panel { display: grid; gap: 0.7rem; align-content: start; }
 .match-panel h1, .match-panel h2 { margin: 0; line-height: 1.1; }
 .match-panel h1 { font-size: 1.7rem; }
