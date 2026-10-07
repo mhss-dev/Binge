@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MovieService } from 'app/movie.service';
-import { interval, Subscription } from 'rxjs';
+import { catchError, forkJoin, of } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -14,50 +14,30 @@ import { interval, Subscription } from 'rxjs';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   username: string = '';
   password: string = '';
   loginMessage: string = '';
   alertType: string = '';
   passwordType: string = 'password';
-  movie: any = {};
-
-  private subscription: Subscription = new Subscription();
-  private readonly BACKDROP_UPDATE_INTERVAL = 5000;
+  wall: string[][] = [];
 
   constructor(private authService: AuthService, private router: Router, private movieService: MovieService) {}
 
-
   ngOnInit(): void {
-    this.loadMovies();
-    this.setupBackgroundUpdater();
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
-  
-  loadMovies() {
-    this.movieService.getNowPlayingMovies().subscribe({
-      next: (data) => {        
-        this.movie = data.results[2];                
-      },
-      error: (error) => {
-        console.error('Erreur lors de la récupération des films en cours', error);
+    const page = (n: number) => this.movieService.getNowPlayingMovies('BE', n).pipe(catchError(() => of({ results: [] })));
+    forkJoin([page(1), page(2)]).subscribe(([first, second]) => {
+      const posters: string[] = [...(first?.results ?? []), ...(second?.results ?? [])]
+        .map((movie: { poster_path?: string | null }) => movie.poster_path ?? '')
+        .filter((path: string) => /^\/[A-Za-z0-9_.-]{1,100}\.(jpg|jpeg|png|webp)$/.test(path))
+        .map((path: string) => `https://image.tmdb.org/t/p/w342${path}`);
+      if (posters.length < 9) {
+        return;
       }
+      const rows: string[][] = [[], [], []];
+      posters.forEach((url, index) => rows[index % 3].push(url));
+      this.wall = rows.map((row) => [...row, ...row]);
     });
-  }
-
-  private getRandomBackdrop(min: number, max: number): number {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
-  private setupBackgroundUpdater() {
-    this.subscription.add(
-      interval(this.BACKDROP_UPDATE_INTERVAL).subscribe(() => {
-        this.loadMovies();
-      })
-    );
   }
 
   onLogin(): void {
