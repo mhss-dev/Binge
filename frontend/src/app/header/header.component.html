@@ -18,20 +18,9 @@
       </div>
     </div>
     <div class="hm-side">
-      <ng-container *ngFor="let film of movie ? [movie] : []; trackBy: trackById">
-        <a [routerLink]="['/film', film.id]" class="hm-featured">
-          <img *ngIf="imageUrl(film.poster_path, 'w185')" [src]="imageUrl(film.poster_path, 'w185')" alt="" />
-          <div>
-            <span class="hm-kicker">En vedette</span>
-            <strong>{{ film.title }}</strong>
-            <small>
-              <ng-container *ngIf="film.release_date">{{ film.release_date | date : "yyyy" }}</ng-container>
-              <ng-container *ngIf="film.vote_average"> · ★ {{ film.vote_average | number : "1.0-1" }}</ng-container>
-            </small>
-            <em>Voir la fiche <i class="fa-solid fa-arrow-right"></i></em>
-          </div>
-        </a>
-      </ng-container>
+      <a *ngFor="let film of movie ? [movie] : []; trackBy: trackById" [routerLink]="['/film', film.id]" class="hm-featured">
+        {{ film.title }}<ng-container *ngIf="film.release_date"> ({{ film.release_date | date : "yyyy" }})</ng-container>
+      </a>
       <div class="dv-dots" *ngIf="films.length > 1">
         <button
           *ngFor="let film of films; let i = index"
