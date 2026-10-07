@@ -16,6 +16,56 @@ export class AuthService {
 
   constructor(private http: HttpClient) {
     this.checkLoginStatus();
+    this.watchSession();
+  }
+
+  private watchSession(): void {
+    window.addEventListener('storage', (event) => {
+      if (event.key !== 'token' && event.key !== null) {
+        return;
+      }
+      if (this.hasValidToken() && !this.isLoggedInSubject.value) {
+        this.checkLoginStatus();
+      } else {
+        this.syncSession();
+      }
+    });
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        this.syncSession();
+      }
+    });
+    setInterval(() => this.syncSession(), 30000);
+  }
+
+  private hasValidToken(): boolean {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      return false;
+    }
+    try {
+      const payload = JSON.parse(atob((token.split('.')[1] ?? '').replace(/-/g, '+').replace(/_/g, '/')));
+      return typeof payload.exp !== 'number' || payload.exp * 1000 > Date.now();
+    } catch {
+      return false;
+    }
+  }
+
+  private syncSession(): void {
+    if (this.isLoggedInSubject.value && !this.hasValidToken()) {
+      this.expireSession();
+    }
+  }
+
+  expireSession(): void {
+    localStorage.removeItem('token');
+    if (this.isLoggedInSubject.value) {
+      this.setLoggedIn(false);
+    }
+  }
+
+  isSessionRejected(error: HttpErrorResponse): boolean {
+    return error.status === 401 || (error.status === 403 && (error.error === 'Forbidden' || error.error?.message === 'Token expiré'));
   }
 
   checkLoginStatus(): void {
@@ -120,6 +170,7 @@ export class AuthService {
       }),
       catchError(error => {
         console.error('Erreur lors de la déconnexion:', error);
+        localStorage.removeItem('token');
         this.setLoggedIn(false);
         return throwError(() => new Error('Déconnexion échouée'));
       })

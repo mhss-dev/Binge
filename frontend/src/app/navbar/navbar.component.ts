@@ -26,6 +26,7 @@ export class NavbarComponent {
   unreadNotifications: any[] = [];
   movieTitles: any[] = [];
   isSearchOpen = false;
+  private wasLoggedIn = false;
 
   typeMapping: { [key: string]: string } = {
     watchlist: 'dans sa watchlist',
@@ -52,11 +53,19 @@ export class NavbarComponent {
       next: (status: boolean) => {
         this.isLoggedIn = status;
         if (this.isLoggedIn) {
+          this.wasLoggedIn = true;
           this.getNickname();
           this.fetchNotifications();
         } else {
+          this.nickname = null;
+          this.avatar = '';
           this.unreadNotifications = [];
           this.notificationService.clearNotificationsState();
+          this.closeNavbar();
+          if (this.wasLoggedIn && this.requiresLogin(this.router.url)) {
+            this.router.navigate(['/login']);
+          }
+          this.wasLoggedIn = false;
         }
       },
       error: (error: any) => {
@@ -72,6 +81,11 @@ export class NavbarComponent {
         }
       });
     });
+  }
+
+  private requiresLogin(url: string): boolean {
+    const path = url.split('?')[0];
+    return path === '/match' || path.startsWith('/membres') || path.startsWith('/profil/');
   }
 
   searchFilms(): void {
