@@ -56,16 +56,15 @@
         <div class="people">
           <span *ngFor="let p of state?.participants ?? info?.participants ?? []" class="person" [class.me]="p.me" [class.away]="!p.active" [attr.title]="p.active ? null : 'Absent depuis un moment : les matchs ne l\'attendent pas'">
             <img [src]="avatar(p)" alt="" />
-            <span class="pn"><b>{{ p.name }}</b><small>{{ p.swiped }} film{{ p.swiped > 1 ? 's' : '' }} swipé{{ p.swiped > 1 ? 's' : '' }}</small></span>
+            <b>{{ p.name }}</b>
+            <small>{{ p.swiped }}</small>
           </span>
-          <span class="person stat"><span class="pn"><b>{{ matches.length }}</b><small>match{{ matches.length > 1 ? 's' : '' }}</small></span></span>
         </div>
         <div class="room-actions">
           <button type="button" class="match-ghost" (click)="share()">Inviter</button>
           <button type="button" class="match-ghost" (click)="copyLink()">{{ copied ? 'Lien copié' : 'Copier le lien' }}</button>
           <button *ngIf="state?.session?.mine_to_manage" type="button" class="match-ghost" (click)="startEditGenres()">Genres</button>
         </div>
-        <input class="match-input link-input" type="text" readonly [value]="link" aria-label="Lien d'invitation" (focus)="selectLink($event)" />
       </div>
 
       <div class="room-notes">
