@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, HostListener, OnDestroy, signal } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { MatSelectModule } from '@angular/material/select';
 import { FavoritesService } from '../favorites.service';
 import { WatchlistService } from '../watchlist.service';
 import { WatchedService } from '../watched.service';
@@ -19,7 +18,7 @@ type ProfileSortOption = 'title_asc' | 'title_desc';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, MatSelectModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
@@ -65,6 +64,30 @@ export class DashboardComponent implements OnDestroy {
   followingCount: number = 0;
   showEditIcon: boolean = false;
   connectedDevices: any[] = [];
+  setProfileSort(value: string): void {
+    this.profileSortOption = value as ProfileSortOption;
+    this.onWatchedSortChange();
+  }
+
+  get isOwn(): boolean {
+    return !!this.nickname && !!this.currentNickname && this.nickname === this.currentNickname;
+  }
+
+  get isOther(): boolean {
+    return !!this.nickname && !!this.currentNickname && this.nickname !== this.currentNickname;
+  }
+
+  profileAvatar(): string {
+    const url = String(this.currentProfile?.avatar_url ?? '');
+    return /^assets\/images\/(?:[1-9]|1\d|2[0-4])\.png$/.test(url) ? url : 'assets/images/7.png';
+  }
+
+  poster(path: string | null | undefined): string {
+    return path && /^\/[A-Za-z0-9_.-]{1,100}\.(jpg|jpeg|png|webp)$/.test(path)
+      ? `https://image.tmdb.org/t/p/w342${path}`
+      : 'https://placehold.co/342x513?text=Aucun+poster';
+  }
+
   dashboardSearchQuery: string = '';
   profileSortOption: ProfileSortOption = 'title_asc';
   readonly watchedSortOptions = [
