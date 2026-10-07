@@ -57,7 +57,6 @@
 .tag.star { background: rgba(255, 179, 71, 0.18); color: var(--accent-soft); }
 .swipe-buttons { display: flex; gap: 1.8rem; }
 .round { width: 3.8rem; height: 3.8rem; border-radius: 50%; border: 2px solid; background: var(--surface); font-size: 1.4rem; cursor: pointer; transition: transform 0.15s ease, background 0.15s ease; }
-.round:hover { transform: scale(1.08); }
 .round.like { color: var(--success); border-color: var(--success); }
 .round.like:hover { background: rgba(77, 213, 161, 0.14); }
 .round.pass { color: var(--danger); border-color: var(--danger); }
