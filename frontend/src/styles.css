@@ -252,7 +252,7 @@ textarea {
 .dv-card.dv-skel { animation: dv-pulse 1.4s ease-in-out infinite; box-shadow: none; }
 .dv-poster { position: absolute; inset: 0; display: block; }
 .dv-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.dv-info { position: absolute; inset: auto 0 0 0; padding: 2.6rem 0.7rem 0.7rem; display: grid; gap: 0.1rem; background: linear-gradient(to top, rgba(5, 11, 20, 0.96), transparent); }
+.dv-info { position: absolute; inset: auto 0 0 0; padding: 1.8rem 0.7rem 0.6rem; display: grid; gap: 0.1rem; background: linear-gradient(to top, rgba(5, 11, 20, 0.96), transparent); }
 .dv-info strong { font-size: 0.92rem; line-height: 1.15; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .dv-info span { color: var(--muted); font-size: 0.78rem; }
 .dv-badges { position: absolute; top: 0.5rem; left: 0.5rem; display: flex; gap: 0.3rem; }

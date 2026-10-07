@@ -57,7 +57,7 @@
 
   <div class="dv-grid">
     <article *ngFor="let movie of films; trackBy: trackByMovieId" class="dv-card">
-      <a [routerLink]="['/film', movie?.id]" class="dv-poster">
+      <a [routerLink]="['/film', movie?.id]" class="dv-poster" [attr.title]="movie?.title">
         <img loading="lazy" [src]="imageUrl(movie?.poster_path, 'w500')" alt="{{ movie?.title || 'Inconnu' }}" />
         <div class="dv-badges">
           <span *ngIf="movie.isWatched" title="Vu"><i class="fa-solid fa-eye"></i></span>
@@ -65,7 +65,7 @@
           <span *ngIf="movie.isWatchlist" title="Dans la watchlist"><i class="fa-solid fa-clock"></i></span>
         </div>
         <div class="dv-info">
-          <strong>{{ movie?.title || "Titre inconnu" }}</strong>
+          <strong *ngIf="!movie?.poster_path">{{ movie?.title || "Titre inconnu" }}</strong>
           <span>
             <ng-container *ngIf="movie?.release_date">{{ movie?.release_date | date : "yyyy" }}</ng-container>
             <ng-container *ngIf="movie?.vote_average"> · ★ {{ movie?.vote_average | number : "1.0-1" }}</ng-container>

@@ -101,14 +101,14 @@
 
     <div *ngIf="activePanel === 'similar'" class="dv-grid">
       <article *ngFor="let similarMovie of getRecommendationList()" class="dv-card">
-        <a [routerLink]="['/film', similarMovie.id]" class="dv-poster">
+        <a [routerLink]="['/film', similarMovie.id]" class="dv-poster" [attr.title]="similarMovie.title">
           <img
             loading="lazy"
             [src]="imageUrl(similarMovie.poster_path, 'w500', 'https://placehold.co/500x750?text=Aucun+poster+disponible')"
             [alt]="similarMovie.title || 'Inconnu'"
           />
           <div class="dv-info">
-            <strong>{{ similarMovie.title || "Titre inconnu" }}</strong>
+            <strong *ngIf="!similarMovie.poster_path">{{ similarMovie.title || "Titre inconnu" }}</strong>
             <span>
               <ng-container *ngIf="similarMovie.release_date">{{ similarMovie.release_date | date : "yyyy" }}</ng-container>
               <ng-container *ngIf="similarMovie.vote_average"> · ★ {{ similarMovie.vote_average | number : "1.0-1" }}</ng-container>

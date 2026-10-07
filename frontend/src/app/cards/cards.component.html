@@ -23,10 +23,10 @@
 
   <div class="dv-grid">
     <article *ngFor="let movie of getActiveMovies(); trackBy: trackByMovieId" class="dv-card">
-      <a [routerLink]="['/film', movie?.id]" class="dv-poster">
+      <a [routerLink]="['/film', movie?.id]" class="dv-poster" [attr.title]="movie?.title">
         <img loading="lazy" [src]="imageUrl(movie?.poster_path)" alt="{{ movie?.title || 'Inconnu' }}" />
         <div class="dv-info">
-          <strong>{{ movie?.title || "Titre inconnu" }}</strong>
+          <strong *ngIf="!movie?.poster_path">{{ movie?.title || "Titre inconnu" }}</strong>
           <span>
             <ng-container *ngIf="movie?.release_date || movie?.first_air_date">{{ (movie?.release_date || movie?.first_air_date) | date : "yyyy" }}</ng-container>
             <ng-container *ngIf="movie?.vote_average"> · ★ {{ movie?.vote_average | number : "1.0-1" }}</ng-container>
