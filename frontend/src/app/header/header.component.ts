@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { Observable } from 'rxjs';
 import { MovieService } from '../movie.service';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-header',
@@ -15,7 +17,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   index = 0;
   private timer: ReturnType<typeof setInterval> | null = null;
 
-  constructor(private movieService: MovieService) {}
+  readonly isLoggedIn$: Observable<boolean>;
+
+  constructor(private movieService: MovieService, authService: AuthService) {
+    this.isLoggedIn$ = authService.isLoggedIn$;
+  }
 
   get movie(): any | null {
     return this.films.length > 0 ? this.films[this.index % this.films.length] : null;

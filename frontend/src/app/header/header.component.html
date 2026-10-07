@@ -15,6 +15,7 @@
       <div class="dv-hero-actions">
         <a routerLink="/films" class="dv-btn dv-btn-main"><i class="fa-solid fa-film"></i> Explorer le catalogue</a>
         <button type="button" class="dv-btn" (click)="scrollTo('aucinema')"><i class="fa-solid fa-ticket"></i> À l'affiche</button>
+        <a *ngIf="(isLoggedIn$ | async) === false" routerLink="/register" class="dv-btn"><i class="fa-solid fa-user-plus"></i> Créer un compte</a>
       </div>
     </div>
     <div class="hm-side">
