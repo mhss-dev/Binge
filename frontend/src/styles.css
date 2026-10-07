@@ -208,17 +208,18 @@ textarea {
 .mt-row.picked img { outline: 3px solid var(--success); }
 .mt-badge { display: inline-block; width: fit-content; padding: 0.15rem 0.6rem; border-radius: 999px; background: rgba(77, 213, 161, 0.15); color: var(--success) !important; font-size: 0.8rem; }
 
-.dv-page { padding: 5.6rem 0 5rem; display: grid; gap: 1.2rem; }
-.dv-hero { position: relative; overflow: hidden; min-height: clamp(420px, 66vh, 640px); border-radius: 32px; border: 1px solid var(--border); background: var(--bg-elevated); display: grid; align-items: end; }
+.dv-page { padding: 0 0 5rem; display: grid; gap: 1.2rem; }
+.dv-hero { position: relative; overflow: hidden; width: 100vw; margin: -6rem 0 0 calc(50% - 50vw); min-height: clamp(560px, 88vh, 860px); display: grid; align-items: end; background: var(--bg-elevated); }
 .dv-hero.dv-skel { animation: dv-pulse 1.4s ease-in-out infinite; }
 .dv-hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1s ease; }
 .dv-hero-bg.on { opacity: 1; }
-.dv-hero-shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(5, 11, 20, 0.92) 8%, rgba(5, 11, 20, 0.45) 55%, rgba(5, 11, 20, 0.1)), linear-gradient(0deg, rgba(5, 11, 20, 0.95), transparent 55%); }
-.dv-hero-copy { position: relative; z-index: 1; display: grid; gap: 0.7rem; max-width: 40rem; padding: 1.6rem; animation: dv-in 0.6s ease; }
-.dv-hero-copy h1 { margin: 0; font-size: clamp(2rem, 6vw, 3.8rem); line-height: 0.98; letter-spacing: -0.02em; text-wrap: balance; }
+.dv-hero-shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(5, 11, 20, 0.9) 6%, rgba(5, 11, 20, 0.4) 52%, rgba(5, 11, 20, 0)), linear-gradient(0deg, var(--bg) 2%, rgba(7, 17, 31, 0) 45%), linear-gradient(180deg, rgba(5, 11, 20, 0.55), transparent 22%); }
+.dv-hero-inner { position: relative; z-index: 1; width: min(100% - 2rem, var(--max-content-width)); margin: 0 auto; padding: 8rem 0 5rem; display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; }
+.dv-hero-copy { display: grid; gap: 0.8rem; max-width: 46rem; animation: dv-in 0.6s ease; }
+.dv-hero-copy h1 { margin: 0; font-size: clamp(2.6rem, 8vw, 5.8rem); line-height: 0.95; letter-spacing: -0.03em; text-wrap: balance; }
 .dv-hero-meta { display: flex; gap: 0.7rem; align-items: center; margin: 0; color: var(--muted); }
 .dv-score { padding: 0.1rem 0.6rem; border-radius: 999px; background: rgba(255, 179, 71, 0.18); color: var(--accent-soft); }
-.dv-hero-text { margin: 0; color: rgba(245, 247, 251, 0.82); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.dv-hero-text { margin: 0; font-size: 1.05rem; max-width: 40rem; color: rgba(245, 247, 251, 0.82); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
 .dv-hero-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.4rem; }
 .dv-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.1rem; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.08); color: var(--text); font-weight: 600; text-decoration: none; cursor: pointer; backdrop-filter: blur(6px); transition: transform 0.15s ease, background 0.15s ease; }
 .dv-btn:hover { transform: translateY(-1px); background: rgba(255, 255, 255, 0.16); }
@@ -226,11 +227,11 @@ textarea {
 .dv-btn-main { background: linear-gradient(135deg, var(--accent-soft), var(--accent)); border: 0; color: #1b0f02; box-shadow: 0 10px 30px rgba(255, 122, 24, 0.28); }
 .dv-btn-main:hover { background: linear-gradient(135deg, var(--accent-soft), var(--accent)); }
 .dv-btn:disabled { opacity: 0.5; cursor: default; }
-.dv-dots { position: absolute; z-index: 2; right: 1.4rem; bottom: 1.4rem; display: flex; gap: 0.4rem; }
+.dv-dots { display: flex; gap: 0.4rem; padding-bottom: 0.4rem; }
 .dv-dots button { width: 0.7rem; height: 0.7rem; padding: 0; border-radius: 999px; border: 0; background: rgba(255, 255, 255, 0.35); cursor: pointer; transition: width 0.25s ease, background 0.25s ease; }
 .dv-dots button.on { width: 1.8rem; background: var(--accent); }
 
-.dv-bar { position: sticky; top: 4.4rem; z-index: 20; display: grid; gap: 0.6rem; padding: 0.8rem; border-radius: 22px; border: 1px solid var(--border); background: rgba(7, 17, 31, 0.9); backdrop-filter: blur(12px); }
+.dv-bar { margin-top: -2.4rem; position: sticky; top: 4.4rem; z-index: 20; display: grid; gap: 0.6rem; padding: 0.8rem; border-radius: 22px; border: 1px solid var(--border); background: rgba(7, 17, 31, 0.9); backdrop-filter: blur(12px); }
 .dv-search { display: flex; align-items: center; gap: 0.6rem; padding: 0 0.9rem; min-height: 2.8rem; border-radius: 14px; border: 1px solid var(--border); background: rgba(255, 255, 255, 0.05); }
 .dv-search input { flex: 1; min-width: 0; background: transparent; border: 0; outline: none; color: var(--text); font-size: 1rem; }
 .dv-chips { display: flex; gap: 0.4rem; overflow-x: auto; scroll-snap-type: x proximity; padding-bottom: 0.2rem; scrollbar-width: none; }
@@ -265,7 +266,6 @@ textarea {
 .dv-end { text-align: center; color: var(--muted); margin: 0; }
 
 @media (min-width: 992px) {
-  .dv-hero-copy { padding: 3rem; }
   .dv-grid { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1.3rem; }
   .dv-bar { grid-template-columns: minmax(0, 1fr); }
 }

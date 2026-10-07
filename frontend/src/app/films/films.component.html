@@ -8,28 +8,30 @@
       alt=""
     />
     <div class="dv-hero-shade"></div>
-    <div class="dv-hero-copy" *ngFor="let film of [featured]; trackBy: trackByMovieId">
-      <p class="eyebrow">À la une{{ nickname ? " · pour " + nickname : "" }}</p>
-      <h1>{{ film.title }}</h1>
-      <p class="dv-hero-meta">
-        <span *ngIf="film.release_date">{{ film.release_date | date : "yyyy" }}</span>
-        <span *ngIf="film.vote_average" class="dv-score">★ {{ film.vote_average | number : "1.0-1" }}</span>
-      </p>
-      <p class="dv-hero-text">{{ film.overview }}</p>
-      <div class="dv-hero-actions">
-        <a class="dv-btn dv-btn-main" [routerLink]="['/film', film.id]"><i class="fa-solid fa-play"></i> Voir la fiche</a>
-        <button type="button" class="dv-btn" [class.on]="film.isWatchlist" (click)="toggleWatchlist(film.id)"><i class="fa-solid fa-clock"></i> Watchlist</button>
-        <button type="button" class="dv-btn" [class.on]="film.isFavorite" (click)="toggleFavorite(film.id)"><i class="fa-solid fa-heart"></i> Favori</button>
+    <div class="dv-hero-inner">
+      <div class="dv-hero-copy" *ngFor="let film of [featured]; trackBy: trackByMovieId">
+        <p class="eyebrow">À la une{{ nickname ? " · pour " + nickname : "" }}</p>
+        <h1>{{ film.title }}</h1>
+        <p class="dv-hero-meta">
+          <span *ngIf="film.release_date">{{ film.release_date | date : "yyyy" }}</span>
+          <span *ngIf="film.vote_average" class="dv-score">★ {{ film.vote_average | number : "1.0-1" }}</span>
+        </p>
+        <p class="dv-hero-text">{{ film.overview }}</p>
+        <div class="dv-hero-actions">
+          <a class="dv-btn dv-btn-main" [routerLink]="['/film', film.id]"><i class="fa-solid fa-play"></i> Voir la fiche</a>
+          <button type="button" class="dv-btn" [class.on]="film.isWatchlist" (click)="toggleWatchlist(film.id)"><i class="fa-solid fa-clock"></i> Watchlist</button>
+          <button type="button" class="dv-btn" [class.on]="film.isFavorite" (click)="toggleFavorite(film.id)"><i class="fa-solid fa-heart"></i> Favori</button>
+        </div>
       </div>
-    </div>
-    <div class="dv-dots" *ngIf="featuredList.length > 1">
-      <button
-        *ngFor="let film of featuredList; let i = index"
-        type="button"
-        [class.on]="i === featuredIndex % featuredList.length"
-        [attr.aria-label]="'Afficher ' + film.title"
-        (click)="pickFeatured(i)"
-      ></button>
+      <div class="dv-dots" *ngIf="featuredList.length > 1">
+        <button
+          *ngFor="let film of featuredList; let i = index"
+          type="button"
+          [class.on]="i === featuredIndex % featuredList.length"
+          [attr.aria-label]="'Afficher ' + film.title"
+          (click)="pickFeatured(i)"
+        ></button>
+      </div>
     </div>
   </div>
   <ng-template #heroLoading><div class="dv-hero dv-skel"></div></ng-template>
