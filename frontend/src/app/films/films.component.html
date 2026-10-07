@@ -87,12 +87,4 @@
   <p class="dv-end" *ngIf="isLoading && films.length > 0">Chargement…</p>
   <p class="dv-end" *ngIf="!isLoading && films.length === 0">Aucun film ne correspond. Essaie un autre genre ou une autre recherche.</p>
 
-  <div class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3 text-center" *ngIf="toastMessage">
-    <div class="toast align-items-center text-white border-0 d-flex justify-content-center discover-toast" role="alert" aria-live="assertive" aria-atomic="true" #toastElement>
-      <div class="d-flex text-center">
-        <div class="toast-body text-center">{{ toastMessage }}</div>
-      </div>
-    </div>
-  </div>
-
 </section>

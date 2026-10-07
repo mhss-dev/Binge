@@ -8,12 +8,13 @@ import { filter } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ScrollTopComponent } from './scroll-top/scroll-top.component';
 import { SearchPaletteComponent } from './search-palette/search-palette.component';
+import { ToastComponent } from './toast/toast.component';
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NavbarComponent, RouterLink, RouterLinkActive, FooterComponent, CommonModule, ScrollTopComponent, SearchPaletteComponent],
+  imports: [RouterOutlet, NavbarComponent, RouterLink, RouterLinkActive, FooterComponent, CommonModule, ScrollTopComponent, SearchPaletteComponent, ToastComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

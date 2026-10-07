@@ -16,7 +16,7 @@ import { WatchlistService } from '../watchlist.service';
 import { WatchedService } from '../watched.service';
 import { AuthService } from '../auth.service';
 import { Title } from '@angular/platform-browser';
-import { Toast } from 'bootstrap';
+import { ToastService } from '../toast/toast.service';
 
 @Component({
   selector: 'app-films',
@@ -28,9 +28,8 @@ import { Toast } from 'bootstrap';
 export class FilmsComponent implements OnDestroy {
   private readonly destroyRef = inject(DestroyRef);
   private readonly scrollWatch = watchScroll(inject(NgZone), inject(DestroyRef), () => !this.isLoading && this.hasMore && nearBottom(), () => this.loadFilms(this.currentPage + 1));
-  @ViewChild('toastElement', { static: false }) toastElement!: ElementRef;
 
-  toastMessage: string = '';
+  private readonly toasts = inject(ToastService);
   films: any[] = [];
 
   totalPages: number = 0;
@@ -345,7 +344,7 @@ export class FilmsComponent implements OnDestroy {
     const movie = this.films.find((m) => m.id === movieId);
 
     if (!this.isLoggedIn) {
-      this.showToast("Vous devez être connecté pour pouvoir effectuer cette action");
+      this.showToast('Connecte-toi pour utiliser tes listes');
       return;
     }
 
@@ -367,7 +366,7 @@ export class FilmsComponent implements OnDestroy {
 
     if (isCurrentlyFavorite) {
       const movie = this.films.find((m) => m.id === movieId);
-      this.showToast(movie.title + ` est déjà dans vos favoris`);
+      this.showToast(`${movie.title} est déjà dans vos favoris`);
       return;
     }
 
@@ -375,16 +374,17 @@ export class FilmsComponent implements OnDestroy {
       next: () => {
         const movie = this.films.find((m) => m.id === movieId);
         if (movie) {
+          const leftWatchlist = movie.isWatchlist;
           movie.isFavorite = true;
           movie.isWatched = true;
           movie.isWatchlist = false;
-          this.showToast(movie.title + ` a été ajouté dans vos favoris et vos vus`);
+          this.showToast(`${movie.title} ajouté aux favoris et aux vus${leftWatchlist ? ', retiré de la watchlist' : ''}`);
           this.cdr.detectChanges();
         }
       },
       error: (err) => {
         if (err.status === 400) {
-          this.showToast(`Erreur: Le film est déjà dans les favoris.`);
+          this.showToast('Ce film est déjà dans vos favoris');
         } else {
           this.showToast(`Erreur lors de l'ajout aux favoris. Êtes-vous connecté(e) ?`);
           console.error('Erreur ajout aux favoris', err);
@@ -394,10 +394,7 @@ export class FilmsComponent implements OnDestroy {
   }
 
   showToast(message: string): void {
-    this.toastMessage = message;
-    this.cdr.detectChanges();
-    const toast = new Toast(this.toastElement.nativeElement);
-    toast.show();
+    this.toasts.show(message);
   }
 
   removeFromFavorites(movieId: number): void {
@@ -405,7 +402,7 @@ export class FilmsComponent implements OnDestroy {
       (movie) => movie.id === movieId
     )?.isFavorite;
     if (!isCurrentlyFavorite) {
-      this.showToast("Le film n'est pas dans vos favoris !");
+      this.showToast("Ce film n'est pas dans vos favoris");
       return;
     }
 
@@ -414,7 +411,7 @@ export class FilmsComponent implements OnDestroy {
         const movie = this.films.find((m) => m.id === movieId);
         if (movie) {
           movie.isFavorite = false;
-          this.showToast(movie.title + ` a été retiré de vos favoris`);
+          this.showToast(`${movie.title} retiré des favoris`);
         }
         this.cdr.detectChanges();
       },
@@ -445,7 +442,7 @@ export class FilmsComponent implements OnDestroy {
       (movie) => movie.id === movieId
     )?.isWatchlist;
     if (isCurrentlyInWatchlist) {
-      this.showToast('Le film est déjà dans votre watchlist !');
+      this.showToast('Ce film est déjà dans votre watchlist');
       return;
     }
 
@@ -453,9 +450,12 @@ export class FilmsComponent implements OnDestroy {
       next: () => {
         const movie = this.films.find((m) => m.id === movieId);
         if (movie) {
-          this.removeWatched(movieId);
+          const leftWatched = movie.isWatched;
+          if (leftWatched) {
+            this.removeWatched(movieId);
+          }
           movie.isWatchlist = true;
-          this.showToast(movie.title + ` a été ajouté dans votre watchlist`);
+          this.showToast(`${movie.title} ajouté à la watchlist${leftWatched ? ', retiré des vus' : ''}`);
         }
         this.cdr.detectChanges();
       },
@@ -470,7 +470,7 @@ export class FilmsComponent implements OnDestroy {
       (movie) => movie.id === movieId
     )?.isWatchlist;
     if (!isCurrentlyInWatchlist) {
-      this.showToast("Le film n'est pas dans votre watchlist !");
+      this.showToast("Ce film n'est pas dans votre watchlist");
       return;
     }
 
@@ -479,7 +479,7 @@ export class FilmsComponent implements OnDestroy {
         const movie = this.films.find((m) => m.id === movieId);
         if (movie) {
           movie.isWatchlist = false;
-          this.showToast(movie.title + ` a été retiré de votre watchlist.`);
+          this.showToast(`${movie.title} retiré de la watchlist`);
         }
         this.cdr.detectChanges();
       },
@@ -493,7 +493,7 @@ export class FilmsComponent implements OnDestroy {
     const movie = this.films.find((m) => m.id === movieId);
 
     if (!this.isLoggedIn) {
-      this.showToast("Vous devez être connecté pour pouvoir effectuer cette action");
+      this.showToast('Connecte-toi pour utiliser tes listes');
       return;
     }
 
@@ -527,7 +527,7 @@ export class FilmsComponent implements OnDestroy {
     const movie = this.films.find((m) => m.id === movieId);
 
     if (!this.isLoggedIn) {
-      this.showToast("Vous devez être connecté pour pouvoir effectuer cette action");
+      this.showToast('Connecte-toi pour utiliser tes listes');
       return;
     }
     if (!movie) {
@@ -561,7 +561,7 @@ export class FilmsComponent implements OnDestroy {
       (movie) => movie.id === movieId
     )?.isWatched;
     if (isCurrentlyWatched) {
-      this.showToast('Le film est déjà marqué comme vu !');
+      this.showToast('Ce film est déjà dans vos vus');
       return;
     }
 
@@ -569,15 +569,16 @@ export class FilmsComponent implements OnDestroy {
       next: () => {
         const movie = this.films.find((m) => m.id === movieId);
         if (movie) {
+          const leftWatchlist = movie.isWatchlist;
           movie.isWatched = true;
           movie.isWatchlist = false;
-          this.showToast(movie.title + ` a été ajouté dans vos films vus !`);
+          this.showToast(`${movie.title} marqué comme vu${leftWatchlist ? ', retiré de la watchlist' : ''}`);
           this.cdr.detectChanges();
         }
       },
       error: (err) => {
         if (err.status === 400) {
-          this.showToast(`Erreur : Le film est déjà dans les films vus.`);
+          this.showToast('Ce film est déjà dans vos vus');
         } else {
           this.showToast("Erreur lors de l'ajout aux films vus. Êtes-vous connecté(e) ?");
           console.error('Erreur ajout aux films vus', err);
@@ -591,7 +592,7 @@ export class FilmsComponent implements OnDestroy {
       (movie) => movie.id === movieId
     )?.isWatched;
     if (!isCurrentlyWatched) {
-      this.showToast("Le film n'est pas marqué comme vu !");
+      this.showToast("Ce film n'est pas dans vos vus");
       return;
     }
 
@@ -600,7 +601,7 @@ export class FilmsComponent implements OnDestroy {
         const movie = this.films.find((m) => m.id === movieId);
         if (movie) {
           movie.isWatched = false;
-          this.showToast(movie.title + ` a été retiré de vos films vus !`);
+          this.showToast(`${movie.title} retiré des vus`);
         }
         this.cdr.detectChanges();
       },
