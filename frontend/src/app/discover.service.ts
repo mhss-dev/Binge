@@ -15,7 +15,8 @@ export class DiscoverService {
     adult: boolean = false,
     sortOption: string = 'popularity.desc',
     genreId: string = '',
-    minYear?: number
+    minYear?: number,
+    era?: number | null
   ): Observable<any> {
     const validPage = Math.max(1, Math.min(page, 500));
 
@@ -31,6 +32,10 @@ export class DiscoverService {
       params = params.set('primary_release_date.gte', `${minYear}-01-01`);
     }
     
+    if (era) {
+      params = params.set('era', era.toString());
+    }
+
     const url = `${this.apiUrl}/films`;
 
     return this.http.get<any>(url, { params }).pipe(

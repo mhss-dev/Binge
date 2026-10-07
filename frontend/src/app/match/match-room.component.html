@@ -73,17 +73,22 @@
         <div class="room-actions">
           <button type="button" class="match-ghost" (click)="share()">Inviter</button>
           <button type="button" class="match-ghost" (click)="copyLink()">{{ copied ? 'Lien copié' : 'Copier le lien' }}</button>
-          <button *ngIf="state?.session?.mine_to_manage" type="button" class="match-ghost" (click)="startEditGenres()">Genres</button>
+          <button *ngIf="state?.session?.mine_to_manage" type="button" class="match-ghost" (click)="startEditGenres()">Filtres</button>
         </div>
       </div>
 
       <div class="room-notes">
         <div *ngIf="alone" class="waiting">En attente de quelqu'un : envoie-lui le lien, il n'a pas besoin de compte.</div>
         <div *ngIf="editingGenres" class="match-panel glass-panel">
-          <h2>Genres</h2>
+          <h2>Genres et époques</h2>
           <div class="chip-row">
             <button *ngFor="let genre of genres" type="button" class="chip" [class.active]="draftGenres.includes(genre.id)" (click)="toggleDraft(genre.id)">
               {{ genre.label }}
+            </button>
+          </div>
+          <div class="chip-row">
+            <button *ngFor="let era of eras" type="button" class="chip" [class.active]="draftEra === era.value" (click)="toggleEra(era.value)">
+              {{ era.label }}
             </button>
           </div>
           <div class="room-actions">

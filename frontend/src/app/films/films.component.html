@@ -44,6 +44,9 @@
     <div class="dv-chips" role="group" aria-label="Genres">
       <button type="button" *ngFor="let genre of genreOptions" [class.on]="selectedGenre === genre.value && !searchQuery" (click)="setGenre(genre.value)">{{ genre.label }}</button>
     </div>
+    <div class="dv-chips" role="group" aria-label="Époques">
+      <button type="button" *ngFor="let era of eraOptions" [class.on]="selectedEra === era.value && !searchQuery" (click)="setEra(era.value)">{{ era.label }}</button>
+    </div>
     <div class="dv-row">
       <div class="dv-seg" role="group" aria-label="Trier">
         <button type="button" *ngFor="let option of sortOptions" [class.on]="sortOption === option.value" (click)="setSort(option.value)">{{ option.label }}</button>

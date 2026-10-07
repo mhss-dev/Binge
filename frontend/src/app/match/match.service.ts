@@ -6,6 +6,7 @@ import { environment } from '@env/environment';
 export interface MatchFilters {
   genres?: number[];
   yearFrom?: number;
+  era?: number;
 }
 
 export interface MatchSession {
@@ -89,6 +90,17 @@ export interface JoinResult {
   name: string;
   guest_token?: string;
 }
+
+export const ERAS: { value: number; label: string }[] = [
+  { value: 2020, label: '2020s' },
+  { value: 2010, label: '2010s' },
+  { value: 2000, label: '2000s' },
+  { value: 1990, label: '90s' },
+  { value: 1980, label: '80s' },
+  { value: 1970, label: '70s' },
+  { value: 1960, label: '60s' },
+  { value: 1900, label: 'Avant 1960' },
+];
 
 export const MATCH_GENRES: { id: number; label: string }[] = [
   { id: 28, label: 'Action' },

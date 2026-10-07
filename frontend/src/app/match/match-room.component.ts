@@ -7,6 +7,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { WatchlistService } from '../watchlist.service';
 import {
+  ERAS,
   MATCH_GENRES,
   MatchCard,
   MatchEntry,
@@ -57,6 +58,8 @@ export class MatchRoomComponent implements OnInit, OnDestroy {
   copied = false;
   editingGenres = false;
   draftGenres: number[] = [];
+  draftEra: number | null = null;
+  readonly eras = ERAS;
   watchlisted = new Set<number>();
   readonly confetti = Array.from({ length: 34 }, (_, k) => {
     const colors = ['#ffb347', '#ff7a18', '#4dd5a1', '#ff4f81', '#7cc4ff', '#ffffff'];
@@ -436,6 +439,7 @@ export class MatchRoomComponent implements OnInit, OnDestroy {
 
   startEditGenres(): void {
     this.draftGenres = [...(this.state?.session.filters.genres ?? this.info?.session.filters.genres ?? [])];
+    this.draftEra = this.state?.session.filters.era ?? this.info?.session.filters.era ?? null;
     this.editingGenres = true;
   }
 
@@ -447,8 +451,12 @@ export class MatchRoomComponent implements OnInit, OnDestroy {
         : this.draftGenres;
   }
 
+  toggleEra(value: number): void {
+    this.draftEra = this.draftEra === value ? null : value;
+  }
+
   applyGenres(): void {
-    this.matchService.updateFilters(this.code, { genres: this.draftGenres }).subscribe({
+    this.matchService.updateFilters(this.code, this.draftEra ? { genres: this.draftGenres, era: this.draftEra } : { genres: this.draftGenres }).subscribe({
       next: () => {
         this.editingGenres = false;
         this.exhausted = false;

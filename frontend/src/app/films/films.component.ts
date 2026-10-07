@@ -3,6 +3,7 @@ import { Component, HostListener, ChangeDetectorRef, OnDestroy, signal, ViewChil
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { nearBottom, watchScroll } from '../scroll.util';
 import { DiscoverService } from '../discover.service';
+import { ERAS } from '../match/match.service';
 
 import { FormsModule } from '@angular/forms';
 import {
@@ -49,6 +50,8 @@ export class FilmsComponent implements OnDestroy {
   nickname: string | null = null;
   sortOption: string = 'popularity.desc';
   selectedGenre: string = '';
+  selectedEra: number | null = null;
+  readonly eraOptions = ERAS;
   featuredIndex = 0;
   readonly skeletons = Array.from({ length: 12 });
   readonly sortOptions = [
@@ -176,6 +179,12 @@ export class FilmsComponent implements OnDestroy {
     this.reload();
   }
 
+  setEra(value: number | null): void {
+    this.selectedEra = this.selectedEra === value ? null : value;
+    this.searchQuery = '';
+    this.reload();
+  }
+
   setSort(value: string): void {
     this.sortOption = value;
     this.searchQuery = '';
@@ -196,7 +205,7 @@ export class FilmsComponent implements OnDestroy {
     const token = this.loadToken;
 
     this.discoverService
-      .getFilms(page, false, this.sortOption, this.selectedGenre)
+      .getFilms(page, false, this.sortOption, this.selectedGenre, undefined, this.selectedEra)
       .subscribe({
         next: (data) => {
           if (token !== this.loadToken) {
@@ -283,11 +292,12 @@ export class FilmsComponent implements OnDestroy {
     this.searchQuery = '';
     this.sortOption = 'popularity.desc';
     this.selectedGenre = '';
+    this.selectedEra = null;
     this.reload();
   }
 
   hasActiveFilters(): boolean {
-    return Boolean(this.searchQuery || this.selectedGenre || this.sortOption !== 'popularity.desc');
+    return Boolean(this.searchQuery || this.selectedGenre || this.selectedEra || this.sortOption !== 'popularity.desc');
   }
 
   trackByMovieId(index: number, movie: any): number {
