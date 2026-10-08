@@ -4,6 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { nearBottom, watchScroll } from '../scroll.util';
 import { DiscoverService } from '../discover.service';
 import { ERAS } from '../match/match.service';
+import { RailDirective } from '../rail.directive';
 
 import { FormsModule } from '@angular/forms';
 import {
@@ -21,7 +22,7 @@ import { ToastService } from '../toast/toast.service';
 @Component({
   selector: 'app-films',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, RailDirective],
   templateUrl: './films.component.html',
   styles: [':host { display: block; }'],
 })
