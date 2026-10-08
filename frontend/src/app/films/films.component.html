@@ -41,11 +41,19 @@
       <i class="fa-solid fa-magnifying-glass"></i>
       <input type="search" placeholder="Trouvez un film" aria-label="Recherche" [(ngModel)]="searchQuery" name="searchQuery" (input)="onSearchInput()" />
     </form>
-    <div class="dv-chips" role="group" aria-label="Genres">
+    <div class="dv-rail">
+      <button type="button" class="dv-rail-btn prev" (click)="genreRail.slide(-1)" aria-label="Défiler vers la gauche"><i class="fa-solid fa-chevron-left"></i></button>
+      <div class="dv-chips" appRail #genreRail="appRail" role="group" aria-label="Genres">
       <button type="button" *ngFor="let genre of genreOptions" [class.on]="selectedGenre === genre.value && !searchQuery" (click)="setGenre(genre.value)">{{ genre.label }}</button>
     </div>
-    <div class="dv-chips" role="group" aria-label="Époques">
+      <button type="button" class="dv-rail-btn next" (click)="genreRail.slide(1)" aria-label="Défiler vers la droite"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+    <div class="dv-rail">
+      <button type="button" class="dv-rail-btn prev" (click)="eraRail.slide(-1)" aria-label="Défiler vers la gauche"><i class="fa-solid fa-chevron-left"></i></button>
+      <div class="dv-chips" appRail #eraRail="appRail" role="group" aria-label="Époques">
       <button type="button" *ngFor="let era of eraOptions" [class.on]="selectedEra === era.value && !searchQuery" (click)="setEra(era.value)">{{ era.label }}</button>
+    </div>
+      <button type="button" class="dv-rail-btn next" (click)="eraRail.slide(1)" aria-label="Défiler vers la droite"><i class="fa-solid fa-chevron-right"></i></button>
     </div>
     <div class="dv-row">
       <div class="dv-seg" role="group" aria-label="Trier">
