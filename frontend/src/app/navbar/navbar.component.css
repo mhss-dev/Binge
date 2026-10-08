@@ -12,8 +12,6 @@
   z-index: 1000;
   padding: 0;
   transition: background-color 0.25s ease;
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
 }
 
 .topbar-stack {
