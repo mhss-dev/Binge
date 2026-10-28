@@ -1,1 +1,86 @@
-<p>series works!</p>
+<section class="dv-page app-shell text-white">
+  <div class="dv-hero" *ngIf="featured; else heroLoading">
+    <img
+      *ngFor="let serie of featuredList; let i = index"
+      class="dv-hero-bg"
+      [class.on]="i === featuredIndex % featuredList.length"
+      [src]="imageUrl(serie.backdrop_path, 'w1280')"
+      alt=""
+    />
+    <div class="dv-hero-shade"></div>
+    <div class="dv-hero-inner">
+      <div class="dv-hero-copy" *ngFor="let serie of [featured]; trackBy: trackBySerieId">
+        <p class="eyebrow">Séries à la une</p>
+        <h1>{{ serie.name }}</h1>
+        <p class="dv-hero-meta">
+          <span *ngIf="serie.first_air_date">{{ serie.first_air_date | date : "yyyy" }}</span>
+          <span *ngIf="serie.vote_average" class="dv-score">★ {{ serie.vote_average | number : "1.0-1" }}</span>
+        </p>
+        <p class="dv-hero-text">{{ serie.overview }}</p>
+        <div class="dv-hero-actions">
+          <a class="dv-btn dv-btn-main" [routerLink]="['/serie', serie.id]"><i class="fa-solid fa-play"></i> Voir la fiche</a>
+        </div>
+      </div>
+      <div class="dv-dots" *ngIf="featuredList.length > 1">
+        <button
+          *ngFor="let serie of featuredList; let i = index"
+          type="button"
+          [class.on]="i === featuredIndex % featuredList.length"
+          [attr.aria-label]="'Afficher ' + serie.name"
+          (click)="pickFeatured(i)"
+        ></button>
+      </div>
+    </div>
+  </div>
+  <ng-template #heroLoading><div class="dv-hero dv-skel"></div></ng-template>
+
+  <div class="dv-bar">
+    <form class="dv-search" (submit)="$event.preventDefault()">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="search" placeholder="Trouvez une série" aria-label="Recherche" [(ngModel)]="searchQuery" name="searchQuery" (input)="onSearchInput()" />
+    </form>
+    <div class="dv-rail">
+      <button type="button" class="dv-rail-btn prev" (click)="genreRail.slide(-1)" aria-label="Défiler vers la gauche"><i class="fa-solid fa-chevron-left"></i></button>
+      <div class="dv-chips" appRail #genreRail="appRail" role="group" aria-label="Genres">
+      <button type="button" *ngFor="let genre of genreOptions" [class.on]="selectedGenre === genre.value && !searchQuery" (click)="setGenre(genre.value)">{{ genre.label }}</button>
+    </div>
+      <button type="button" class="dv-rail-btn next" (click)="genreRail.slide(1)" aria-label="Défiler vers la droite"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+    <div class="dv-rail">
+      <button type="button" class="dv-rail-btn prev" (click)="eraRail.slide(-1)" aria-label="Défiler vers la gauche"><i class="fa-solid fa-chevron-left"></i></button>
+      <div class="dv-chips" appRail #eraRail="appRail" role="group" aria-label="Époques">
+      <button type="button" *ngFor="let era of eraOptions" [class.on]="selectedEra === era.value && !searchQuery" (click)="setEra(era.value)">{{ era.label }}</button>
+    </div>
+      <button type="button" class="dv-rail-btn next" (click)="eraRail.slide(1)" aria-label="Défiler vers la droite"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+    <div class="dv-row">
+      <div class="dv-seg" role="group" aria-label="Trier">
+        <button type="button" *ngFor="let option of sortOptions" [class.on]="sortOption === option.value" (click)="setSort(option.value)">{{ option.label }}</button>
+      </div>
+      <div class="dv-row-end">
+        <button *ngIf="hasActiveFilters()" type="button" class="dv-link" (click)="clearFilters()">Réinitialiser</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="dv-grid">
+    <article *ngFor="let serie of series; trackBy: trackBySerieId" class="dv-card">
+      <a [routerLink]="['/serie', serie?.id]" class="dv-poster" [attr.title]="serie?.name">
+        <img loading="lazy" [src]="imageUrl(serie?.poster_path, 'w500')" alt="{{ serie?.name || 'Inconnu' }}" />
+        <div class="dv-info">
+          <strong *ngIf="!serie?.poster_path">{{ serie?.name || "Titre inconnu" }}</strong>
+          <span>
+            <ng-container *ngIf="serie?.first_air_date">{{ serie?.first_air_date | date : "yyyy" }}</ng-container>
+            <ng-container *ngIf="serie?.vote_average"> · ★ {{ serie?.vote_average | number : "1.0-1" }}</ng-container>
+          </span>
+        </div>
+      </a>
+    </article>
+
+    <div *ngFor="let item of skeletons" class="dv-card dv-skel" [hidden]="!(isLoading && series.length === 0)"></div>
+  </div>
+
+  <p class="dv-end" *ngIf="isLoading && series.length > 0">Chargement…</p>
+  <p class="dv-end" *ngIf="!isLoading && series.length === 0">Aucune série ne correspond. Essaie un autre genre ou une autre recherche.</p>
+
+</section>

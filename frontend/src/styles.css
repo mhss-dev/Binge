@@ -513,6 +513,18 @@ html body .nav-shell .nav-pill.active { background: rgba(255, 255, 255, 0.1); bo
 .fc-arrow.prev { left: 0.5rem; }
 .fc-arrow.next { right: 0.5rem; }
 @media (min-width: 992px) { .fc-rec { width: 170px; } }
+
+.sd-error { padding-top: 7rem; }
+.sd-episodes { display: grid; gap: 0.8rem; }
+.sd-season { justify-self: start; max-width: 100%; }
+.sd-episode { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: 1rem; align-items: start; padding: 0.7rem; border-radius: 18px; border: 1px solid var(--border); background: rgba(255, 255, 255, 0.03); }
+.sd-episode img, .sd-still-empty { width: 100%; aspect-ratio: 16 / 9; border-radius: 12px; object-fit: cover; background: var(--surface-strong); }
+.sd-still-empty { display: grid; place-items: center; color: var(--muted); }
+.sd-episode-copy { display: grid; gap: 0.25rem; min-width: 0; }
+.sd-episode-meta { color: var(--muted); font-size: 0.85rem; }
+.sd-episode-copy p { margin: 0.2rem 0 0; color: rgba(245, 247, 251, 0.8); line-height: 1.5; font-size: 0.92rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+@media (min-width: 768px) { .sd-episode { grid-template-columns: 14rem minmax(0, 1fr); } }
+@media (max-width: 480px) { .sd-episode { grid-template-columns: 1fr; } }
 @media (max-width: 640px) { .fc-arrow { display: none; } }
 .pf-social { display: flex; align-items: center; gap: 0.6rem; justify-content: center; margin-top: 0.2rem; color: var(--muted); font-size: 0.95rem; }
 .pf-social button { padding: 0; border: 0; background: transparent; color: var(--muted); cursor: pointer; }

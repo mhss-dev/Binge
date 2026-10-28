@@ -30,6 +30,10 @@
               <i class="fa-solid fa-film"></i>
               <span>Découverte</span>
             </a>
+            <a routerLink="/series" routerLinkActive="active" class="nav-pill" (click)="closeNavbar()">
+              <i class="fa-solid fa-tv"></i>
+              <span>Séries</span>
+            </a>
             <a *ngIf="isLoggedIn" routerLink="/match" routerLinkActive="active" class="nav-pill" (click)="closeNavbar()">
               <i class="fa-solid fa-heart"></i>
               <span>Match</span>

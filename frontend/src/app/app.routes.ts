@@ -12,6 +12,7 @@ import { CardsComponent } from './cards/cards.component';
 import { SearchComponent } from './search/search.component';
 import { TopRatedComponent } from './top-rated/top-rated.component';
 import { SeriesComponent } from './series/series.component';
+import { SerieDetailsComponent } from './serie-details/serie-details.component';
 import { MatchHomeComponent } from './match/match-home.component';
 import { MatchRoomComponent } from './match/match-room.component';
 
@@ -25,6 +26,7 @@ export const routes: Routes = [
     { path: 'match/:code', component: MatchRoomComponent },
     { path: 'membres', component: MembersComponent, canActivate:[AuthGuard] },
     { path: 'film/:id', component: DetailsComponent },
+    { path: 'serie/:id', component: SerieDetailsComponent },
     { path: 'acteur/:id', component: ActorComponent },
     { path: 'actrice/:id', component: ActorComponent },
     { path: 'realisateur/:id', component: ActorComponent },

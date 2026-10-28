@@ -1,5 +1,5 @@
 // Link previews read the raw HTML without running Angular:
-// for crawlers, swap the generic meta tags of index.html for the film's own.
+// for crawlers, swap the generic meta tags of index.html for the film's or series' own.
 const API = "https://backend-binge.onrender.com/api";
 const IMG = "https://image.tmdb.org/t/p";
 const BOTS = /bot|crawler|spider|preview|facebookexternalhit|whatsapp|telegram|slack|discord|mattermost|embedly|skype|linkedin/i;
@@ -14,27 +14,29 @@ export default async (request: Request, context: { next: () => Promise<Response>
   const response = await context.next();
   if (!BOTS.test(request.headers.get("user-agent") || "")) return response;
 
-  const id = new URL(request.url).pathname.match(/^\/film\/(\d+)/)?.[1];
+  const [, kind, id] = new URL(request.url).pathname.match(/^\/(film|serie)\/(\d+)/) || [];
   if (!id) return response;
+  const isSerie = kind === "serie";
 
   let movie;
   try {
     // Render may be asleep: give up rather than make the crawler time out.
-    const res = await fetch(`${API}/films/${id}`, { signal: AbortSignal.timeout(8000) });
+    const res = await fetch(`${API}/${isSerie ? "series" : "films"}/${id}`, { signal: AbortSignal.timeout(8000) });
     if (!res.ok) return response;
     movie = await res.json();
   } catch {
     return response;
   }
 
-  const name = movie.title || movie.original_title;
+  const name = movie.title || movie.name || movie.original_title || movie.original_name;
   if (!name) return response;
 
-  const year = (movie.release_date || "").slice(0, 4);
+  const year = (movie.release_date || movie.first_air_date || "").slice(0, 4);
   const title = year ? `${name} (${year})` : name;
   const facts = [
     (movie.genres || []).map((g: { name: string }) => g.name).slice(0, 3).join(", "),
     movie.runtime ? `${Math.floor(movie.runtime / 60)}h${String(movie.runtime % 60).padStart(2, "0")}` : "",
+    movie.number_of_seasons ? `${movie.number_of_seasons} saison${movie.number_of_seasons > 1 ? "s" : ""}` : "",
     movie.vote_average ? `★ ${movie.vote_average.toFixed(1)}` : "",
   ].filter(Boolean).join(" · ");
   // Previews show about two lines: the facts, then the first sentence of the synopsis.
@@ -52,7 +54,7 @@ export default async (request: Request, context: { next: () => Promise<Response>
     `<title>${escape(title)} • Binge</title>`,
     `<meta name="description" content="${escape(description)}">`,
     `<meta property="og:site_name" content="Binge">`,
-    `<meta property="og:type" content="video.movie">`,
+    `<meta property="og:type" content="${isSerie ? "video.tv_show" : "video.movie"}">`,
     `<meta property="og:url" content="${escape(request.url)}">`,
     `<meta property="og:title" content="${escape(title)}">`,
     `<meta property="og:description" content="${escape(description)}">`,
@@ -78,4 +80,4 @@ export default async (request: Request, context: { next: () => Promise<Response>
   return new Response(html, { status: response.status, headers });
 };
 
-export const config = { path: "/film/*" };
+export const config = { path: ["/film/*", "/serie/*"] };

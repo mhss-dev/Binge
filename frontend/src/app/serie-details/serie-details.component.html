@@ -1,0 +1,164 @@
+<section class="fc-page text-white">
+  <p *ngIf="error" class="dv-end app-shell sd-error">{{ error }}</p>
+
+  <div class="fc-hero">
+    <img *ngIf="serie?.backdrop_path" class="fc-bg" [src]="imageUrl(serie?.backdrop_path, 'w1280')" alt="" />
+    <div class="fc-shade"></div>
+
+    <div class="fc-inner">
+      <img
+        *ngIf="serie?.poster_path"
+        class="fc-poster"
+        [src]="imageUrl(serie?.poster_path, 'w500')"
+        [alt]="serie?.name || 'Affiche'"
+      />
+
+      <div class="fc-copy" *ngIf="serie">
+        <img *ngIf="logoUrl; else titleText" [src]="logoUrl" [alt]="serie?.name || serie?.original_name || 'Titre de la série'" class="fc-logo" />
+        <ng-template #titleText>
+          <h1>{{ serie?.name || serie?.original_name }}</h1>
+        </ng-template>
+        <p class="fc-tagline" *ngIf="serie?.tagline">{{ serie?.tagline }}</p>
+
+        <div class="fc-facts">
+          <span class="dv-score" *ngIf="serie?.vote_average">★ {{ serie?.vote_average | number : "1.0-1" }}</span>
+          <span *ngIf="serie?.vote_count">{{ serie?.vote_count | number : "1.0-0" }} avis</span>
+          <span>{{ getYears() }}</span>
+          <span>{{ getSeasonsLabel() }}</span>
+          <span *ngIf="getStatus()">{{ getStatus() }}</span>
+        </div>
+
+        <div class="fc-genres">
+          <span *ngFor="let genre of serie?.genres" class="fc-genre">{{ genre.name }}</span>
+        </div>
+
+        <p class="fc-synopsis" [class.open]="overviewExpanded">{{ getOverview() }}</p>
+        <button *ngIf="canToggleOverview()" type="button" class="dv-link" (click)="toggleOverview()">
+          {{ overviewExpanded ? "Voir moins" : "Lire plus" }}
+        </button>
+
+        <p class="fc-director" *ngIf="serie?.created_by?.length">
+          Création :
+          <ng-container *ngFor="let creator of serie.created_by; let last = last">{{ creator.name }}<span *ngIf="!last">, </span></ng-container>
+        </p>
+
+        <div class="fc-actions">
+          <button class="dv-btn dv-btn-main" [disabled]="!trailerKey" data-bs-toggle="modal" data-bs-target="#trailerModal">
+            <i class="fa-solid fa-play"></i> Bande-annonce
+          </button>
+          <button class="dv-btn" (click)="copyPageLink()" aria-label="Copier le lien" title="Copier le lien">
+            <i class="fa-solid fa-link"></i> {{ copiedLink ? "Lien copié" : "" }}
+          </button>
+        </div>
+
+        <div *ngIf="watchProviders" class="fc-providers">
+          <span>Disponible sur · {{ getProviderRegionLabel() }}</span>
+          <div class="fc-providers-row">
+            <img
+              *ngFor="let provider of combinedProviders()"
+              [src]="imageUrl(provider.logo_path, 'w92')"
+              [alt]="provider.provider_name"
+              [title]="provider.provider_name"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fc-sections app-shell" *ngIf="serie">
+    <div class="dv-seg" role="group" aria-label="Sections">
+      <button type="button" [class.on]="activePanel === 'episodes'" (click)="selectPanel('episodes')" *ngIf="seasons.length">Épisodes</button>
+      <button type="button" [class.on]="activePanel === 'cast'" (click)="selectPanel('cast')">Distribution</button>
+      <button type="button" [class.on]="activePanel === 'similar'" (click)="selectPanel('similar')">Recommandations</button>
+    </div>
+
+    <div *ngIf="activePanel === 'episodes' && seasons.length" class="sd-episodes">
+      <select class="dv-select sd-season" aria-label="Saison" [value]="selectedSeason" (change)="selectSeason($any($event.target).value)">
+        <option *ngFor="let season of seasons; trackBy: trackByNumber" [value]="season.season_number">
+          {{ season.name }} · {{ season.episode_count }} épisode{{ season.episode_count > 1 ? "s" : "" }}
+        </option>
+      </select>
+
+      <p class="dv-end" *ngIf="episodesLoading">Chargement…</p>
+
+      <article *ngFor="let episode of episodes; trackBy: trackByNumber" class="sd-episode">
+        <img
+          *ngIf="episode.still_path; else noStill"
+          loading="lazy"
+          [src]="imageUrl(episode.still_path, 'w300')"
+          [alt]="episode.name"
+        />
+        <ng-template #noStill><div class="sd-still-empty"><i class="fa-solid fa-tv"></i></div></ng-template>
+        <div class="sd-episode-copy">
+          <strong>{{ episode.episode_number }}. {{ episode.name }}</strong>
+          <span class="sd-episode-meta">
+            <ng-container *ngIf="episode.air_date">{{ episode.air_date | date : "dd/MM/yyyy" }}</ng-container>
+            <ng-container *ngIf="episode.runtime"> · {{ formatRuntime(episode.runtime) }}</ng-container>
+            <ng-container *ngIf="episode.vote_average"> · ★ {{ episode.vote_average | number : "1.0-1" }}</ng-container>
+          </span>
+          <p *ngIf="episode.overview">{{ episode.overview }}</p>
+        </div>
+      </article>
+    </div>
+
+    <div *ngIf="activePanel === 'cast'" class="fc-carousel">
+      <button type="button" class="fc-arrow prev" (click)="slide(strip, -1)" aria-label="Précédent"><i class="fa-solid fa-chevron-left"></i></button>
+      <div #strip class="fc-strip">
+        <a
+          *ngFor="let actor of getLeadCast()"
+          class="fc-person"
+          [routerLink]="['/', actor.gender === 1 ? 'actrice' : 'acteur', actor.id]"
+        >
+          <img
+            loading="lazy"
+            [src]="imageUrl(actor.profile_path, 'w342', 'https://m.media-amazon.com/images/G/01/imdbpro/help/outline._CB1537462849_.png')"
+            [alt]="actor.name || 'Inconnu'"
+          />
+          <strong>{{ actor.name || "Inconnu" }}</strong>
+          <span>{{ getRole(actor) }}</span>
+        </a>
+      </div>
+      <button type="button" class="fc-arrow next" (click)="slide(strip, 1)" aria-label="Suivant"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+
+    <div *ngIf="activePanel === 'similar'" class="fc-carousel">
+      <p class="dv-end" *ngIf="getRecommendationList().length === 0">Pas encore de recommandations pour cette série.</p>
+      <button type="button" class="fc-arrow prev" (click)="slide(rail, -1)" aria-label="Précédent"><i class="fa-solid fa-chevron-left"></i></button>
+      <div #rail class="fc-strip">
+        <article *ngFor="let similar of getRecommendationList()" class="dv-card fc-rec">
+          <a [routerLink]="['/serie', similar.id]" class="dv-poster" [attr.title]="similar.name">
+            <img
+              loading="lazy"
+              [src]="imageUrl(similar.poster_path, 'w500', 'https://placehold.co/500x750?text=Aucun+poster+disponible')"
+              [alt]="similar.name || 'Inconnu'"
+            />
+            <div class="dv-info">
+              <strong *ngIf="!similar.poster_path">{{ similar.name || "Titre inconnu" }}</strong>
+              <span>
+                <ng-container *ngIf="similar.first_air_date">{{ similar.first_air_date | date : "yyyy" }}</ng-container>
+                <ng-container *ngIf="similar.vote_average"> · ★ {{ similar.vote_average | number : "1.0-1" }}</ng-container>
+              </span>
+            </div>
+          </a>
+        </article>
+      </div>
+      <button type="button" class="fc-arrow next" (click)="slide(rail, 1)" aria-label="Suivant"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+  </div>
+
+  <div class="modal fade" id="trailerModal" tabindex="-1" aria-label="Bande-annonce" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content trailer-modal-content bg-black">
+        <div class="trailer-header">
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="ratio ratio-16x9" *ngIf="trailerUrl">
+            <iframe [src]="trailerUrl" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
