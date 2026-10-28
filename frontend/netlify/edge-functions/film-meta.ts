@@ -7,7 +7,8 @@ const BOTS = /bot|crawler|spider|preview|facebookexternalhit|whatsapp|telegram|s
 const escape = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-const clip = (s: string, max: number) => (s.length > max ? s.slice(0, max - 1).trimEnd() + "…" : s);
+const clip = (s: string, max: number) =>
+  s.length > max ? s.slice(0, max).replace(/[\s,;:—-]+\S*$/, "") + "…" : s;
 
 export default async (request: Request, context: { next: () => Promise<Response> }) => {
   const response = await context.next();
@@ -36,11 +37,15 @@ export default async (request: Request, context: { next: () => Promise<Response>
     movie.runtime ? `${Math.floor(movie.runtime / 60)}h${String(movie.runtime % 60).padStart(2, "0")}` : "",
     movie.vote_average ? `★ ${movie.vote_average.toFixed(1)}` : "",
   ].filter(Boolean).join(" · ");
-  const description = clip([facts, movie.overview].filter(Boolean).join(" — "), 300);
-  const image = movie.backdrop_path
-    ? { url: `${IMG}/w1280${movie.backdrop_path}`, width: 1280, height: 720 }
-    : movie.poster_path
-      ? { url: `${IMG}/w500${movie.poster_path}`, width: 500, height: 750 }
+  // Previews show about two lines: the facts, then the first sentence of the synopsis.
+  const overview = (movie.overview || "").trim();
+  const sentence = overview.match(/^[\s\S]*?[.!?…](?=\s|$)/)?.[0] || overview;
+  const description = clip([facts, sentence].filter(Boolean).join(" — "), 170);
+  // A portrait poster shows as a thumbnail beside the text; the wide backdrop is only a fallback.
+  const image = movie.poster_path
+    ? { url: `${IMG}/w342${movie.poster_path}`, width: 342, height: 513 }
+    : movie.backdrop_path
+      ? { url: `${IMG}/w1280${movie.backdrop_path}`, width: 1280, height: 720 }
       : null;
 
   const tags = [
@@ -51,7 +56,7 @@ export default async (request: Request, context: { next: () => Promise<Response>
     `<meta property="og:url" content="${escape(request.url)}">`,
     `<meta property="og:title" content="${escape(title)}">`,
     `<meta property="og:description" content="${escape(description)}">`,
-    `<meta name="twitter:card" content="${image ? "summary_large_image" : "summary"}">`,
+    `<meta name="twitter:card" content="${image && image.width > image.height ? "summary_large_image" : "summary"}">`,
     ...(image
       ? [
           `<meta property="og:image" content="${image.url}">`,
