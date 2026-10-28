@@ -37,6 +37,10 @@
   <ng-template #heroLoading><div class="dv-hero dv-skel"></div></ng-template>
 
   <div class="dv-bar">
+    <div class="dv-seg dv-kind" role="group" aria-label="Type">
+      <button type="button" [class.on]="kind === 'films'" (click)="switchKind('films')"><i class="fa-solid fa-film"></i> Films</button>
+      <button type="button" [class.on]="kind === 'series'" (click)="switchKind('series')"><i class="fa-solid fa-tv"></i> Séries</button>
+    </div>
     <form class="dv-search" (submit)="$event.preventDefault()">
       <i class="fa-solid fa-magnifying-glass"></i>
       <input type="search" placeholder="Trouvez un film" aria-label="Recherche" [(ngModel)]="searchQuery" name="searchQuery" (input)="onSearchInput()" />

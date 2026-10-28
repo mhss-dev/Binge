@@ -32,6 +32,11 @@ export class NavbarComponent {
     favorite: 'dans ses favoris',
   };
 
+  // Films and series are the two sides of Découverte.
+  isDiscoverRoute(): boolean {
+    return /^\/(films|series)(\/|\?|$)/.test(this.router.url);
+  }
+
   constructor(
     private authService: AuthService,
     private router: Router,

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, DestroyRef, NgZone, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { nearBottom, watchScroll } from '../scroll.util';
 import { SeriesService } from '../series.service';
@@ -11,6 +11,7 @@ import { ToastService } from '../toast/toast.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ERAS } from '../match/match.service';
 import { RailDirective } from '../rail.directive';
+import { readFilters, switchParams } from '../discover-kind';
 
 @Component({
   selector: 'app-series',
@@ -25,6 +26,7 @@ export class SeriesComponent implements OnInit, OnDestroy {
   private readonly scrollWatch = watchScroll(inject(NgZone), inject(DestroyRef), () => !this.isLoading && this.hasMore && nearBottom(), () => this.loadSeries(this.currentPage + 1));
 
   series: any[] = [];
+  readonly kind: 'films' | 'series' = 'series';
   totalPages = 0;
   currentPage = 1;
   isLoading = false;
@@ -68,6 +70,8 @@ export class SeriesComponent implements OnInit, OnDestroy {
     private seriesService: SeriesService,
     private seriesLists: SeriesListsService,
     private authService: AuthService,
+    private route: ActivatedRoute,
+    private router: Router,
     private cdr: ChangeDetectorRef,
     private titleService: Title
   ) {}
@@ -75,7 +79,15 @@ export class SeriesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.titleService.setTitle('Binge • séries');
     localStorage.setItem('redirectUrl', window.location.pathname);
-    this.loadSeries(1);
+    const filters = readFilters(this.route.snapshot.queryParamMap, this.genreOptions);
+    this.selectedGenre = filters.genre;
+    this.selectedEra = filters.era;
+    this.searchQuery = filters.query;
+    if (this.searchQuery) {
+      this.searchSeries(this.searchQuery);
+    } else {
+      this.loadSeries(1);
+    }
     this.startFeatured();
 
     this.authService.isLoggedIn$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((status) => {
@@ -278,6 +290,11 @@ export class SeriesComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       },
     });
+  }
+
+  switchKind(kind: 'films' | 'series'): void {
+    if (kind === this.kind) return;
+    this.router.navigate(['/films'], { queryParams: switchParams('films', { genre: this.selectedGenre, era: this.selectedEra, query: this.searchQuery }) });
   }
 
   clearFilters(): void {

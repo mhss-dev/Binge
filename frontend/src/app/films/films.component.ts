@@ -5,6 +5,7 @@ import { nearBottom, watchScroll } from '../scroll.util';
 import { DiscoverService } from '../discover.service';
 import { ERAS } from '../match/match.service';
 import { RailDirective } from '../rail.directive';
+import { readFilters, switchParams } from '../discover-kind';
 
 import { FormsModule } from '@angular/forms';
 import {
@@ -32,6 +33,7 @@ export class FilmsComponent implements OnDestroy {
 
   private readonly toasts = inject(ToastService);
   films: any[] = [];
+  readonly kind: 'films' | 'series' = 'films';
 
   totalPages: number = 0;
   currentPage: number = 1;
@@ -99,9 +101,17 @@ export class FilmsComponent implements OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    const filters = readFilters(this.route.snapshot.queryParamMap, this.genreOptions);
+    this.selectedGenre = filters.genre;
+    this.selectedEra = filters.era;
+    this.searchQuery = filters.query;
     this.route.params.subscribe((params) => {
       this.movieId = +params['id'];
-      this.loadFilms(1);
+      if (this.searchQuery) {
+        this.searchFilms(this.searchQuery);
+      } else {
+        this.loadFilms(1);
+      }
       this.titleService.setTitle('Binge • social & découverte de films');
     });
 
@@ -286,6 +296,11 @@ export class FilmsComponent implements OnDestroy {
         this.isLoading = false;
       },
     });
+  }
+
+  switchKind(kind: 'films' | 'series'): void {
+    if (kind === this.kind) return;
+    this.router.navigate(['/series'], { queryParams: switchParams('series', { genre: this.selectedGenre, era: this.selectedEra, query: this.searchQuery }) });
   }
 
   clearFilters(): void {

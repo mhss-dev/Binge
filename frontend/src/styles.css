@@ -232,6 +232,8 @@ textarea {
 .dv-chips::-webkit-scrollbar { display: none; }
 .dv-chips button { flex: none; scroll-snap-align: start; padding: 0.4rem 0.9rem; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--text); cursor: pointer; white-space: nowrap; }
 .dv-chips button.on { background: var(--accent); border-color: var(--accent); color: #1b0f02; font-weight: 700; }
+.dv-kind { justify-self: start; }
+.dv-kind button i { margin-right: 0.35rem; }
 .dv-row { display: flex; justify-content: space-between; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
 .dv-row-end { display: flex; gap: 0.6rem; align-items: center; }
 .dv-seg { display: inline-flex; padding: 0.2rem; border-radius: 12px; border: 1px solid var(--border); background: rgba(255, 255, 255, 0.04); overflow-x: auto; max-width: 100%; }
