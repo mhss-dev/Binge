@@ -66,6 +66,7 @@ export class AdminComponent implements OnInit {
         user.reset_pending = true;
         this.busy = false;
         this.cdr.detectChanges();
+        this.reveal(`resetLink-${user.id}`);
       },
       error: (err) => {
         this.busy = false;
@@ -88,6 +89,15 @@ export class AdminComponent implements OnInit {
   askDelete(user: AdminUser): void {
     this.closePanels();
     this.deleteFor = user;
+    this.cdr.detectChanges();
+    this.reveal(`deleteConfirm-${user.id}`);
+  }
+
+  // The panel opens under the account row: bring it into view and put the cursor in it.
+  private reveal(inputId: string): void {
+    const input = document.getElementById(inputId) as HTMLInputElement | null;
+    input?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    input?.focus({ preventScroll: true });
   }
 
   confirmDelete(): void {

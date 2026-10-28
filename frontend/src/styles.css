@@ -637,3 +637,4 @@ html body .nav-shell .nav-pill.active { background: rgba(255, 255, 255, 0.1); bo
   .ad-actions { grid-column: 1 / -1; justify-content: flex-start; }
   .ad-actions .dv-btn span { display: none; }
 }
+.ad-user .ad-panel { grid-column: 1 / -1; }

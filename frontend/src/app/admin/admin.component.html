@@ -16,25 +16,6 @@
     <a routerLink="/home" class="dv-link">Retour à l'accueil</a>
   </div>
 
-  <div class="ad-panel" *ngIf="resetFor">
-    <p>Lien pour <strong>{{ resetFor.nickname }}</strong>, valable une seule fois jusqu'au {{ resetExpires | date : "dd/MM/yyyy à HH:mm" }}. Envoie-le uniquement à cette personne : il permet de choisir un nouveau mot de passe pour son compte. Créer un nouveau lien annule celui-ci.</p>
-    <div class="ad-link">
-      <input type="text" readonly [value]="resetLink" aria-label="Lien de réinitialisation" (focus)="$any($event.target).select()" />
-      <button type="button" class="dv-btn dv-btn-main" (click)="copyLink()"><i class="fa-solid fa-copy"></i> {{ copied ? "Copié" : "Copier" }}</button>
-    </div>
-    <button type="button" class="dv-link" (click)="closePanels()">Fermer</button>
-  </div>
-
-  <div class="ad-panel ad-danger" *ngIf="deleteFor">
-    <p>Supprimer définitivement <strong>{{ deleteFor.nickname }}</strong> (n° {{ deleteFor.id }}) : ses listes, abonnements, notifications et matchs partent avec. C'est irréversible.</p>
-    <label class="pm-label" for="deleteConfirm">Tape <strong>{{ deleteFor.nickname }}</strong> pour confirmer</label>
-    <div class="ad-link">
-      <input id="deleteConfirm" type="text" [(ngModel)]="deleteConfirm" name="deleteConfirm" autocomplete="off" />
-      <button type="button" class="dv-btn ad-delete" [disabled]="busy || deleteConfirm !== deleteFor.nickname" (click)="confirmDelete()"><i class="fa-solid fa-trash"></i> Supprimer</button>
-    </div>
-    <button type="button" class="dv-link" (click)="closePanels()">Annuler</button>
-  </div>
-
   <div class="ad-list" *ngIf="state === 'ready'">
     <article class="ad-user" *ngFor="let user of filteredUsers">
       <img [src]="avatar(user)" alt="" />
@@ -47,6 +28,25 @@
         <button type="button" class="dv-btn" [disabled]="busy" (click)="createLink(user)" title="Créer un lien de nouveau mot de passe"><i class="fa-solid fa-key"></i><span>Lien mot de passe</span></button>
         <button type="button" class="dv-btn ad-delete" *ngIf="!user.is_admin" [disabled]="busy" (click)="askDelete(user)" title="Supprimer le compte"><i class="fa-solid fa-trash"></i><span>Supprimer</span></button>
       </div>
+
+      <div class="ad-panel" *ngIf="resetFor?.id === user.id">
+        <p>Lien pour <strong>{{ user.nickname }}</strong>, valable une seule fois jusqu'au {{ resetExpires | date : "dd/MM/yyyy à HH:mm" }}. Envoie-le uniquement à cette personne : il permet de choisir un nouveau mot de passe pour son compte. Créer un nouveau lien annule celui-ci.</p>
+        <div class="ad-link">
+          <input [id]="'resetLink-' + user.id" type="text" readonly [value]="resetLink" aria-label="Lien de réinitialisation" (focus)="$any($event.target).select()" />
+          <button type="button" class="dv-btn dv-btn-main" (click)="copyLink()"><i class="fa-solid fa-copy"></i> {{ copied ? "Copié" : "Copier" }}</button>
+        </div>
+        <button type="button" class="dv-link" (click)="closePanels()">Fermer</button>
+      </div>
+
+      <form class="ad-panel ad-danger" *ngIf="deleteFor?.id === user.id" (ngSubmit)="confirmDelete()">
+        <p>Supprimer définitivement <strong>{{ user.nickname }}</strong> (n° {{ user.id }}) : ses listes, abonnements, notifications et matchs partent avec. C'est irréversible.</p>
+        <label class="pm-label" [for]="'deleteConfirm-' + user.id">Tape <strong>{{ user.nickname }}</strong> pour confirmer</label>
+        <div class="ad-link">
+          <input [id]="'deleteConfirm-' + user.id" type="text" [(ngModel)]="deleteConfirm" name="deleteConfirm" autocomplete="off" />
+          <button type="submit" class="dv-btn ad-delete" [disabled]="busy || deleteConfirm !== user.nickname"><i class="fa-solid fa-trash"></i> Supprimer</button>
+        </div>
+        <button type="button" class="dv-link" (click)="closePanels()">Annuler</button>
+      </form>
     </article>
     <p class="dv-end" *ngIf="filteredUsers.length === 0">Aucun compte ne correspond.</p>
   </div>
