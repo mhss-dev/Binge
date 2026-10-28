@@ -12,7 +12,6 @@
       />
 
       <div class="fc-copy">
-        <p class="eyebrow">Fiche film</p>
         <img *ngIf="logoUrl; else titleText" [src]="logoUrl" [alt]="movie?.title || movie?.original_title || 'Titre du film'" class="fc-logo" />
         <ng-template #titleText>
           <h1>{{ movie?.title || movie?.original_title }}</h1>
