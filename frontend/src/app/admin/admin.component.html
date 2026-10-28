@@ -1,10 +1,10 @@
-<section class="ad-page app-shell text-white">
+<section class="acct-page app-shell text-white">
   <div class="section-heading">
     <div>
       <p class="eyebrow">Administration</p>
       <h1>Comptes</h1>
     </div>
-    <label class="dv-search ad-search" *ngIf="state === 'ready'">
+    <label class="dv-search acct-search" *ngIf="state === 'ready'">
       <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
       <input type="search" placeholder="Pseudo, identifiant ou n°" [(ngModel)]="query" name="query" aria-label="Chercher un compte" />
     </label>
@@ -16,36 +16,36 @@
     <a routerLink="/home" class="dv-link">Retour à l'accueil</a>
   </div>
 
-  <div class="ad-list" *ngIf="state === 'ready'">
-    <article class="ad-user" *ngFor="let user of filteredUsers">
+  <div class="acct-list" *ngIf="state === 'ready'">
+    <article class="acct-user" *ngFor="let user of filteredUsers">
       <img [src]="avatar(user)" alt="" />
-      <div class="ad-user-copy">
+      <div class="acct-user-copy">
         <a [routerLink]="['/profil', user.nickname]"><strong>{{ user.nickname }}</strong></a>
         <span>n° {{ user.id }} · identifiant {{ user.username }} · {{ user.watched }} vus · {{ user.favorites }} favoris</span>
-        <span class="ad-tag" *ngIf="user.reset_pending">Lien de mot de passe en attente</span>
+        <span class="acct-tag" *ngIf="user.reset_pending">Lien de mot de passe en attente</span>
       </div>
-      <div class="ad-actions">
+      <div class="acct-actions">
         <button type="button" class="dv-btn" [disabled]="busy" (click)="createLink(user)" title="Créer un lien de nouveau mot de passe"><i class="fa-solid fa-key"></i><span>Lien mot de passe</span></button>
-        <button type="button" class="dv-btn ad-delete" *ngIf="!user.is_admin" [disabled]="busy" (click)="askDelete(user)" title="Supprimer le compte"><i class="fa-solid fa-trash"></i><span>Supprimer</span></button>
+        <button type="button" class="dv-btn acct-delete" *ngIf="!user.is_admin" [disabled]="busy" (click)="askDelete(user)" title="Supprimer le compte"><i class="fa-solid fa-trash"></i><span>Supprimer</span></button>
       </div>
 
-      <div class="ad-panel" *ngIf="resetFor?.id === user.id">
+      <div class="acct-panel" *ngIf="resetFor?.id === user.id">
         <p>Lien pour <strong>{{ user.nickname }}</strong>, valable une seule fois jusqu'au {{ resetExpires | date : "dd/MM/yyyy à HH:mm" }}. Envoie-le uniquement à cette personne : il permet de choisir un nouveau mot de passe pour son compte. Créer un nouveau lien annule celui-ci.</p>
-        <div class="ad-link">
+        <div class="acct-link">
           <input [id]="'resetLink-' + user.id" type="text" readonly [value]="resetLink" aria-label="Lien de réinitialisation" (focus)="$any($event.target).select()" />
           <button type="button" class="dv-btn dv-btn-main" (click)="copyLink()"><i class="fa-solid fa-copy"></i> {{ copied ? "Copié" : "Copier" }}</button>
         </div>
         <button type="button" class="dv-link" (click)="closePanels()">Fermer</button>
       </div>
 
-      <form class="ad-panel ad-danger" *ngIf="deleteFor?.id === user.id" (ngSubmit)="confirmDelete()">
+      <form class="acct-panel acct-danger" *ngIf="deleteFor?.id === user.id" (ngSubmit)="confirmDelete()">
         <p>Supprimer définitivement <strong>{{ user.nickname }}</strong> (n° {{ user.id }}) : ses listes, abonnements, notifications et matchs partent avec. C'est irréversible.</p>
         <label class="pm-label" [for]="'deleteConfirm-' + user.id">Tape <strong>{{ user.nickname }}</strong> pour confirmer</label>
-        <div class="ad-link">
+        <div class="acct-link">
           <input [id]="'deleteConfirm-' + user.id" type="text" [(ngModel)]="deleteConfirm" name="deleteConfirm" autocomplete="off" />
-          <button type="submit" class="dv-btn ad-delete" [disabled]="busy || deleteConfirm !== user.nickname"><i class="fa-solid fa-trash"></i> Supprimer</button>
+          <button type="submit" class="dv-btn acct-delete" [disabled]="busy || deleteConfirm !== user.nickname"><i class="fa-solid fa-trash"></i> Supprimer</button>
         </div>
-        <p class="ad-error" *ngIf="panelError" role="alert">{{ panelError }}</p>
+        <p class="acct-error" *ngIf="panelError" role="alert">{{ panelError }}</p>
         <button type="button" class="dv-link" (click)="closePanels()">Annuler</button>
       </form>
     </article>
