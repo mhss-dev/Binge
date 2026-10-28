@@ -6,6 +6,7 @@ import { AuthService } from '../auth.service';
 import { NotificationService } from 'app/notifications.service';
 import { DetailsService } from 'app/details.service';
 import { SearchPaletteService } from '../search-palette/search-palette.service';
+import { AdminService } from '../admin.service';
 
 @Component({
   selector: 'app-navbar',
@@ -17,6 +18,7 @@ import { SearchPaletteService } from '../search-palette/search-palette.service';
 export class NavbarComponent {
   private readonly scrollWatch = watchScroll(inject(NgZone), inject(DestroyRef), () => (window.scrollY > 50) !== this.isScrolled, () => (this.isScrolled = window.scrollY > 50));
   isLoggedIn = false;
+  isAdmin = false;
   nickname: string | null = null;
   isLogoVisible = true;
   isScrolled = false;
@@ -43,7 +45,8 @@ export class NavbarComponent {
     private cdr: ChangeDetectorRef,
     private notificationService: NotificationService,
     private movieService: DetailsService,
-    private searchPalette: SearchPaletteService
+    private searchPalette: SearchPaletteService,
+    private adminService: AdminService
   ) {}
 
   ngOnInit(): void {
@@ -54,8 +57,14 @@ export class NavbarComponent {
           this.wasLoggedIn = true;
           this.getNickname();
           this.fetchNotifications();
+          // Only shows the menu entry: the server checks admin rights on every request.
+          this.adminService.isAdmin().subscribe({
+            next: (res) => (this.isAdmin = !!res.admin),
+            error: () => (this.isAdmin = false),
+          });
         } else {
           this.nickname = null;
+          this.isAdmin = false;
           this.avatar = '';
           this.unreadNotifications = [];
           this.notificationService.clearNotificationsState();
@@ -83,7 +92,7 @@ export class NavbarComponent {
 
   private requiresLogin(url: string): boolean {
     const path = url.split('?')[0];
-    return path === '/match' || path.startsWith('/membres') || path.startsWith('/profil/');
+    return path === '/match' || path === '/admin' || path.startsWith('/membres') || path.startsWith('/profil/');
   }
 
   fetchNotifications(): void {

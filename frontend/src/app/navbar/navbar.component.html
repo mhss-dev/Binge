@@ -123,6 +123,10 @@
                     <i class="fa-solid fa-user"></i>
                     <span>Profil</span>
                   </a>
+                  <a *ngIf="isAdmin" class="dropdown-item app-dropdown-item" routerLink="/admin" (click)="closeNavbar()">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Admin</span>
+                  </a>
                   <button class="dropdown-item app-dropdown-item danger" (click)="logout(); closeNavbar()">
                     <i class="fa-solid fa-right-from-bracket"></i>
                     <span>Se déconnecter</span>

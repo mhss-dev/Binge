@@ -13,6 +13,8 @@ import { SearchComponent } from './search/search.component';
 import { TopRatedComponent } from './top-rated/top-rated.component';
 import { SeriesComponent } from './series/series.component';
 import { SerieDetailsComponent } from './serie-details/serie-details.component';
+import { AdminComponent } from './admin/admin.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { MatchHomeComponent } from './match/match-home.component';
 import { MatchRoomComponent } from './match/match-room.component';
 
@@ -30,6 +32,8 @@ export const routes: Routes = [
     { path: 'acteur/:id', component: ActorComponent },
     { path: 'actrice/:id', component: ActorComponent },
     { path: 'realisateur/:id', component: ActorComponent },
+    { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
+    { path: 'reinitialiser', component: ResetPasswordComponent },
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
     { path: 'search', component: SearchComponent },

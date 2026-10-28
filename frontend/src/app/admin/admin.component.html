@@ -1,0 +1,53 @@
+<section class="ad-page app-shell text-white">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Administration</p>
+      <h1>Comptes</h1>
+    </div>
+    <label class="dv-search ad-search" *ngIf="state === 'ready'">
+      <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+      <input type="search" placeholder="Pseudo, identifiant ou n°" [(ngModel)]="query" name="query" aria-label="Chercher un compte" />
+    </label>
+  </div>
+
+  <p class="dv-end" *ngIf="state === 'loading'">Chargement…</p>
+  <div class="pf-empty" *ngIf="state === 'denied'">
+    <p>Cette page est réservée à l'administrateur. Si c'est toi, reconnecte-toi : l'accès admin demande une connexion récente.</p>
+    <a routerLink="/home" class="dv-link">Retour à l'accueil</a>
+  </div>
+
+  <div class="ad-panel" *ngIf="resetFor">
+    <p>Lien pour <strong>{{ resetFor.nickname }}</strong>, valable une seule fois jusqu'au {{ resetExpires | date : "dd/MM/yyyy à HH:mm" }}. Envoie-le uniquement à cette personne : il permet de choisir un nouveau mot de passe pour son compte. Créer un nouveau lien annule celui-ci.</p>
+    <div class="ad-link">
+      <input type="text" readonly [value]="resetLink" aria-label="Lien de réinitialisation" (focus)="$any($event.target).select()" />
+      <button type="button" class="dv-btn dv-btn-main" (click)="copyLink()"><i class="fa-solid fa-copy"></i> {{ copied ? "Copié" : "Copier" }}</button>
+    </div>
+    <button type="button" class="dv-link" (click)="closePanels()">Fermer</button>
+  </div>
+
+  <div class="ad-panel ad-danger" *ngIf="deleteFor">
+    <p>Supprimer définitivement <strong>{{ deleteFor.nickname }}</strong> (n° {{ deleteFor.id }}) : ses listes, abonnements, notifications et matchs partent avec. C'est irréversible.</p>
+    <label class="pm-label" for="deleteConfirm">Tape <strong>{{ deleteFor.nickname }}</strong> pour confirmer</label>
+    <div class="ad-link">
+      <input id="deleteConfirm" type="text" [(ngModel)]="deleteConfirm" name="deleteConfirm" autocomplete="off" />
+      <button type="button" class="dv-btn ad-delete" [disabled]="busy || deleteConfirm !== deleteFor.nickname" (click)="confirmDelete()"><i class="fa-solid fa-trash"></i> Supprimer</button>
+    </div>
+    <button type="button" class="dv-link" (click)="closePanels()">Annuler</button>
+  </div>
+
+  <div class="ad-list" *ngIf="state === 'ready'">
+    <article class="ad-user" *ngFor="let user of filteredUsers">
+      <img [src]="avatar(user)" alt="" />
+      <div class="ad-user-copy">
+        <a [routerLink]="['/profil', user.nickname]"><strong>{{ user.nickname }}</strong></a>
+        <span>n° {{ user.id }} · identifiant {{ user.username }} · {{ user.watched }} vus · {{ user.favorites }} favoris</span>
+        <span class="ad-tag" *ngIf="user.reset_pending">Lien de mot de passe en attente</span>
+      </div>
+      <div class="ad-actions">
+        <button type="button" class="dv-btn" [disabled]="busy" (click)="createLink(user)" title="Créer un lien de nouveau mot de passe"><i class="fa-solid fa-key"></i><span>Lien mot de passe</span></button>
+        <button type="button" class="dv-btn ad-delete" *ngIf="!user.is_admin" [disabled]="busy" (click)="askDelete(user)" title="Supprimer le compte"><i class="fa-solid fa-trash"></i><span>Supprimer</span></button>
+      </div>
+    </article>
+    <p class="dv-end" *ngIf="filteredUsers.length === 0">Aucun compte ne correspond.</p>
+  </div>
+</section>
