@@ -6,6 +6,11 @@ import { DiscoverService } from '../discover.service';
 import { ERAS } from '../match/match.service';
 import { RailDirective } from '../rail.directive';
 import { readFilters, switchParams } from '../discover-kind';
+import { RANDOM_SORT, ShownMemory, randomPageOrder, readFlag, saveFlag, shuffle } from '../discover-shuffle';
+import { Observable, map, of, switchMap } from 'rxjs';
+
+// "Au hasard" only draws from films with enough votes, or most pages would be near-empty unknowns.
+const RANDOM_MIN_VOTES = 200;
 
 import { FormsModule } from '@angular/forms';
 import {
@@ -50,13 +55,20 @@ export class FilmsComponent implements OnDestroy {
   isWatched: boolean = false;
   isLoggedIn = false;
   nickname: string | null = null;
-  sortOption: string = 'popularity.desc';
+  sortOption: string = RANDOM_SORT;
+  hideWatched = readFlag('binge:hideWatched', true);
+  private watchedIds = new Set<number>();
+  private pageOrder: number[] = [];
+  private deferred: any[] = [];
+  private emptyFills = 0;
+  private readonly memory = new ShownMemory('binge:shown:films');
   selectedGenre: string = '';
   selectedEra: number | null = null;
   readonly eraOptions = ERAS;
   featuredIndex = 0;
   readonly skeletons = Array.from({ length: 12 });
   readonly sortOptions = [
+    { value: RANDOM_SORT, label: 'Au hasard' },
     { value: 'popularity.desc', label: 'Populaires' },
     { value: 'primary_release_date.desc', label: 'Récents' },
     { value: 'primary_release_date.asc', label: 'Anciens' },
@@ -119,6 +131,14 @@ export class FilmsComponent implements OnDestroy {
       this.isLoggedIn = status;
       if (this.isLoggedIn) {
         this.getNickname();
+        this.watched.getWatched().subscribe({
+          next: (rows: { movie_id: number }[]) => {
+            this.watchedIds = new Set(rows.map((row) => row.movie_id));
+            this.cdr.detectChanges();
+            this.fillViewport(0);
+          },
+          error: () => {},
+        });
       } else {
         return;
       }
@@ -136,8 +156,20 @@ export class FilmsComponent implements OnDestroy {
     }
   }
 
+  // Watched films are hidden with the list known when the page opened: a film marked as seen
+  // here stays in place instead of vanishing under the cursor.
+  get visibleFilms(): any[] {
+    return this.hideWatched && this.isLoggedIn && this.watchedIds.size && !this.searchQuery.trim() ? this.films.filter((film) => !this.watchedIds.has(film.id)) : this.films;
+  }
+
+  toggleHideWatched(): void {
+    this.hideWatched = !this.hideWatched;
+    saveFlag('binge:hideWatched', this.hideWatched);
+    this.fillViewport(0);
+  }
+
   get featuredList(): any[] {
-    return this.films.filter((film) => film.backdrop_path).slice(0, 5);
+    return this.visibleFilms.filter((film) => film.backdrop_path).slice(0, 5);
   }
 
   get featured(): any | null {
@@ -180,6 +212,9 @@ export class FilmsComponent implements OnDestroy {
     this.currentPage = 1;
     this.featuredIndex = 0;
     this.films = [];
+    this.pageOrder = [];
+    this.deferred = [];
+    this.emptyFills = 0;
     this.loadFilms(1);
   }
 
@@ -213,38 +248,78 @@ export class FilmsComponent implements OnDestroy {
 
     this.isLoading = true;
     const token = this.loadToken;
+    const random = this.sortOption === RANDOM_SORT;
+    const request$ = random
+      ? this.randomPage(page)
+      : this.discoverService.getFilms(page, false, this.sortOption, this.selectedGenre, undefined, this.selectedEra);
 
-    this.discoverService
-      .getFilms(page, false, this.sortOption, this.selectedGenre, undefined, this.selectedEra)
-      .subscribe({
-        next: (data) => {
-          if (token !== this.loadToken) {
-            return;
+    request$.subscribe({
+      next: (data) => {
+        if (token !== this.loadToken) {
+          return;
+        }
+        let added = 0;
+        if (data.items && Array.isArray(data.items)) {
+          const before = this.visibleFilms.length;
+          const known = new Set(this.films.map((film) => film.id));
+          let fresh = data.items.filter((film: any) => !known.has(film.id));
+          if (random) {
+            // Films shown on an earlier visit wait for the end of the list.
+            fresh = shuffle(fresh);
+            this.deferred.push(...fresh.filter((film: any) => this.memory.has(film.id)));
+            fresh = fresh.filter((film: any) => !this.memory.has(film.id));
+            this.memory.remember(fresh.map((film: any) => film.id));
           }
-          if (data.items && Array.isArray(data.items)) {
-            this.films =
-              page === 1 ? [...data.items] : [...this.films, ...data.items];
-            this.totalPages = data.totalPages;
-            this.currentPage = page;
-            this.hasMore = this.currentPage < this.totalPages;
-            this.checkIfFavorites();
-            this.checkIfWatched();
-            this.checkIfWatchlist();
-            this.cdr.detectChanges();
-          } else {
-            console.error(data);
+          this.films = page === 1 ? fresh : [...this.films, ...fresh];
+          this.totalPages = data.totalPages;
+          this.currentPage = page;
+          this.hasMore = this.currentPage < this.totalPages;
+          if (!this.hasMore && this.deferred.length) {
+            this.films = [...this.films, ...this.deferred];
+            this.deferred = [];
           }
-          this.cdr.detectChanges();
-          this.isLoading = false;
-        },
-        error: (err) => {
-          if (token !== this.loadToken) {
-            return;
-          }
-          console.error(err);
-          this.isLoading = false;
-        },
-      });
+          added = this.visibleFilms.length - before;
+          this.checkIfFavorites();
+          this.checkIfWatched();
+          this.checkIfWatchlist();
+        } else {
+          console.error(data);
+        }
+        this.isLoading = false;
+        this.cdr.detectChanges();
+        this.fillViewport(added);
+      },
+      error: (err) => {
+        if (token !== this.loadToken) {
+          return;
+        }
+        console.error(err);
+        this.isLoading = false;
+      },
+    });
+  }
+
+  // Walks every page of the current filters once, in an order drawn for this visit.
+  private randomPage(step: number): Observable<any> {
+    const fetch = (page: number) => this.discoverService.getFilms(page, false, 'popularity.desc', this.selectedGenre, undefined, this.selectedEra, RANDOM_MIN_VOTES);
+    const order$ = this.pageOrder.length
+      ? of(this.pageOrder)
+      : fetch(1).pipe(map((data) => (this.pageOrder = randomPageOrder(data.totalPages || 0))));
+    return order$.pipe(
+      switchMap((order) => (order[step - 1] ? fetch(order[step - 1]) : of({ items: [] }))),
+      map((data) => ({ ...data, totalPages: this.pageOrder.length }))
+    );
+  }
+
+  // When hidden or already-shown films leave the screen short, keep loading so the scroll never stalls.
+  private fillViewport(added: number): void {
+    this.emptyFills = added > 0 ? 0 : this.emptyFills + 1;
+    if (this.emptyFills > 8) return;
+    setTimeout(() => {
+      if (!this.isLoading && this.hasMore && nearBottom(300)) {
+        this.loadFilms(this.currentPage + 1);
+      }
+    }, 50);
   }
 
   getNickname(): void {
@@ -305,14 +380,14 @@ export class FilmsComponent implements OnDestroy {
 
   clearFilters(): void {
     this.searchQuery = '';
-    this.sortOption = 'popularity.desc';
+    this.sortOption = RANDOM_SORT;
     this.selectedGenre = '';
     this.selectedEra = null;
     this.reload();
   }
 
   hasActiveFilters(): boolean {
-    return Boolean(this.searchQuery || this.selectedGenre || this.selectedEra || this.sortOption !== 'popularity.desc');
+    return Boolean(this.searchQuery || this.selectedGenre || this.selectedEra || this.sortOption !== RANDOM_SORT);
   }
 
   trackByMovieId(index: number, movie: any): number {

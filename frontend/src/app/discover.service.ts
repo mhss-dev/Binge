@@ -16,7 +16,8 @@ export class DiscoverService {
     sortOption: string = 'popularity.desc',
     genreId: string = '',
     minYear?: number,
-    era?: number | null
+    era?: number | null,
+    minVotes?: number
   ): Observable<any> {
     const validPage = Math.max(1, page);
 
@@ -34,6 +35,9 @@ export class DiscoverService {
     
     if (era) {
       params = params.set('era', era.toString());
+    }
+    if (minVotes) {
+      params = params.set('min_votes', minVotes.toString());
     }
 
     const url = `${this.apiUrl}/films`;

@@ -62,13 +62,16 @@
         <button type="button" *ngFor="let option of sortOptions" [class.on]="sortOption === option.value" (click)="setSort(option.value)">{{ option.label }}</button>
       </div>
       <div class="dv-row-end">
+        <div class="dv-seg" *ngIf="isLoggedIn">
+          <button type="button" [class.on]="hideWatched" [attr.aria-pressed]="hideWatched" (click)="toggleHideWatched()"><i class="fa-solid fa-eye-slash"></i> Masquer les vues</button>
+        </div>
         <button *ngIf="hasActiveFilters()" type="button" class="dv-link" (click)="clearFilters()">Réinitialiser</button>
       </div>
     </div>
   </div>
 
   <div class="dv-grid">
-    <article *ngFor="let serie of series; trackBy: trackBySerieId" class="dv-card">
+    <article *ngFor="let serie of visibleSeries; trackBy: trackBySerieId" class="dv-card">
       <a [routerLink]="['/serie', serie?.id]" class="dv-poster" [attr.title]="serie?.name">
         <img loading="lazy" [src]="imageUrl(serie?.poster_path, 'w500')" alt="{{ serie?.name || 'Inconnu' }}" />
         <div class="dv-badges">
@@ -95,6 +98,6 @@
   </div>
 
   <p class="dv-end" *ngIf="isLoading && series.length > 0">Chargement…</p>
-  <p class="dv-end" *ngIf="!isLoading && series.length === 0">Aucune série ne correspond. Essaie un autre genre ou une autre recherche.</p>
+  <p class="dv-end" *ngIf="!isLoading && visibleSeries.length === 0">Aucune série ne correspond. Essaie un autre genre ou une autre recherche.</p>
 
 </section>

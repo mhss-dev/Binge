@@ -12,7 +12,7 @@ export class SeriesService {
 
   constructor(private http: HttpClient) {}
 
-  getSeries(page: number = 1, sortOption: string = 'popularity.desc', genreId: string = '', era?: number | null): Observable<any> {
+  getSeries(page: number = 1, sortOption: string = 'popularity.desc', genreId: string = '', era?: number | null, minVotes?: number): Observable<any> {
     let params = new HttpParams()
       .set('page', Math.max(1, page).toString())
       .set('sort_by', sortOption);
@@ -22,6 +22,9 @@ export class SeriesService {
     }
     if (era) {
       params = params.set('era', era.toString());
+    }
+    if (minVotes) {
+      params = params.set('min_votes', minVotes.toString());
     }
 
     return this.http.get<any>(this.apiUrl, { params });

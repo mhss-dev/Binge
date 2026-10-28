@@ -12,6 +12,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ERAS } from '../match/match.service';
 import { RailDirective } from '../rail.directive';
 import { readFilters, switchParams } from '../discover-kind';
+import { RANDOM_SORT, ShownMemory, randomPageOrder, readFlag, saveFlag, shuffle } from '../discover-shuffle';
+import { Observable, map, of, switchMap } from 'rxjs';
+
+// "Au hasard" only draws from series with enough votes, or most pages would be near-empty unknowns.
+const RANDOM_MIN_VOTES = 100;
 
 @Component({
   selector: 'app-series',
@@ -32,7 +37,13 @@ export class SeriesComponent implements OnInit, OnDestroy {
   isLoading = false;
   hasMore = true;
   searchQuery = '';
-  sortOption = 'popularity.desc';
+  sortOption = RANDOM_SORT;
+  hideWatched = readFlag('binge:hideWatched', true);
+  private watchedIds = new Set<number>();
+  private pageOrder: number[] = [];
+  private deferred: any[] = [];
+  private emptyFills = 0;
+  private readonly memory = new ShownMemory('binge:shown:series');
   selectedGenre = '';
   selectedEra: number | null = null;
   featuredIndex = 0;
@@ -41,6 +52,7 @@ export class SeriesComponent implements OnInit, OnDestroy {
   readonly eraOptions = ERAS;
   readonly skeletons = Array.from({ length: 12 });
   readonly sortOptions = [
+    { value: RANDOM_SORT, label: 'Au hasard' },
     { value: 'popularity.desc', label: 'Populaires' },
     { value: 'first_air_date.desc', label: 'Récentes' },
     { value: 'first_air_date.asc', label: 'Anciennes' },
@@ -96,6 +108,10 @@ export class SeriesComponent implements OnInit, OnDestroy {
         this.seriesLists.getLists().subscribe({
           next: (lists) => {
             this.lists = lists;
+            if (!this.watchedIds.size) {
+              this.watchedIds = new Set(lists.watched.map((entry) => entry.serie_id));
+              this.fillViewport(0);
+            }
             this.markLists(this.series);
             this.cdr.detectChanges();
           },
@@ -153,8 +169,19 @@ export class SeriesComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Hidden with the list known when the page opened: a series marked as seen here stays in place.
+  get visibleSeries(): any[] {
+    return this.hideWatched && this.isLoggedIn && this.watchedIds.size && !this.searchQuery.trim() ? this.series.filter((serie) => !this.watchedIds.has(serie.id)) : this.series;
+  }
+
+  toggleHideWatched(): void {
+    this.hideWatched = !this.hideWatched;
+    saveFlag('binge:hideWatched', this.hideWatched);
+    this.fillViewport(0);
+  }
+
   get featuredList(): any[] {
-    return this.series.filter((serie) => serie.backdrop_path).slice(0, 5);
+    return this.visibleSeries.filter((serie) => serie.backdrop_path).slice(0, 5);
   }
 
   get featured(): any | null {
@@ -197,6 +224,9 @@ export class SeriesComponent implements OnInit, OnDestroy {
     this.currentPage = 1;
     this.featuredIndex = 0;
     this.series = [];
+    this.pageOrder = [];
+    this.deferred = [];
+    this.emptyFills = 0;
     this.loadSeries(1);
   }
 
@@ -230,24 +260,42 @@ export class SeriesComponent implements OnInit, OnDestroy {
 
     this.isLoading = true;
     const token = this.loadToken;
+    const random = this.sortOption === RANDOM_SORT;
+    const request$ = random ? this.randomPage(page) : this.seriesService.getSeries(page, this.sortOption, this.selectedGenre, this.selectedEra);
 
-    this.seriesService.getSeries(page, this.sortOption, this.selectedGenre, this.selectedEra).subscribe({
+    request$.subscribe({
       next: (data) => {
         if (token !== this.loadToken) {
           return;
         }
+        let added = 0;
         if (Array.isArray(data.items)) {
+          const before = this.visibleSeries.length;
           // TMDB's popularity order shifts between pages, so a series can come back twice.
           const known = new Set(this.series.map((serie) => serie.id));
-          const fresh = data.items.filter((serie: any) => !known.has(serie.id));
-          this.markLists(data.items);
-          this.series = page === 1 ? [...data.items] : [...this.series, ...fresh];
+          let fresh = data.items.filter((serie: any) => !known.has(serie.id));
+          if (random) {
+            // Series shown on an earlier visit wait for the end of the list.
+            fresh = shuffle(fresh);
+            this.deferred.push(...fresh.filter((serie: any) => this.memory.has(serie.id)));
+            fresh = fresh.filter((serie: any) => !this.memory.has(serie.id));
+            this.memory.remember(fresh.map((serie: any) => serie.id));
+          }
+          this.markLists(fresh);
+          this.series = page === 1 ? fresh : [...this.series, ...fresh];
           this.totalPages = data.totalPages;
           this.currentPage = page;
           this.hasMore = this.currentPage < this.totalPages;
+          if (!this.hasMore && this.deferred.length) {
+            this.markLists(this.deferred);
+            this.series = [...this.series, ...this.deferred];
+            this.deferred = [];
+          }
+          added = this.visibleSeries.length - before;
         }
         this.isLoading = false;
         this.cdr.detectChanges();
+        this.fillViewport(added);
       },
       error: (err) => {
         if (token !== this.loadToken) {
@@ -257,6 +305,29 @@ export class SeriesComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       },
     });
+  }
+
+  // Walks every page of the current filters once, in an order drawn for this visit.
+  private randomPage(step: number): Observable<any> {
+    const fetch = (page: number) => this.seriesService.getSeries(page, 'popularity.desc', this.selectedGenre, this.selectedEra, RANDOM_MIN_VOTES);
+    const order$ = this.pageOrder.length
+      ? of(this.pageOrder)
+      : fetch(1).pipe(map((data) => (this.pageOrder = randomPageOrder(data.totalPages || 0))));
+    return order$.pipe(
+      switchMap((order) => (order[step - 1] ? fetch(order[step - 1]) : of({ items: [] }))),
+      map((data) => ({ ...data, totalPages: this.pageOrder.length }))
+    );
+  }
+
+  // When hidden or already-shown series leave the screen short, keep loading so the scroll never stalls.
+  private fillViewport(added: number): void {
+    this.emptyFills = added > 0 ? 0 : this.emptyFills + 1;
+    if (this.emptyFills > 8) return;
+    setTimeout(() => {
+      if (!this.isLoading && this.hasMore && nearBottom(300)) {
+        this.loadSeries(this.currentPage + 1);
+      }
+    }, 50);
   }
 
   searchSeries(query: string): void {
@@ -299,14 +370,14 @@ export class SeriesComponent implements OnInit, OnDestroy {
 
   clearFilters(): void {
     this.searchQuery = '';
-    this.sortOption = 'popularity.desc';
+    this.sortOption = RANDOM_SORT;
     this.selectedGenre = '';
     this.selectedEra = null;
     this.reload();
   }
 
   hasActiveFilters(): boolean {
-    return Boolean(this.searchQuery || this.selectedGenre || this.selectedEra || this.sortOption !== 'popularity.desc');
+    return Boolean(this.searchQuery || this.selectedGenre || this.selectedEra || this.sortOption !== RANDOM_SORT);
   }
 
   trackBySerieId(index: number, serie: any): number {
