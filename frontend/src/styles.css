@@ -638,3 +638,4 @@ html body .nav-shell .nav-pill.active { background: rgba(255, 255, 255, 0.1); bo
   .ad-actions .dv-btn span { display: none; }
 }
 .ad-user .ad-panel { grid-column: 1 / -1; }
+.ad-error { margin: 0; color: #ff8a8d; font-weight: 600; }

@@ -45,6 +45,7 @@
           <input [id]="'deleteConfirm-' + user.id" type="text" [(ngModel)]="deleteConfirm" name="deleteConfirm" autocomplete="off" />
           <button type="submit" class="dv-btn ad-delete" [disabled]="busy || deleteConfirm !== user.nickname"><i class="fa-solid fa-trash"></i> Supprimer</button>
         </div>
+        <p class="ad-error" *ngIf="panelError" role="alert">{{ panelError }}</p>
         <button type="button" class="dv-link" (click)="closePanels()">Annuler</button>
       </form>
     </article>

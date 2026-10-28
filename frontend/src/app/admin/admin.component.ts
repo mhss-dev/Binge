@@ -22,6 +22,7 @@ export class AdminComponent implements OnInit {
   copied = false;
   deleteFor: AdminUser | null = null;
   deleteConfirm = '';
+  panelError = '';
   busy = false;
 
   constructor(private adminService: AdminService, private toasts: ToastService, private titleService: Title, private cdr: ChangeDetectorRef) {}
@@ -70,7 +71,7 @@ export class AdminComponent implements OnInit {
       },
       error: (err) => {
         this.busy = false;
-        this.toasts.show(err.error?.error || 'Impossible de créer le lien.');
+        this.toasts.show(`${err.error?.error || 'Impossible de créer le lien'} (code ${err.status})`);
       },
     });
   }
@@ -103,6 +104,7 @@ export class AdminComponent implements OnInit {
   confirmDelete(): void {
     const user = this.deleteFor;
     if (!user || this.deleteConfirm !== user.nickname) return;
+    this.panelError = '';
     this.busy = true;
     this.adminService.deleteUser(user.id, this.deleteConfirm).subscribe({
       next: () => {
@@ -114,7 +116,10 @@ export class AdminComponent implements OnInit {
       },
       error: (err) => {
         this.busy = false;
-        this.toasts.show(err.error?.error || 'Suppression impossible.');
+        // Stays in the panel (a toast vanishes too fast to read), with the HTTP status for diagnosis.
+        this.panelError = `${err.error?.error || err.message || 'Suppression impossible'} (code ${err.status})`;
+        console.error('Suppression du compte impossible :', err);
+        this.cdr.detectChanges();
       },
     });
   }
@@ -125,5 +130,6 @@ export class AdminComponent implements OnInit {
     this.copied = false;
     this.deleteFor = null;
     this.deleteConfirm = '';
+    this.panelError = '';
   }
 }
