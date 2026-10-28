@@ -22,7 +22,7 @@ export class MovieService {
   }
 
   getTopRated(page: number = 1): Observable<any> {    
-    const validPage = Math.max(1, Math.min(page, 500));
+    const validPage = Math.max(1, page);
 
     let params = new HttpParams()
       .set('page', validPage.toString())

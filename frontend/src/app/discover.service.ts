@@ -18,7 +18,7 @@ export class DiscoverService {
     minYear?: number,
     era?: number | null
   ): Observable<any> {
-    const validPage = Math.max(1, Math.min(page, 500));
+    const validPage = Math.max(1, page);
 
     let params = new HttpParams()
       .set('page', validPage.toString())
@@ -46,7 +46,7 @@ export class DiscoverService {
   }
 
   getMoviesByActor(id: number, page: number = 1): Observable<any> {
-    const validPage = Math.max(1, Math.min(page, 500));
+    const validPage = Math.max(1, page);
 
     let params = new HttpParams()
       .set('with_people', id.toString())
