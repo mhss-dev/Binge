@@ -1,9 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, DestroyRef, OnDestroy, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl, Title } from '@angular/platform-browser';
 import { SeriesService } from '../series.service';
+import { SerieList, SerieState, SeriesListsService } from '../series-lists.service';
+import { AuthService } from '../auth.service';
+import { ToastService } from '../toast/toast.service';
 
 @Component({
   selector: 'app-serie-details',
@@ -31,10 +34,16 @@ export class SerieDetailsComponent implements OnInit, OnDestroy {
   activePanel: 'episodes' | 'cast' | 'similar' = 'episodes';
   overviewExpanded = false;
   copiedLink = false;
+  isLoggedIn = false;
+  listState: SerieState = { favorite: false, watched: false, watchlist: false };
+  private readonly toasts = inject(ToastService);
 
   constructor(
     private route: ActivatedRoute,
     private seriesService: SeriesService,
+    private seriesLists: SeriesListsService,
+    private authService: AuthService,
+    private router: Router,
     private sanitizer: DomSanitizer,
     private titleService: Title,
     private cdr: ChangeDetectorRef
@@ -50,6 +59,13 @@ export class SerieDetailsComponent implements OnInit, OnDestroy {
       if (id) {
         this.loadSerie(id);
         localStorage.setItem('redirectUrl', window.location.pathname);
+      }
+    });
+
+    this.authService.isLoggedIn$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((status) => {
+      this.isLoggedIn = status;
+      if (status && this.serie) {
+        this.loadListState(this.serie.id);
       }
     });
   }
@@ -96,6 +112,10 @@ export class SerieDetailsComponent implements OnInit, OnDestroy {
         if (this.seasons.length > 0) {
           this.selectSeason(this.seasons[0].season_number);
         }
+        this.listState = { favorite: false, watched: false, watchlist: false };
+        if (this.isLoggedIn) {
+          this.loadListState(data.id);
+        }
         this.cdr.detectChanges();
       },
       error: () => {
@@ -119,6 +139,39 @@ export class SerieDetailsComponent implements OnInit, OnDestroy {
       error: () => {
         this.episodesLoading = false;
       },
+    });
+  }
+
+  private loadListState(serieId: number): void {
+    this.seriesLists.getLists().subscribe({
+      next: (lists) => {
+        if (this.serie?.id !== serieId) return;
+        this.listState = SeriesListsService.stateOf(lists, serieId);
+        this.cdr.detectChanges();
+      },
+      error: () => {},
+    });
+  }
+
+  toggleList(list: SerieList): void {
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/login']);
+      return;
+    }
+    const inList = list === 'favorites' ? this.listState.favorite : this.listState[list];
+    const labels: Record<SerieList, [string, string]> = {
+      favorites: ['ajoutée aux favoris et aux vus', 'retirée des favoris'],
+      watched: ['marquée comme vue', 'retirée des vus'],
+      watchlist: ['ajoutée à la watchlist', 'retirée de la watchlist'],
+    };
+    const request = inList ? this.seriesLists.remove(list, this.serie.id) : this.seriesLists.add(list, this.serie.id);
+    request.subscribe({
+      next: (state) => {
+        this.listState = state;
+        this.toasts.show(`${this.serie.name} ${labels[list][inList ? 1 : 0]}`);
+        this.cdr.detectChanges();
+      },
+      error: () => this.toasts.show('Erreur, réessaie dans un instant.'),
     });
   }
 

@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, tap } from 'rxjs';
+import { Observable, catchError, forkJoin, map, of, tap } from 'rxjs';
 import { environment } from '../environments/environment';
 
 @Injectable({
@@ -40,5 +40,15 @@ export class SeriesService {
 
   getSeason(id: number, season: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}/season/${season}`);
+  }
+
+  loadBatchSeries(ids: number[]): Observable<any[]> {
+    const chunks: number[][] = [];
+    for (let i = 0; i < ids.length; i += 40) {
+      chunks.push(ids.slice(i, i + 40));
+    }
+    return chunks.length
+      ? forkJoin(chunks.map((chunk) => this.http.get<any[]>(`${this.apiUrl}/batch`, { params: { ids: chunk.join(',') } }).pipe(catchError(() => of([]))))).pipe(map((parts) => parts.flat()))
+      : of([]);
   }
 }

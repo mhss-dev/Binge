@@ -57,6 +57,10 @@ export class DiscoverService {
     return this.http.get<any>(url, { params });
   }
 
+  getPerson(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/person/${id}`);
+  }
+
   searchFilms(query: string): Observable<any> {
     if (!query) {
       throw new Error('Search query hello?');

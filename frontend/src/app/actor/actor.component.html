@@ -28,8 +28,8 @@
           <span class="fact-pill" *ngIf="actor?.place_of_birth">{{
             actor?.place_of_birth
           }}</span>
-          <span class="fact-pill" *ngIf="movies?.length"
-            >{{ movies.length }} crédits</span
+          <span class="fact-pill" *ngIf="credits.length"
+            >{{ credits.length }} crédits</span
           >
         </div>
 
@@ -45,20 +45,23 @@
     </div>
   </div>
 
-  <section class="filmography-section" *ngIf="movies?.length">
+  <section class="filmography-section" *ngIf="credits.length">
     <div class="section-heading filmography-heading">
       <div>
         <p class="eyebrow">À parcourir</p>
         <h2>Filmographie</h2>
       </div>
+      <div class="dv-seg" role="group" aria-label="Afficher" *ngIf="hasBothKinds()">
+        <button type="button" *ngFor="let option of filterOptions" [class.on]="creditFilter === option.value" (click)="setFilter(option.value)">{{ option.label }}</button>
+      </div>
     </div>
 
     <div class="filmography-grid">
       <article
-        *ngFor="let movie of movies"
+        *ngFor="let movie of shownCredits; trackBy: trackByCredit"
         class="filmography-card poster-card"
       >
-        <a [routerLink]="['/film', movie?.id]" class="poster-link">
+        <a [routerLink]="creditLink(movie)" class="poster-link" [attr.title]="movie?.title">
           <img
             [src]="
               movie?.poster_path

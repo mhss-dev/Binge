@@ -67,6 +67,11 @@
     <article *ngFor="let serie of series; trackBy: trackBySerieId" class="dv-card">
       <a [routerLink]="['/serie', serie?.id]" class="dv-poster" [attr.title]="serie?.name">
         <img loading="lazy" [src]="imageUrl(serie?.poster_path, 'w500')" alt="{{ serie?.name || 'Inconnu' }}" />
+        <div class="dv-badges">
+          <span *ngIf="serie.isWatched" title="Vue"><i class="fa-solid fa-eye"></i></span>
+          <span *ngIf="serie.isFavorite" title="Favori"><i class="fa-solid fa-heart"></i></span>
+          <span *ngIf="serie.isWatchlist" title="Dans la watchlist"><i class="fa-solid fa-clock"></i></span>
+        </div>
         <div class="dv-info">
           <strong *ngIf="!serie?.poster_path">{{ serie?.name || "Titre inconnu" }}</strong>
           <span>
@@ -75,6 +80,11 @@
           </span>
         </div>
       </a>
+      <div class="dv-actions">
+        <button type="button" [class.on]="serie.isWatched" (click)="toggleList(serie, 'watched')" aria-label="Marquer comme vue" title="Vue"><i class="fa-solid fa-eye"></i></button>
+        <button type="button" [class.fav]="serie.isFavorite" (click)="toggleList(serie, 'favorites')" aria-label="Ajouter aux favoris" title="Favori"><i class="fa-solid fa-heart"></i></button>
+        <button type="button" [class.on]="serie.isWatchlist" (click)="toggleList(serie, 'watchlist')" aria-label="Ajouter à la watchlist" title="Watchlist"><i class="fa-solid fa-clock"></i></button>
+      </div>
     </article>
 
     <div *ngFor="let item of skeletons" class="dv-card dv-skel" [hidden]="!(isLoading && series.length === 0)"></div>

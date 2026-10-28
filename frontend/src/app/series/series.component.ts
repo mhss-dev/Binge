@@ -5,6 +5,10 @@ import { RouterLink } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { nearBottom, watchScroll } from '../scroll.util';
 import { SeriesService } from '../series.service';
+import { SerieList, SerieLists, SeriesListsService } from '../series-lists.service';
+import { AuthService } from '../auth.service';
+import { ToastService } from '../toast/toast.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ERAS } from '../match/match.service';
 import { RailDirective } from '../rail.directive';
 
@@ -16,6 +20,8 @@ import { RailDirective } from '../rail.directive';
   styleUrl: './series.component.css'
 })
 export class SeriesComponent implements OnInit, OnDestroy {
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly toasts = inject(ToastService);
   private readonly scrollWatch = watchScroll(inject(NgZone), inject(DestroyRef), () => !this.isLoading && this.hasMore && nearBottom(), () => this.loadSeries(this.currentPage + 1));
 
   series: any[] = [];
@@ -28,6 +34,8 @@ export class SeriesComponent implements OnInit, OnDestroy {
   selectedGenre = '';
   selectedEra: number | null = null;
   featuredIndex = 0;
+  isLoggedIn = false;
+  private lists: SerieLists = { favorites: [], watched: [], watchlist: [] };
   readonly eraOptions = ERAS;
   readonly skeletons = Array.from({ length: 12 });
   readonly sortOptions = [
@@ -58,6 +66,8 @@ export class SeriesComponent implements OnInit, OnDestroy {
 
   constructor(
     private seriesService: SeriesService,
+    private seriesLists: SeriesListsService,
+    private authService: AuthService,
     private cdr: ChangeDetectorRef,
     private titleService: Title
   ) {}
@@ -67,6 +77,59 @@ export class SeriesComponent implements OnInit, OnDestroy {
     localStorage.setItem('redirectUrl', window.location.pathname);
     this.loadSeries(1);
     this.startFeatured();
+
+    this.authService.isLoggedIn$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((status) => {
+      this.isLoggedIn = status;
+      if (status) {
+        this.seriesLists.getLists().subscribe({
+          next: (lists) => {
+            this.lists = lists;
+            this.markLists(this.series);
+            this.cdr.detectChanges();
+          },
+          error: () => {},
+        });
+      }
+    });
+  }
+
+  private markLists(series: any[]): void {
+    series.forEach((serie) => Object.assign(serie, this.stateFlags(serie.id)));
+  }
+
+  private stateFlags(serieId: number) {
+    const state = SeriesListsService.stateOf(this.lists, serieId);
+    return { isFavorite: state.favorite, isWatched: state.watched, isWatchlist: state.watchlist };
+  }
+
+  toggleList(serie: any, list: SerieList): void {
+    if (!this.isLoggedIn) {
+      this.toasts.show('Connecte-toi pour utiliser tes listes');
+      return;
+    }
+    const inList = list === 'favorites' ? serie.isFavorite : list === 'watched' ? serie.isWatched : serie.isWatchlist;
+    const labels: Record<SerieList, [string, string]> = {
+      favorites: ['ajoutée aux favoris et aux vus', 'retirée des favoris'],
+      watched: ['marquée comme vue', 'retirée des vus'],
+      watchlist: ['ajoutée à la watchlist', 'retirée de la watchlist'],
+    };
+    const request = inList ? this.seriesLists.remove(list, serie.id) : this.seriesLists.add(list, serie.id);
+    request.subscribe({
+      next: (state) => {
+        const entry = { serie_id: serie.id, added_at: new Date().toISOString() };
+        const sync = (name: SerieList, on: boolean) => {
+          const rest = this.lists[name].filter((item) => item.serie_id !== serie.id);
+          this.lists[name] = on ? [entry, ...rest] : rest;
+        };
+        sync('favorites', state.favorite);
+        sync('watched', state.watched);
+        sync('watchlist', state.watchlist);
+        Object.assign(serie, this.stateFlags(serie.id));
+        this.toasts.show(`${serie.name} ${labels[list][inList ? 1 : 0]}`);
+        this.cdr.detectChanges();
+      },
+      error: () => this.toasts.show('Erreur, réessaie dans un instant.'),
+    });
   }
 
   ngOnDestroy(): void {
@@ -165,6 +228,7 @@ export class SeriesComponent implements OnInit, OnDestroy {
           // TMDB's popularity order shifts between pages, so a series can come back twice.
           const known = new Set(this.series.map((serie) => serie.id));
           const fresh = data.items.filter((serie: any) => !known.has(serie.id));
+          this.markLists(data.items);
           this.series = page === 1 ? [...data.items] : [...this.series, ...fresh];
           this.totalPages = data.totalPages;
           this.currentPage = page;
@@ -202,6 +266,7 @@ export class SeriesComponent implements OnInit, OnDestroy {
           return;
         }
         this.series = Array.isArray(data.results) ? data.results : [];
+        this.markLists(this.series);
         this.isLoading = false;
         this.cdr.detectChanges();
       },

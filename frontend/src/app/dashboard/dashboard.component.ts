@@ -13,8 +13,12 @@ import { MembersService } from 'app/members.service';
 import { Title } from '@angular/platform-browser';
 import { MatchService } from '../match/match.service';
 import { PosterWallComponent } from '../poster-wall/poster-wall.component';
+import { SeriesService } from '../series.service';
+import { SeriesListsService } from '../series-lists.service';
 
 type ProfileSortOption = 'added_desc' | 'added_asc' | 'title_asc' | 'title_desc';
+type MediaFilter = 'all' | 'movie' | 'tv';
+type ProfileList = 'favorites' | 'watched' | 'watchlist';
 
 @Component({
   selector: 'app-dashboard',
@@ -35,6 +39,15 @@ export class DashboardComponent implements OnDestroy {
 
   watchlist: any[] = [];
   watched: any[] = [];
+  // Series of the profile, and films + series merged by add date: what the tabs show.
+  seriesLists: Record<ProfileList, any[]> = { favorites: [], watched: [], watchlist: [] };
+  allLists: Record<ProfileList, any[]> = { favorites: [], watched: [], watchlist: [] };
+  mediaFilter: MediaFilter = 'all';
+  readonly mediaFilterOptions: { value: MediaFilter; label: string }[] = [
+    { value: 'all', label: 'Tout' },
+    { value: 'movie', label: 'Films' },
+    { value: 'tv', label: 'Séries' },
+  ];
   profileImage: string | ArrayBuffer | null = null;
   currentNickname: string = '';
   currentProfile: any;
@@ -73,14 +86,14 @@ export class DashboardComponent implements OnDestroy {
   private wallList: string[] = [];
 
   get wallPosters(): string[] {
-    const key = `${this.favorites.length}:${this.watched.length}`;
+    const key = `${this.allLists.favorites.length}:${this.allLists.watched.length}`;
     if (key !== this.wallKey) {
       this.wallKey = key;
-      const seen = new Set<number>();
       const out: string[] = [];
-      for (const movie of [...this.favorites, ...this.watched]) {
-        if (movie?.poster_path && !seen.has(movie.id)) {
-          seen.add(movie.id);
+      const seen = new Set<string>();
+      for (const movie of [...this.allLists.favorites, ...this.allLists.watched]) {
+        if (movie?.poster_path && !seen.has(`${movie.kind}:${movie.id}`)) {
+          seen.add(`${movie.kind}:${movie.id}`);
           out.push(this.poster(movie.poster_path));
         }
         if (out.length >= 45) {
@@ -133,7 +146,9 @@ export class DashboardComponent implements OnDestroy {
     private route: ActivatedRoute,
     private memberservice: MembersService,
     private titleService: Title,
-    private matchService: MatchService
+    private matchService: MatchService,
+    private seriesService: SeriesService,
+    private seriesListsService: SeriesListsService
   ) {}
 
   invitingToMatch = false;
@@ -342,6 +357,29 @@ fetchProfileData(): void {
   this.favorites = [];
   this.watchlist = [];
   this.watched = [];
+  this.seriesLists = { favorites: [], watched: [], watchlist: [] };
+  this.rebuildLists();
+
+  if (this.nickname) {
+    this.seriesListsService.getLists(this.nickname).pipe(
+      takeUntil(this.cancelPending$)
+    ).subscribe({
+      next: (lists) => {
+        (['favorites', 'watched', 'watchlist'] as ProfileList[]).forEach((list) => {
+          const entries = lists[list] || [];
+          const addedAt = new Map(entries.map((entry) => [entry.serie_id, entry.added_at]));
+          this.seriesService.loadBatchSeries(entries.map((entry) => entry.serie_id)).pipe(
+            takeUntil(this.cancelPending$)
+          ).subscribe((series) => {
+            this.seriesLists[list] = series.map((serie) => ({ ...serie, title: serie.name, kind: 'tv', added_at: addedAt.get(serie.id) ?? null }));
+            this.rebuildLists();
+            this.cdr.detectChanges();
+          });
+        });
+      },
+      error: (err) => console.error('Erreur lors de la récupération des séries du profil :', err),
+    });
+  }
 
   this.memberservice.getProfileData(routeNickname || undefined).pipe(
     takeUntil(this.cancelPending$)
@@ -361,7 +399,8 @@ processProfileData(data: any): void {
       takeUntil(this.cancelPending$)
     ).subscribe({
       next: (movies: any[]) => {
-        this.favorites = movies;
+        this.favorites = this.tagFilms(movies, data.favorites);
+        this.rebuildLists();
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -377,7 +416,8 @@ processProfileData(data: any): void {
       takeUntil(this.cancelPending$)
     ).subscribe({
       next: (movies: any[]) => {
-        this.watchlist = movies;
+        this.watchlist = this.tagFilms(movies, data.watchlist);
+        this.rebuildLists();
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -393,7 +433,8 @@ processProfileData(data: any): void {
       takeUntil(this.cancelPending$)
     ).subscribe({
       next: (movies: any[]) => {
-        this.watched = movies;
+        this.watched = this.tagFilms(movies, data.watched);
+        this.rebuildLists();
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -402,6 +443,41 @@ processProfileData(data: any): void {
       }
     });
   }
+}
+
+private tagFilms(movies: any[], rows: { movie_id: number; added_at?: string | null }[]): any[] {
+  const addedAt = new Map(rows.map((row) => [row.movie_id, row.added_at ?? null]));
+  return movies.map((movie) => ({ ...movie, kind: 'movie', added_at: addedAt.get(movie.id) ?? null }));
+}
+
+// Newest first; film rows saved before add dates existed have none and keep their order at the end.
+private mergeByDate(films: any[], series: any[]): any[] {
+  const stamp = (item: any) => (item.added_at ? Date.parse(item.added_at) || 0 : 0);
+  return [...films, ...series]
+    .map((item, index) => ({ item, index }))
+    .sort((a, b) => stamp(b.item) - stamp(a.item) || a.index - b.index)
+    .map(({ item }) => item);
+}
+
+rebuildLists(): void {
+  this.allLists = {
+    favorites: this.mergeByDate(this.favorites, this.seriesLists.favorites),
+    watched: this.mergeByDate(this.watched, this.seriesLists.watched),
+    watchlist: this.mergeByDate(this.watchlist, this.seriesLists.watchlist),
+  };
+}
+
+shownList(list: ProfileList): any[] {
+  return this.mediaFilter === 'all' ? this.allLists[list] : this.allLists[list].filter((item) => item.kind === this.mediaFilter);
+}
+
+setMediaFilter(value: MediaFilter): void {
+  this.mediaFilter = value;
+  this.onWatchedSortChange();
+}
+
+itemLink(item: any): any[] {
+  return [item.kind === 'tv' ? '/serie' : '/film', item.id];
 }
 
 normalizeMovieTitle(movie: any): string {
@@ -539,19 +615,19 @@ getTotalPages(arrayLength: number): number[] {
 
 
 paginatedFavorites() {
-  const filteredFavorites = this.sortProfileMovies(this.filterProfileMovies(this.favorites));
+  const filteredFavorites = this.sortProfileMovies(this.filterProfileMovies(this.shownList('favorites')));
   const startIndex = (this.currentFavoritesPage - 1) * this.moviesPerPage;
   return filteredFavorites.slice(startIndex, startIndex + this.moviesPerPage);
 }
 
 paginatedWatchlist() {
-  const filteredWatchlist = this.sortProfileMovies(this.filterProfileMovies(this.watchlist));
+  const filteredWatchlist = this.sortProfileMovies(this.filterProfileMovies(this.shownList('watchlist')));
   const startIndex = (this.currentWatchlistPage - 1) * this.moviesPerPage;
   return filteredWatchlist.slice(startIndex, startIndex + this.moviesPerPage);
 }
 
 paginatedWatched() {
-  const filteredWatched = this.sortProfileMovies(this.filterProfileMovies(this.watched));
+  const filteredWatched = this.sortProfileMovies(this.filterProfileMovies(this.shownList('watched')));
   const startIndex = (this.currentWatchedPage - 1) * this.moviesPerPage;
   return filteredWatched.slice(startIndex, startIndex + this.moviesPerPage);
 }

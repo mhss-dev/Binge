@@ -39,17 +39,28 @@
 
         <p class="fc-director" *ngIf="serie?.created_by?.length">
           Création :
-          <ng-container *ngFor="let creator of serie.created_by; let last = last">{{ creator.name }}<span *ngIf="!last">, </span></ng-container>
+          <ng-container *ngFor="let creator of serie.created_by; let last = last"><a [routerLink]="['/realisateur', creator.id]">{{ creator.name }}</a><span *ngIf="!last">, </span></ng-container>
         </p>
 
         <div class="fc-actions">
           <button class="dv-btn dv-btn-main" [disabled]="!trailerKey" data-bs-toggle="modal" data-bs-target="#trailerModal">
             <i class="fa-solid fa-play"></i> Bande-annonce
           </button>
+          <button class="dv-btn" [class.on]="listState.watched" (click)="toggleList('watched')">
+            <i class="fa-solid fa-eye"></i> {{ listState.watched ? "Vue" : "Marquer vue" }}
+          </button>
+          <button class="dv-btn" [class.on]="listState.favorite" (click)="toggleList('favorites')">
+            <i class="fa-solid fa-heart"></i> {{ listState.favorite ? "Favori" : "Ajouter aux favoris" }}
+          </button>
+          <button class="dv-btn" [class.on]="listState.watchlist" (click)="toggleList('watchlist')">
+            <i class="fa-solid fa-clock"></i> {{ listState.watchlist ? "Dans la watchlist" : "Watchlist" }}
+          </button>
           <button class="dv-btn" (click)="copyPageLink()" aria-label="Copier le lien" title="Copier le lien">
             <i class="fa-solid fa-link"></i> {{ copiedLink ? "Lien copié" : "" }}
           </button>
         </div>
+
+        <div *ngIf="!isLoggedIn" class="fc-hint">Connectez-vous pour ajouter cette série à vos listes.</div>
 
         <div *ngIf="watchProviders" class="fc-providers">
           <span>Disponible sur · {{ getProviderRegionLabel() }}</span>
