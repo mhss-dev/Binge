@@ -8,6 +8,17 @@ import { Title, Meta } from '@angular/platform-browser';
 
 type CreditFilter = 'all' | 'movie' | 'tv';
 
+// TMDB trade → label, masculine then feminine (gender 1 is female on TMDB).
+const ROLE_LABELS: Record<string, [string, string]> = {
+  Acting: ['Acteur', 'Actrice'],
+  Directing: ['Réalisateur', 'Réalisatrice'],
+  Writing: ['Scénariste', 'Scénariste'],
+  Production: ['Producteur', 'Productrice'],
+  Sound: ['Compositeur', 'Compositrice'],
+  Camera: ['Directeur de la photographie', 'Directrice de la photographie'],
+  Editing: ['Monteur', 'Monteuse'],
+};
+
 @Component({
   selector: 'app-actor',
   standalone: true,
@@ -24,6 +35,7 @@ export class ActorComponent {
   credits: any[] = [];
   error: any;
   shownCount = this.pageSize;
+  bioExpanded = false;
   creditFilter: CreditFilter = 'all';
   readonly filterOptions: { value: CreditFilter; label: string }[] = [
     { value: 'all', label: 'Tout' },
@@ -48,6 +60,7 @@ export class ActorComponent {
     this.error = null;
     this.creditFilter = 'all';
     this.shownCount = this.pageSize;
+    this.bioExpanded = false;
     this.discoverService.getPerson(id).subscribe({
       next: (data) => {
         this.actor = data?.person || null;
@@ -104,12 +117,43 @@ export class ActorComponent {
     this.metaService.updateTag({ property: 'og:image', content: 'https://image.tmdb.org/t/p/original/' + this.actor.profile_path });
   }
 
-  getAge(birthday: string | null): number | string {
-    if (!birthday) return '???';
+  roleLabel(): string {
+    const labels = ROLE_LABELS[this.actor?.known_for_department];
+    return labels ? labels[this.actor.gender === 1 ? 1 : 0] : '';
+  }
 
-    const birthDate = new Date(birthday);
-    const timeDiff = Math.abs(Date.now() - birthDate.getTime());
-    const age = Math.floor((timeDiff / (1000 * 3600 * 24)) / 365.25);
-    return age + ' ans';
+  // "Née le 9 juin 1981 à Jérusalem, Israël" · "45 ans", or the age at death when there is one.
+  lifeFacts(): string[] {
+    const person = this.actor;
+    if (!person) return [];
+    const e = person.gender === 1 ? 'e' : '';
+    const facts: string[] = [];
+    if (person.birthday) {
+      facts.push(`Né${e} le ${this.longDate(person.birthday)}` + (person.place_of_birth ? ` à ${person.place_of_birth}` : ''));
+    } else if (person.place_of_birth) {
+      facts.push(`Né${e} à ${person.place_of_birth}`);
+    }
+    if (person.deathday) {
+      facts.push(`Mort${e} le ${this.longDate(person.deathday)}` + (person.birthday ? ` à ${this.yearsBetween(person.birthday, person.deathday)} ans` : ''));
+    } else if (person.birthday) {
+      facts.push(`${this.yearsBetween(person.birthday)} ans`);
+    }
+    return facts;
+  }
+
+  countOf(kind: 'movie' | 'tv'): number {
+    return this.credits.filter((credit) => credit.media_type === kind).length;
+  }
+
+  private longDate(date: string): string {
+    return new Date(date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+  }
+
+  private yearsBetween(from: string, to?: string): number {
+    const start = new Date(from);
+    const end = to ? new Date(to) : new Date();
+    let years = end.getUTCFullYear() - start.getUTCFullYear();
+    if (end.getUTCMonth() < start.getUTCMonth() || (end.getUTCMonth() === start.getUTCMonth() && end.getUTCDate() < start.getUTCDate())) years--;
+    return years;
   }
 }

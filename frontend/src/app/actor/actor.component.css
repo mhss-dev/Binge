@@ -5,84 +5,105 @@
 .person-hero {
   position: relative;
   overflow: hidden;
-  padding: 1.5rem;
-  border-radius: 32px;
-  margin-bottom: 2.2rem;
-  background:
-    radial-gradient(circle at top right, rgba(255, 122, 24, 0.14), transparent 34%),
-    rgba(8, 16, 28, 0.68);
-}
-
-.person-hero::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto;
-  height: 8.5rem;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent),
-    radial-gradient(circle at top left, rgba(255, 179, 71, 0.14), transparent 44%);
-  pointer-events: none;
-}
-
-.person-main {
-  position: relative;
   display: grid;
-  grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
-  gap: 1.5rem;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 2rem;
   align-items: start;
-}
-
-.person-portrait-wrap {
-  display: flex;
-  justify-content: center;
+  padding: 1.75rem;
+  border-radius: var(--radius-xl);
+  margin-bottom: 2.6rem;
+  background:
+    radial-gradient(circle at top right, rgba(255, 122, 24, 0.12), transparent 40%),
+    var(--surface);
 }
 
 .person-portrait {
   width: 100%;
-  max-width: 320px;
   aspect-ratio: 2 / 3;
   object-fit: cover;
-  border-radius: 26px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: var(--shadow-lg);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.person-copy {
+  display: grid;
+  gap: 0.9rem;
+  justify-items: start;
+  min-width: 0;
+  padding-top: 0.4rem;
+}
+
+.person-copy .eyebrow {
+  margin: 0;
 }
 
 .person-copy h1 {
   margin: 0;
-  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
   line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
 }
 
 .person-facts {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 1.15rem;
-}
-
-.fact-pill {
-  padding: 0.75rem 1rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 0.25rem 0;
+  margin: 0;
   color: var(--muted);
 }
 
-.bio-panel {
-  margin-top: 1.2rem;
-  padding: 1rem 1.05rem;
-  border-radius: 22px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+.person-facts span + span::before {
+  content: "·";
+  margin: 0 0.6rem;
+  color: rgba(159, 176, 201, 0.5);
 }
 
-.bio-panel p {
+.person-stats {
+  display: flex;
+  gap: 2rem;
+  justify-self: stretch;
+  margin: 0.3rem 0 0.2rem;
+  padding: 0.9rem 0;
+  border-block: 1px solid var(--border);
+}
+
+.person-stats div {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+}
+
+.person-stats dt {
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.person-stats dd {
   margin: 0;
-  line-height: 1.7;
-  color: rgba(245, 247, 251, 0.82);
+  color: var(--muted);
 }
 
-.empty-bio p {
+.person-bio {
+  margin: 0;
+  max-width: 46rem;
+  line-height: 1.65;
+  color: rgba(245, 247, 251, 0.82);
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: pre-line;
+}
+
+.person-bio.open {
+  display: block;
+}
+
+.person-bio.empty-bio {
   color: var(--muted);
 }
 
@@ -134,16 +155,13 @@
 }
 
 @media (max-width: 900px) {
-  .person-main {
+  .person-hero {
     grid-template-columns: 1fr;
+    gap: 1.4rem;
   }
 
-  .person-copy {
-    text-align: center;
-  }
-
-  .person-facts {
-    justify-content: center;
+  .person-portrait {
+    width: 160px;
   }
 
   .filmography-grid {
@@ -157,7 +175,11 @@
   }
 
   .person-hero {
-    padding: 1rem;
+    padding: 1.1rem;
+  }
+
+  .person-stats {
+    gap: 1.5rem;
   }
 
   .filmography-grid {

@@ -1,47 +1,43 @@
 <section class="person-page app-shell text-white">
-  <div class="person-hero glass-panel">
-    <div class="person-main">
-      <div class="person-portrait-wrap">
-        <img
-          [src]="
-            actor?.profile_path
-              ? 'https://image.tmdb.org/t/p/w500/' + actor?.profile_path
-              : 'https://m.media-amazon.com/images/G/01/imdbpro/help/outline._CB1537462849_.png'
-          "
-          class="person-portrait"
-          alt="{{ actor?.name || 'Inconnu' }}"
-        />
-      </div>
+  <div class="person-hero glass-panel" *ngIf="actor">
+    <img
+      class="person-portrait"
+      [src]="
+        actor.profile_path
+          ? 'https://image.tmdb.org/t/p/w500/' + actor.profile_path
+          : 'https://m.media-amazon.com/images/G/01/imdbpro/help/outline._CB1537462849_.png'
+      "
+      [alt]="actor.name || 'Inconnu'"
+    />
 
-      <div class="person-copy">
-        <p class="eyebrow">Filmographie</p>
-        <h1>{{ actor?.name || "Inconnu" }}</h1>
+    <div class="person-copy">
+      <p class="eyebrow" *ngIf="roleLabel()">{{ roleLabel() }}</p>
+      <h1>{{ actor.name || "Inconnu" }}</h1>
 
-        <div class="person-facts">
-          <span class="fact-pill" *ngIf="actor?.birthday">
-            Né{{ actor?.gender === 1 ? "e" : "" }} le
-            {{ actor?.birthday | date : "dd-MM-yyyy" }}
-          </span>
-          <span class="fact-pill" *ngIf="actor?.birthday">{{
-            getAge(actor?.birthday)
-          }}</span>
-          <span class="fact-pill" *ngIf="actor?.place_of_birth">{{
-            actor?.place_of_birth
-          }}</span>
-          <span class="fact-pill" *ngIf="credits.length"
-            >{{ credits.length }} crédits</span
-          >
+      <p class="person-facts" *ngIf="lifeFacts().length">
+        <span *ngFor="let fact of lifeFacts()">{{ fact }}</span>
+      </p>
+
+      <dl class="person-stats" *ngIf="credits.length">
+        <div *ngIf="countOf('movie')">
+          <dt>{{ countOf("movie") }}</dt>
+          <dd>film{{ countOf("movie") > 1 ? "s" : "" }}</dd>
         </div>
-
-        <div class="bio-panel" *ngIf="actor?.biography; else noBiography">
-          <p>{{ actor?.biography }}</p>
+        <div *ngIf="countOf('tv')">
+          <dt>{{ countOf("tv") }}</dt>
+          <dd>série{{ countOf("tv") > 1 ? "s" : "" }}</dd>
         </div>
-        <ng-template #noBiography>
-          <div class="bio-panel empty-bio">
-            <p>Aucune biographie disponible pour le moment.</p>
-          </div>
-        </ng-template>
-      </div>
+      </dl>
+
+      <ng-container *ngIf="actor.biography; else noBiography">
+        <p class="person-bio" [class.open]="bioExpanded">{{ actor.biography }}</p>
+        <button *ngIf="actor.biography.length > 420" type="button" class="dv-link" (click)="bioExpanded = !bioExpanded">
+          {{ bioExpanded ? "Voir moins" : "Lire plus" }}
+        </button>
+      </ng-container>
+      <ng-template #noBiography>
+        <p class="person-bio empty-bio">Aucune biographie disponible pour le moment.</p>
+      </ng-template>
     </div>
   </div>
 
