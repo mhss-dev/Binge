@@ -39,6 +39,5 @@
 
     <p *ngIf="loading && results.length === 0" class="sp-note">Recherche en cours…</p>
     <p *ngIf="!loading && searched && results.length === 0" class="sp-note">Aucun film trouvé pour « {{ query.trim() }} ».</p>
-    <p *ngIf="!query.trim()" class="sp-note">Tape un titre, puis Entrée pour ouvrir la fiche. ↑ ↓ pour naviguer.</p>
   </div>
 </div>
