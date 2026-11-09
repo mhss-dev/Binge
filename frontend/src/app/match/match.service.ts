@@ -140,6 +140,39 @@ export class MatchService {
     }
   }
 
+  isSolo(code: string): boolean {
+    try {
+      return localStorage.getItem(`match_solo_${code}`) !== null;
+    } catch {
+      return false;
+    }
+  }
+
+  markSolo(code: string): void {
+    try {
+      localStorage.setItem(`match_solo_${code}`, '[]');
+    } catch {
+      return;
+    }
+  }
+
+  soloLikes(code: string): MatchMovie[] {
+    try {
+      const list = JSON.parse(localStorage.getItem(`match_solo_${code}`) ?? '[]');
+      return Array.isArray(list) ? list : [];
+    } catch {
+      return [];
+    }
+  }
+
+  saveSoloLikes(code: string, movies: MatchMovie[]): void {
+    try {
+      localStorage.setItem(`match_solo_${code}`, JSON.stringify(movies));
+    } catch {
+      return;
+    }
+  }
+
   private headers(code?: string): HttpHeaders {
     let headers = new HttpHeaders();
     const token = localStorage.getItem('token');

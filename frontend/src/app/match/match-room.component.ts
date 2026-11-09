@@ -55,6 +55,9 @@ export class MatchRoomComponent implements OnInit, OnDestroy {
   leaving: 'left' | 'right' | null = null;
 
   celebration: MatchMovie | null = null;
+  solo = false;
+  soloList: MatchMovie[] = [];
+  soloPick = false;
   copied = false;
   editingGenres = false;
   draftGenres: number[] = [];
@@ -95,6 +98,8 @@ export class MatchRoomComponent implements OnInit, OnDestroy {
     this.meta.addTag({ name: 'robots', content: 'noindex, nofollow' });
     this.code = (this.route.snapshot.paramMap.get('code') ?? '').toLowerCase();
     this.authService.isLoggedIn$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((status) => (this.isLoggedIn = status));
+    this.solo = this.matchService.isSolo(this.code);
+    this.soloList = this.solo ? this.matchService.soloLikes(this.code) : [];
     this.loadInfo();
   }
 
@@ -107,6 +112,26 @@ export class MatchRoomComponent implements OnInit, OnDestroy {
 
   get link(): string {
     return `${window.location.origin}/match/${this.code}`;
+  }
+
+  removeSolo(id: number): void {
+    this.soloList = this.soloList.filter((m) => m.id !== id);
+    this.matchService.saveSoloLikes(this.code, this.soloList);
+  }
+
+  pickForMe(): void {
+    if (this.soloList.length === 0) {
+      return;
+    }
+    const others = this.soloList.filter((m) => m.id !== this.celebration?.id);
+    const pool = others.length > 0 ? others : this.soloList;
+    this.soloPick = true;
+    this.celebration = pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  closeSoloPick(): void {
+    this.soloPick = false;
+    this.celebration = null;
   }
 
   get alone(): boolean {
@@ -340,6 +365,10 @@ export class MatchRoomComponent implements OnInit, OnDestroy {
       return;
     }
     this.leaving = liked ? 'right' : 'left';
+    if (this.solo && liked && !this.soloList.some((m) => m.id === card.id)) {
+      this.soloList = [...this.soloList, { id: card.id, title: card.title, poster_path: card.poster_path, release_date: card.release_date }];
+      this.matchService.saveSoloLikes(this.code, this.soloList);
+    }
     this.matchService.swipe(this.code, card.id, liked).subscribe({
       next: (res) => {
         if (res.match && res.movie) {

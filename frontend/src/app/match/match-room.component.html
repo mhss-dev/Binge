@@ -50,15 +50,15 @@
     <div class="room">
       <div class="room-head">
         <div class="room-title">
-          <p class="eyebrow">Match</p>
-          <h1>{{ state?.session?.title || info?.session?.title || 'Match de films' }}</h1>
+          <p class="eyebrow">{{ solo ? 'Quoi regarder ce soir ?' : 'Match' }}</p>
+          <h1>{{ solo ? 'Ma soirée' : state?.session?.title || info?.session?.title || 'Match de films' }}</h1>
         </div>
         <ng-template #who let-p>
           <img [src]="avatar(p)" alt="" />
           <b>{{ p.name }}</b>
           <small>{{ p.swiped }}</small>
         </ng-template>
-        <div class="people">
+        <div class="people" *ngIf="!solo">
           <ng-container *ngFor="let p of state?.participants ?? info?.participants ?? []">
             <a *ngIf="p.registered; else plain" class="person link" [class.me]="p.me" [class.away]="!p.active" [routerLink]="['/profil', p.name]">
               <ng-container *ngTemplateOutlet="who; context: { $implicit: p }"></ng-container>
@@ -71,14 +71,14 @@
           </ng-container>
         </div>
         <div class="room-actions">
-          <button type="button" class="match-ghost" (click)="share()">Inviter</button>
-          <button type="button" class="match-ghost" (click)="copyLink()">{{ copied ? 'Lien copié' : 'Copier le lien' }}</button>
+          <button *ngIf="!solo" type="button" class="match-ghost" (click)="share()">Inviter</button>
+          <button *ngIf="!solo" type="button" class="match-ghost" (click)="copyLink()">{{ copied ? 'Lien copié' : 'Copier le lien' }}</button>
           <button *ngIf="state?.session?.mine_to_manage" type="button" class="match-ghost" (click)="startEditGenres()">Filtres</button>
         </div>
       </div>
 
       <div class="room-notes">
-        <div *ngIf="alone" class="waiting">En attente de quelqu'un : envoie-lui le lien, il n'a pas besoin de compte.</div>
+        <div *ngIf="alone && !solo" class="waiting">En attente de quelqu'un : envoie-lui le lien, il n'a pas besoin de compte.</div>
         <div *ngIf="editingGenres" class="match-panel glass-panel">
           <h2>Genres et époques</h2>
           <div class="chip-row">
@@ -107,10 +107,10 @@
         <div *ngIf="!topCard && loadingDeck" class="match-center"><p>Chargement des films…</p></div>
 
         <div *ngIf="!topCard && !loadingDeck && exhausted" class="match-panel glass-panel match-center">
-          <h2>Vous avez fait le tour</h2>
+          <h2>{{ solo ? 'Tu as fait le tour' : 'Vous avez fait le tour' }}</h2>
           <p>Plus de film à proposer avec ces genres.</p>
           <button *ngIf="state?.session?.mine_to_manage" type="button" class="match-primary" (click)="startEditGenres()">Changer les genres</button>
-          <button type="button" class="match-ghost" (click)="scrollToMatches()">Voir vos matchs</button>
+          <button *ngIf="!solo || soloList.length > 0" type="button" class="match-ghost" (click)="scrollToMatches()">{{ solo ? 'Voir ma sélection' : 'Voir vos matchs' }}</button>
         </div>
 
         <div *ngIf="topCard" class="deck">
@@ -151,7 +151,20 @@
         <p *ngIf="topCard" class="hint">Touche l'affiche pour le résumé · glisse ou utilise les flèches ← →</p>
       </div>
 
-      <div *ngIf="matches.length > 0" id="matches" class="matches">
+      <div *ngIf="solo && soloList.length > 0" id="matches" class="matches">
+        <div class="solo-pick">
+          <h2 class="mt-title">Ma sélection ({{ soloList.length }})</h2>
+          <button type="button" class="match-primary small" (click)="pickForMe()">🎲 Choisis pour moi</button>
+        </div>
+        <div class="mt-rail">
+          <div *ngFor="let movie of soloList" class="mt-tile" [attr.title]="movie.title">
+            <a [routerLink]="['/film', movie.id]"><img referrerpolicy="no-referrer" [src]="poster(movie.poster_path, 'w342')" [alt]="movie.title" loading="lazy" /></a>
+            <button type="button" class="mt-x" aria-label="Retirer" (click)="removeSolo(movie.id)">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!solo && matches.length > 0" id="matches" class="matches">
         <h2 class="mt-title">Vos matchs ({{ matches.length }})</h2>
         <div class="fc-carousel mt-carousel">
           <button type="button" class="fc-arrow prev" (click)="slide(rail, -1)" aria-label="Précédent"><i class="fa-solid fa-chevron-left"></i></button>
@@ -164,26 +177,31 @@
         </div>
       </div>
 
-      <div *ngIf="state?.session?.mine_to_manage" class="room-foot">
+      <div *ngIf="state?.session?.mine_to_manage && !solo" class="room-foot">
         <button type="button" class="match-ghost danger" (click)="endRoom()">{{ alone ? "Supprimer le salon" : "Terminer le salon" }}</button>
       </div>
     </div>
 
-    <div *ngIf="celebration" class="mt-over" [style.--bgimg]="'url(' + poster(celebration.poster_path, 'w342') + ')'" role="dialog" aria-modal="true" aria-label="Match">
+    <div *ngIf="celebration && (!solo || soloPick)" class="mt-over" [style.--bgimg]="'url(' + poster(celebration.poster_path, 'w342') + ')'" role="dialog" aria-modal="true" aria-label="Match">
       <div class="mt-confetti" aria-hidden="true">
         <i *ngFor="let piece of confetti" [style.--s]="piece.s" [style.--c]="piece.c" [style.--x]="piece.x" [style.--y]="piece.y" [style.--r]="piece.r"></i>
       </div>
       <div class="mt-card">
-        <div class="mt-pair">
+        <div class="mt-pair" *ngIf="!soloPick">
           <ng-container *ngFor="let p of pairPeople; let last = last">
             <img class="mt-av" [src]="avatar(p)" [alt]="p.name" />
             <span *ngIf="!last" class="mt-heart">♥</span>
           </ng-container>
         </div>
-        <div class="mt-big">C'est un match !</div>
+        <div class="mt-big">{{ soloPick ? 'Ce soir, c\'est…' : 'C\'est un match !' }}</div>
         <div class="mt-poster"><img referrerpolicy="no-referrer" [src]="poster(celebration.poster_path, 'w342')" [alt]="celebration.title" /></div>
         <h2 *ngIf="!celebration.poster_path">{{ celebration.title }}</h2>
-        <div class="mt-buttons">
+        <div class="mt-buttons" *ngIf="soloPick">
+          <a class="match-primary" [routerLink]="['/film', celebration.id]" (click)="closeSoloPick()">Voir la fiche</a>
+          <button type="button" class="match-ghost" (click)="pickForMe()">Un autre !</button>
+          <button type="button" class="match-ghost" (click)="closeSoloPick()">Fermer</button>
+        </div>
+        <div class="mt-buttons" *ngIf="!soloPick">
           <button type="button" class="match-primary" (click)="chooseMovie(celebration)">On le regarde !</button>
           <button type="button" class="match-ghost" (click)="closeCelebration()">Continuer à swiper</button>
           <a class="match-ghost" [routerLink]="['/film', celebration.id]" (click)="closeCelebration()">Voir la fiche</a>

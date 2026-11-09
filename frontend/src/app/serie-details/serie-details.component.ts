@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, DestroyRef, OnDestroy, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, HostListener, OnDestroy, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl, Title } from '@angular/platform-browser';
@@ -122,6 +122,32 @@ export class SerieDetailsComponent implements OnInit, OnDestroy {
         this.error = 'Impossible de charger cette série.';
       },
     });
+  }
+
+  seasonOpen = false;
+
+get currentSeasonLabel(): string {
+    const season = this.seasons.find((item: any) => item.season_number === this.selectedSeason);
+    return season ? `${season.name} · ${season.episode_count} épisode${season.episode_count > 1 ? 's' : ''}` : 'Saison';
+  }
+
+  pickSeason(seasonNumber: number): void {
+    this.seasonOpen = false;
+    if (seasonNumber !== this.selectedSeason) {
+      this.selectSeason(seasonNumber);
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocClick(event: Event): void {
+    if (this.seasonOpen && !(event.target as HTMLElement).closest('.sd-season')) {
+      this.seasonOpen = false;
+    }
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    this.seasonOpen = false;
   }
 
   selectSeason(seasonNumber: number | string): void {

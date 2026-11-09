@@ -85,11 +85,18 @@
     </div>
 
     <div *ngIf="activePanel === 'episodes' && seasons.length" class="sd-episodes">
-      <select class="dv-select sd-season" aria-label="Saison" [value]="selectedSeason" (change)="selectSeason($any($event.target).value)">
-        <option *ngFor="let season of seasons; trackBy: trackByNumber" [value]="season.season_number">
-          {{ season.name }} · {{ season.episode_count }} épisode{{ season.episode_count > 1 ? "s" : "" }}
-        </option>
-      </select>
+      <div class="dd sd-season" [class.open]="seasonOpen">
+        <button type="button" class="dd-btn" aria-haspopup="listbox" [attr.aria-expanded]="seasonOpen" aria-label="Saison" (click)="seasonOpen = !seasonOpen">
+          <span>{{ currentSeasonLabel }}</span>
+          <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <ul *ngIf="seasonOpen" class="dd-list" role="listbox" aria-label="Saison">
+          <li *ngFor="let season of seasons; trackBy: trackByNumber" role="option" [attr.aria-selected]="season.season_number === selectedSeason" [class.sel]="season.season_number === selectedSeason" tabindex="0" (click)="pickSeason(season.season_number)" (keydown.enter)="pickSeason(season.season_number)">
+            <span>{{ season.name }}</span>
+            <small>{{ season.episode_count }} épisode{{ season.episode_count > 1 ? "s" : "" }}</small>
+          </li>
+        </ul>
+      </div>
 
       <p class="dv-end" *ngIf="episodesLoading">Chargement…</p>
 
