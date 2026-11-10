@@ -9,6 +9,7 @@ import {
 } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { DetailsService } from '../details.service';
+import { GeoService } from '../geo.service';
 import { FavoritesService } from '../favorites.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { WatchlistService } from '../watchlist.service';
@@ -50,6 +51,7 @@ export class DetailsComponent {
   trailerUrl: SafeResourceUrl | null = null;
   movies: any[] = [];
   providerRegion = 'BE';
+  private geo = inject(GeoService);
   activePanel: 'cast' | 'similar' = 'cast';
   overviewExpanded = false;
   copiedLink = false;
@@ -164,13 +166,7 @@ export class DetailsComponent {
   }
 
   getProviderRegionLabel(): string {
-    const labels: Record<string, string> = {
-      BE: 'Belgique',
-      FR: 'France',
-      US: 'Etats-Unis',
-    };
-
-    return labels[this.providerRegion] || this.providerRegion;
+    return this.geo.regionLabel(this.providerRegion);
   }
 
   private loadTrailers(id: number): void {
@@ -220,16 +216,18 @@ export class DetailsComponent {
   private loadWatchProviders(id: number): void {
     this.detailsService.getProviders(id).subscribe({
       next: (data) => {
-        const regionOrder = ['BE', 'FR', 'US'];
-        const region = regionOrder.find((item) => data.results?.[item]);
-        const providers = region ? data.results?.[region] : null;
+        this.geo.country$.subscribe((country) => {
+          const region = this.geo.pickRegion(data.results || {}, country);
+          const providers = region ? data.results?.[region] : null;
 
-        if (providers) {
-          this.providerRegion = region || 'BE';
-          this.watchProviders = providers;
-        } else {
-          this.watchProviders = null;
-        }
+          if (providers) {
+            this.providerRegion = region || 'BE';
+            this.watchProviders = providers;
+          } else {
+            this.watchProviders = null;
+          }
+          this.cdr.markForCheck();
+        });
       },
       error: (error) => {
         console.error('Erreur lors de la récupération des fournisseurs de streaming', error);

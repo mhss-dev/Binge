@@ -4,6 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl, Title } from '@angular/platform-browser';
 import { SeriesService } from '../series.service';
+import { GeoService } from '../geo.service';
 import { SerieList, SerieState, SeriesListsService } from '../series-lists.service';
 import { AuthService } from '../auth.service';
 import { ToastService } from '../toast/toast.service';
@@ -37,6 +38,7 @@ export class SerieDetailsComponent implements OnInit, OnDestroy {
   isLoggedIn = false;
   listState: SerieState = { favorite: false, watched: false, watchlist: false };
   private readonly toasts = inject(ToastService);
+  private readonly geo = inject(GeoService);
 
   constructor(
     private route: ActivatedRoute,
@@ -102,9 +104,12 @@ export class SerieDetailsComponent implements OnInit, OnDestroy {
         this.trailerKey = trailer?.key || null;
 
         const providers = data['watch/providers']?.results || {};
-        const region = ['BE', 'FR', 'US'].find((item) => providers[item]);
-        this.providerRegion = region || 'BE';
-        this.watchProviders = region ? providers[region] : null;
+        this.geo.country$.subscribe((country) => {
+          const region = this.geo.pickRegion(providers, country);
+          this.providerRegion = region || 'BE';
+          this.watchProviders = region ? providers[region] : null;
+          this.cdr.markForCheck();
+        });
 
         // Specials (season 0) go last: people come for the main seasons.
         const all = (data.seasons || []).filter((season: any) => season.episode_count > 0);
@@ -255,8 +260,7 @@ get currentSeasonLabel(): string {
   }
 
   getProviderRegionLabel(): string {
-    const labels: Record<string, string> = { BE: 'Belgique', FR: 'France', US: 'Etats-Unis' };
-    return labels[this.providerRegion] || this.providerRegion;
+    return this.geo.regionLabel(this.providerRegion);
   }
 
   getOverview(): string {
