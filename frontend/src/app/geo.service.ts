@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, map, of, shareReplay, timeout } from 'rxjs';
 
@@ -7,6 +7,8 @@ const FALLBACK_REGIONS = ['BE', 'FR', 'US'];
 
 @Injectable({ providedIn: 'root' })
 export class GeoService {
+  private readonly http = inject(HttpClient);
+
   // Asked once per visit; null when the country is unknown (local dev, edge function down).
   readonly country$: Observable<string | null> = this.http.get<{ country: string | null }>('/_geo').pipe(
     timeout(3000),
@@ -14,8 +16,6 @@ export class GeoService {
     catchError(() => of(null)),
     shareReplay(1),
   );
-
-  constructor(private http: HttpClient) {}
 
   /** The visitor's country if it has providers, else the first fallback region that has some. */
   pickRegion(results: Record<string, unknown>, country: string | null): string | undefined {
