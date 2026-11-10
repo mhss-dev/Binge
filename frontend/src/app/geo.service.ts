@@ -2,9 +2,6 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, map, of, shareReplay, timeout } from 'rxjs';
 
-// Where streaming availability is looked up when the visitor's own country has nothing.
-const FALLBACK_REGIONS = ['BE', 'FR', 'US'];
-
 @Injectable({ providedIn: 'root' })
 export class GeoService {
   private readonly http = inject(HttpClient);
@@ -17,9 +14,10 @@ export class GeoService {
     shareReplay(1),
   );
 
-  /** The visitor's country if it has providers, else the first fallback region that has some. */
+  /** The visitor's country if it has providers, else any other country that has some. */
   pickRegion(results: Record<string, unknown>, country: string | null): string | undefined {
-    return [country, ...FALLBACK_REGIONS].find((code): code is string => !!code && !!results?.[code]);
+    if (country && results?.[country]) return country;
+    return Object.keys(results || {}).sort()[0];
   }
 
   regionLabel(code: string): string {

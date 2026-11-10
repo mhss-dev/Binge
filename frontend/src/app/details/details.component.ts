@@ -50,7 +50,7 @@ export class DetailsComponent {
   trailerKey: string | null = null;
   trailerUrl: SafeResourceUrl | null = null;
   movies: any[] = [];
-  providerRegion = 'BE';
+  providerRegion = '';
   private geo = inject(GeoService);
   activePanel: 'cast' | 'similar' = 'cast';
   overviewExpanded = false;
@@ -221,7 +221,7 @@ export class DetailsComponent {
           const providers = region ? data.results?.[region] : null;
 
           if (providers) {
-            this.providerRegion = region || 'BE';
+            this.providerRegion = region || '';
             this.watchProviders = providers;
           } else {
             this.watchProviders = null;

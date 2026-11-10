@@ -27,7 +27,7 @@ export class SerieDetailsComponent implements OnInit, OnDestroy {
   trailerKey: string | null = null;
   trailerUrl: SafeResourceUrl | null = null;
   watchProviders: any | null = null;
-  providerRegion = 'BE';
+  providerRegion = '';
   seasons: any[] = [];
   selectedSeason: number | null = null;
   episodes: any[] = [];
@@ -106,7 +106,7 @@ export class SerieDetailsComponent implements OnInit, OnDestroy {
         const providers = data['watch/providers']?.results || {};
         this.geo.country$.subscribe((country) => {
           const region = this.geo.pickRegion(providers, country);
-          this.providerRegion = region || 'BE';
+          this.providerRegion = region || '';
           this.watchProviders = region ? providers[region] : null;
           this.cdr.markForCheck();
         });
