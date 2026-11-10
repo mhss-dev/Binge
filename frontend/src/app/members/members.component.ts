@@ -22,10 +22,13 @@ export class MembersComponent implements OnInit {
   me: string | null = null;
   inviting: string | null = null;
   error = '';
+  loading = true;
+  loadError = '';
+  readonly skeleton = [0, 1, 2, 3, 4, 5];
   readonly sorts: { value: MemberSort; label: string }[] = [
-    { value: 'watched', label: 'Plus actifs' },
-    { value: 'favorites', label: 'Plus de favoris' },
-    { value: 'watchlist', label: 'Plus de watchlist' },
+    { value: 'watched', label: 'Films vus' },
+    { value: 'favorites', label: 'Favoris' },
+    { value: 'watchlist', label: 'Watchlist' },
     { value: 'name', label: 'A à Z' },
   ];
 
@@ -41,9 +44,16 @@ export class MembersComponent implements OnInit {
     this.membersService.getMembers().subscribe({
       next: (response) => {
         this.members = response;
+        this.loading = false;
         this.cdr.detectChanges();
       },
-      error: (err) => console.error('Erreur lors de la récupération des membres:', err),
+      error: (err) => {
+        this.loading = false;
+        if (err?.status !== 404) {
+          this.loadError = 'Impossible de charger les membres. Recharge la page dans un instant.';
+        }
+        this.cdr.detectChanges();
+      },
     });
     this.authService.getProfil().subscribe({
       next: (profile) => {
@@ -54,30 +64,27 @@ export class MembersComponent implements OnInit {
     });
   }
 
-  get podium(): any[] {
+  get topThree(): any[] {
     const top = [...this.members].sort((a, b) => (b.watched_count || 0) - (a.watched_count || 0)).slice(0, 3);
-    return top.length === 3 && (top[0].watched_count || 0) > 0 ? top : [];
+    return top.length === 3 && (top[2].watched_count || 0) > 0 ? top : [];
   }
 
-  get podiumOrder(): { member: any; rank: number }[] {
-    const top = this.podium;
-    return top.length === 3 ? [{ member: top[1], rank: 2 }, { member: top[0], rank: 1 }, { member: top[2], rank: 3 }] : [];
-  }
-
-  get filtered(): any[] {
+  // Rank comes from the whole list for the current sort, so filtering keeps each member's real place.
+  get rows(): { member: any; rank: number | null }[] {
     const query = this.query.trim().toLowerCase();
     const key = { watched: 'watched_count', favorites: 'favorites_count', watchlist: 'watchlist_count' } as const;
-    return this.members
-      .filter((member) => !query || String(member.nickname || '').toLowerCase().includes(query))
-      .sort((a, b) =>
-        this.sort === 'name'
-          ? String(a.nickname || '').localeCompare(String(b.nickname || ''), 'fr')
-          : (b[key[this.sort]] || 0) - (a[key[this.sort]] || 0)
-      );
+    const sorted = [...this.members].sort((a, b) =>
+      this.sort === 'name'
+        ? String(a.nickname || '').localeCompare(String(b.nickname || ''), 'fr')
+        : (b[key[this.sort]] || 0) - (a[key[this.sort]] || 0)
+    );
+    return sorted
+      .map((member, index) => ({ member, rank: this.sort === 'name' ? null : index + 1 }))
+      .filter((row) => !query || String(row.member.nickname || '').toLowerCase().includes(query));
   }
 
-  trackByNickname(index: number, member: any): string {
-    return member.nickname ?? String(index);
+  trackByRow(index: number, row: { member: any }): string {
+    return row.member.nickname ?? String(index);
   }
 
   avatar(member: any): string {
