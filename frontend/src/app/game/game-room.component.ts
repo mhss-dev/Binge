@@ -14,7 +14,6 @@ export const NAME_KEY = 'binge:game:name';
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './game-room.component.html',
-  styleUrl: './game.component.css',
 })
 export class GameRoomComponent implements OnInit, OnDestroy {
   code = '';

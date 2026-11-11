@@ -26,7 +26,6 @@ interface RoundResult {
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './game.component.html',
-  styleUrl: './game.component.css',
 })
 export class GameComponent implements OnDestroy {
   readonly rounds = ROUNDS;
