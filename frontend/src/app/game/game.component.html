@@ -1,0 +1,72 @@
+<section class="game-page app-shell text-white">
+  <ng-container *ngIf="phase === 'menu'">
+    <p class="eyebrow">Quiz</p>
+    <h1>Devine le film</h1>
+    <p class="game-lead">{{ rounds }} manches, 25 secondes chacune. Plus tu réponds vite, plus tu marques. Pas besoin de compte.</p>
+    <div class="game-modes">
+      <button *ngFor="let m of modes" type="button" class="game-mode" (click)="start(m.type)">
+        <i class="fa-solid" [ngClass]="m.icon"></i>
+        <span>{{ m.label }}</span>
+      </button>
+    </div>
+    <p class="game-small" *ngIf="best">Meilleur score : {{ best }}</p>
+    <p class="game-error" *ngIf="error">{{ error }}</p>
+  </ng-container>
+
+  <div class="game-loading" *ngIf="phase === 'loading'">Question suivante…</div>
+
+  <ng-container *ngIf="(phase === 'round' || phase === 'result') && question">
+    <div class="game-head">
+      <span>Manche {{ round }}/{{ rounds }}</span>
+      <span>{{ score }} pts</span>
+    </div>
+    <div class="game-bar" *ngIf="phase === 'round'"><span [style.transform]="'scaleX(' + progress + ')'"></span></div>
+
+    <h2 class="game-prompt">{{ question.prompt }}</h2>
+
+    <div class="game-clue" [ngClass]="'clue-' + question.type">
+      <ng-container *ngIf="question.type === 'scene'">
+        <img [src]="question.images![0]" alt="" [style.filter]="phase === 'result' ? 'none' : 'blur(' + blur + 'px)'">
+      </ng-container>
+      <ng-container *ngIf="question.type === 'actors'">
+        <figure *ngFor="let src of question.images; let i = index">
+          <img [src]="src" alt="">
+          <figcaption *ngIf="phase === 'result' || elapsed > 10">{{ question.captions![i] }}</figcaption>
+        </figure>
+      </ng-container>
+      <p *ngIf="question.type === 'synopsis'" class="game-text">{{ question.text }}</p>
+    </div>
+
+    <ul class="game-hints" *ngIf="phase === 'round' && visibleHints.length">
+      <li *ngFor="let hint of visibleHints">{{ hint }}</li>
+    </ul>
+
+    <form *ngIf="phase === 'round'" class="game-form" (ngSubmit)="submit()" [class.wrong]="wrong">
+      <input #field name="guess" [(ngModel)]="guess" placeholder="Titre du film" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="120">
+      <button type="submit" class="game-primary">Valider</button>
+      <button type="button" class="game-ghost" (click)="giveUp()">Passer</button>
+    </form>
+
+    <div *ngIf="phase === 'result' && answer" class="game-result">
+      <img *ngIf="answer.poster_path" [src]="poster(answer.poster_path)" alt="">
+      <div>
+        <p class="game-verdict" [class.ok]="gained > 0">{{ gained > 0 ? '+' + gained + ' pts' : 'Raté' }}</p>
+        <h3>{{ answer.title }} <small>({{ answer.year }})</small></h3>
+        <div class="game-actions">
+          <button type="button" class="game-primary" (click)="next()">{{ round >= rounds ? 'Voir le score' : 'Manche suivante' }}</button>
+          <a class="game-ghost" [routerLink]="['/film', answer.filmId]" target="_blank">Voir la fiche</a>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="phase === 'done'">
+    <p class="eyebrow">Terminé</p>
+    <h1>{{ score }} points</h1>
+    <p class="game-lead">{{ correctCount }} bonne{{ correctCount > 1 ? 's' : '' }} réponse{{ correctCount > 1 ? 's' : '' }} sur {{ rounds }}. Meilleur score : {{ best }}.</p>
+    <div class="game-actions">
+      <button type="button" class="game-primary" (click)="start(mode)">Rejouer</button>
+      <button type="button" class="game-ghost" (click)="backToMenu()">Changer de mode</button>
+    </div>
+  </ng-container>
+</section>

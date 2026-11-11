@@ -1,0 +1,48 @@
+.game-page { min-height: 100svh; padding: 6.5rem 0 3rem; display: grid; gap: 1rem; align-content: start; width: min(100% - 2rem, 760px); margin: 0 auto; }
+.game-page h1 { margin: 0; font-size: 2rem; line-height: 1.1; }
+.game-lead { margin: 0; color: var(--muted); }
+.game-small { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.game-error { margin: 0; padding: 0.7rem 1rem; border-radius: var(--radius-md); background: rgba(255, 107, 129, 0.12); color: var(--danger); }
+.game-loading { padding: 4rem 0; text-align: center; color: var(--muted); }
+
+.game-modes { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.7rem; }
+.game-mode { display: grid; justify-items: center; gap: 0.5rem; padding: 1.2rem 0.8rem; border-radius: var(--radius-lg); border: 1px solid var(--border); background: var(--surface); color: var(--text); font: inherit; cursor: pointer; transition: border-color 0.2s var(--ease-out), transform 0.2s var(--ease-out); }
+.game-mode i { font-size: 1.4rem; color: var(--accent-soft); }
+.game-mode:hover { border-color: var(--accent-soft); transform: translateY(-2px); }
+
+.game-head { display: flex; justify-content: space-between; color: var(--muted); font-size: 0.9rem; }
+.game-bar { height: 6px; border-radius: 999px; background: var(--border); overflow: hidden; }
+.game-bar span { display: block; height: 100%; width: 100%; transform-origin: left; background: linear-gradient(90deg, var(--accent), var(--accent-soft)); transition: transform 0.1s linear; }
+.game-prompt { margin: 0; font-size: 1.15rem; }
+
+.game-clue { display: flex; justify-content: center; gap: 0.8rem; }
+.clue-scene img { width: 100%; max-height: 52svh; object-fit: cover; border-radius: var(--radius-lg); transition: filter 0.2s linear; }
+.clue-actors figure { margin: 0; flex: 1; max-width: 220px; text-align: center; }
+.clue-actors img { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; border-radius: var(--radius-lg); }
+.clue-actors figcaption { margin-top: 0.4rem; font-size: 0.85rem; color: var(--muted); }
+.game-text { margin: 0; padding: 1.2rem; border-radius: var(--radius-lg); border: 1px solid var(--border); background: var(--surface); line-height: 1.55; }
+
+.game-hints { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.game-hints li { padding: 0.3rem 0.8rem; border-radius: 999px; background: rgba(255, 179, 71, 0.12); color: var(--accent-soft); font-size: 0.85rem; }
+
+.game-form { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.game-form input { flex: 1 1 220px; padding: 0.8rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--border); background: rgba(5, 11, 22, 0.6); color: var(--text); font: inherit; }
+.game-form input:focus { outline: 2px solid var(--accent-soft); outline-offset: 1px; }
+.game-form.wrong input { border-color: var(--danger); animation: shake 0.35s; }
+@keyframes shake { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+
+.game-primary { padding: 0.8rem 1.4rem; border: 0; border-radius: var(--radius-md); background: linear-gradient(135deg, var(--accent), var(--accent-soft)); color: #1b0f02; font: inherit; font-weight: 700; cursor: pointer; }
+.game-ghost { display: inline-block; padding: 0.8rem 1.1rem; border-radius: var(--radius-md); border: 1px solid var(--border); background: transparent; color: var(--text); font: inherit; cursor: pointer; text-decoration: none; }
+.game-ghost:hover { border-color: var(--accent-soft); }
+.game-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+
+.game-result { display: flex; gap: 1rem; align-items: center; padding: 1rem; border-radius: var(--radius-lg); border: 1px solid var(--border); background: var(--surface); }
+.game-result img { width: 96px; border-radius: 12px; }
+.game-result h3 { margin: 0.2rem 0 0.8rem; font-size: 1.2rem; }
+.game-result small { color: var(--muted); font-weight: 400; }
+.game-verdict { margin: 0; font-weight: 700; color: var(--danger); }
+.game-verdict.ok { color: var(--success); }
+
+@media (prefers-reduced-motion: reduce) {
+  .game-form.wrong input, .game-mode, .game-bar span { animation: none; transition: none; }
+}

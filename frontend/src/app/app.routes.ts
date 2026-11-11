@@ -17,6 +17,7 @@ import { AdminComponent } from './admin/admin.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { MatchHomeComponent } from './match/match-home.component';
 import { MatchRoomComponent } from './match/match-room.component';
+import { GameComponent } from './game/game.component';
 
 export const routes: Routes = [
     { path: 'home', component: HomeComponent },
@@ -26,6 +27,7 @@ export const routes: Routes = [
     { path: 'actuellement-cinema', component: CardsComponent },
     { path: 'match', component: MatchHomeComponent, canActivate:[AuthGuard] },
     { path: 'match/:code', component: MatchRoomComponent },
+    { path: 'jeu', component: GameComponent },
     { path: 'membres', component: MembersComponent, canActivate:[AuthGuard] },
     { path: 'film/:id', component: DetailsComponent },
     { path: 'serie/:id', component: SerieDetailsComponent },
