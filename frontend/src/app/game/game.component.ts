@@ -1,8 +1,9 @@
 import { Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { GameAnswer, GameQuestion, GameService, GameType } from '../game.service';
+import { NAME_KEY } from './game-room.component';
 
 const ROUNDS = 10;
 const BEST_KEY = 'binge:game:best';
@@ -38,6 +39,10 @@ export class GameComponent implements OnDestroy {
     { type: 'synopsis', label: 'Synopsis', hint: 'Le résumé, titre caché', icon: 'fa-align-left' },
   ];
 
+  multi = false;
+  name = '';
+  joinCode = '';
+  creating = false;
   phase: Phase = 'menu';
   mode: GameType | null = null;
   question: GameQuestion | null = null;
@@ -67,8 +72,9 @@ export class GameComponent implements OnDestroy {
 
   @ViewChild('field') field?: ElementRef<HTMLInputElement>;
 
-  constructor(private game: GameService) {
+  constructor(private game: GameService, private router: Router) {
     try {
+      this.name = localStorage.getItem(NAME_KEY) || '';
       this.best = Number(localStorage.getItem(BEST_KEY)) || 0;
     } catch {}
   }
@@ -115,6 +121,34 @@ export class GameComponent implements OnDestroy {
     const result = this.results[index];
     if (result) return result.outcome === 'ok' ? 'ok' : 'ko';
     return index === this.round - 1 ? 'now' : '';
+  }
+
+  /** On the menu a mode card starts a solo game, or opens a room when playing with others. */
+  pickMode(mode: GameType | null): void {
+    if (!this.multi) return this.start(mode);
+    const name = this.name.trim();
+    if (!name || this.creating) return;
+    this.creating = true;
+    this.error = '';
+    this.game.createRoom(name, mode).subscribe({
+      next: (who) => {
+        try {
+          localStorage.setItem(NAME_KEY, name);
+        } catch {}
+        this.game.saveIdentity(who);
+        this.router.navigate(['/jeu', who.code]);
+      },
+      error: () => {
+        this.creating = false;
+        this.error = 'Impossible de créer la salle, réessaie.';
+      },
+    });
+  }
+
+  joinRoom(): void {
+    // A pasted link works as well as the bare code.
+    const code = this.joinCode.trim().split('/').pop()?.toLowerCase();
+    if (code) this.router.navigate(['/jeu', code]);
   }
 
   start(mode: GameType | null): void {

@@ -3,13 +3,26 @@
     <p class="eyebrow">Quiz</p>
     <h1>Devine le film</h1>
     <p class="game-lead">{{ rounds }} manches de 25 secondes. Plus tu réponds vite, plus tu marques. Pas de compte à créer.</p>
+    <div class="game-switch" role="tablist" aria-label="Mode de jeu">
+      <button type="button" role="tab" [class.on]="!multi" [attr.aria-selected]="!multi" (click)="multi = false"><i class="fa-solid fa-user"></i> Seul(e)</button>
+      <button type="button" role="tab" [class.on]="multi" [attr.aria-selected]="multi" (click)="multi = true"><i class="fa-solid fa-user-group"></i> À plusieurs</button>
+    </div>
+    <label class="game-name" *ngIf="multi">
+      <span>Ton pseudo dans la salle</span>
+      <input name="name" [(ngModel)]="name" maxlength="20" placeholder="Pseudo" autocomplete="nickname">
+    </label>
+    <p class="game-small" *ngIf="multi">Choisis un mode pour créer la salle, puis envoie le lien aux autres (jusqu'à 8 joueurs).</p>
     <div class="game-modes">
-      <button *ngFor="let m of modes" type="button" class="game-mode" (click)="start(m.type)">
+      <button *ngFor="let m of modes" type="button" class="game-mode" [disabled]="multi && (!name.trim() || creating)" (click)="pickMode(m.type)">
         <i class="fa-solid" [ngClass]="m.icon"></i>
         <strong>{{ m.label }}</strong>
         <small>{{ m.hint }}</small>
       </button>
     </div>
+    <form class="game-form game-join" *ngIf="multi" (ngSubmit)="joinRoom()">
+      <input name="joinCode" [(ngModel)]="joinCode" placeholder="Code ou lien d'une salle" autocomplete="off" autocapitalize="off">
+      <button type="submit" class="game-ghost" [disabled]="!joinCode.trim()">Rejoindre</button>
+    </form>
     <p class="game-small" *ngIf="best">Ton record : {{ best }} points</p>
     <p class="game-error" *ngIf="error">{{ error }}</p>
   </ng-container>

@@ -18,6 +18,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { MatchHomeComponent } from './match/match-home.component';
 import { MatchRoomComponent } from './match/match-room.component';
 import { GameComponent } from './game/game.component';
+import { GameRoomComponent } from './game/game-room.component';
 
 export const routes: Routes = [
     { path: 'home', component: HomeComponent },
@@ -28,6 +29,7 @@ export const routes: Routes = [
     { path: 'match', component: MatchHomeComponent, canActivate:[AuthGuard] },
     { path: 'match/:code', component: MatchRoomComponent },
     { path: 'jeu', component: GameComponent },
+    { path: 'jeu/:code', component: GameRoomComponent },
     { path: 'membres', component: MembersComponent, canActivate:[AuthGuard] },
     { path: 'film/:id', component: DetailsComponent },
     { path: 'serie/:id', component: SerieDetailsComponent },

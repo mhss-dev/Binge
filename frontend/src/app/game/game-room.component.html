@@ -1,0 +1,144 @@
+<section class="game-page app-shell text-white">
+  <!-- Not in the room yet (or kicked out): pick a name -->
+  <ng-container *ngIf="!who">
+    <p class="eyebrow">Quiz à plusieurs</p>
+    <h1>{{ lost && !error ? 'Tu as été retiré de la salle' : 'Rejoindre la partie' }}</h1>
+    <p class="game-error" *ngIf="error">{{ error }}</p>
+    <form class="game-form" (ngSubmit)="join()" *ngIf="!gone">
+      <input name="name" [(ngModel)]="joinName" placeholder="Ton pseudo" maxlength="20" autocomplete="nickname">
+      <button type="submit" class="game-primary" [disabled]="!joinName.trim()">Rejoindre</button>
+    </form>
+    <a routerLink="/jeu" class="game-ghost room-back">Retour au quiz</a>
+  </ng-container>
+
+  <ng-container *ngIf="who && !state">
+    <div class="game-loading"><span class="game-spinner"></span><p>Connexion à la salle…</p></div>
+  </ng-container>
+
+  <ng-container *ngIf="who && state">
+    <p class="game-error" *ngIf="error">{{ error }}</p>
+
+    <!-- Lobby -->
+    <ng-container *ngIf="state.phase === 'lobby'">
+      <p class="eyebrow">Salle · {{ modeLabel }}</p>
+      <h1>On attend les autres</h1>
+      <div class="room-share">
+        <input readonly [value]="shareLink" aria-label="Lien de la salle" (focus)="$any($event.target).select()">
+        <button type="button" class="game-ghost" (click)="copy()">{{ copied ? 'Copié' : 'Copier le lien' }}</button>
+      </div>
+      <ul class="room-players">
+        <li *ngFor="let p of state.players" [class.me]="p.id === state.me" [class.away]="!p.connected">
+          <span class="room-avatar">{{ p.name[0] }}</span>
+          <span>{{ p.name }}</span>
+          <i class="fa-solid fa-crown" *ngIf="p.host" title="Hôte"></i>
+        </li>
+      </ul>
+      <div class="game-actions">
+        <button type="button" class="game-primary" *ngIf="isHost" (click)="start()" [disabled]="state.preparing">
+          {{ state.preparing ? 'Préparation…' : 'Lancer la partie' }}
+        </button>
+        <p class="game-small" *ngIf="!isHost">{{ state.preparing ? 'La partie démarre…' : 'L\'hôte lancera la partie.' }}</p>
+        <button type="button" class="game-ghost" (click)="leave()">Quitter</button>
+      </div>
+    </ng-container>
+
+    <!-- Round and reveal share the clue -->
+    <ng-container *ngIf="(state.phase === 'round' || state.phase === 'reveal') && state.question">
+      <header class="game-head">
+        <span class="game-small">Manche {{ state.round }}/{{ state.rounds }}</span>
+        <span class="game-score">{{ myScore }} pts</span>
+      </header>
+
+      <ul class="room-strip">
+        <li *ngFor="let p of state.players" [class.me]="p.id === state.me" [class.solved]="p.solved" [class.away]="!p.connected">
+          <span>{{ p.name }}</span>
+          <b>{{ p.score }}</b>
+          <i class="fa-solid fa-check" *ngIf="p.solved"></i>
+        </li>
+      </ul>
+
+      <div class="game-timer" *ngIf="state.phase === 'round' && playing" [class.low]="remaining < 6">
+        <div class="game-bar"><span [style.transform]="'scaleX(' + progress + ')'"></span></div>
+        <b>{{ remaining | number: '1.0-0' }}</b>
+      </div>
+
+      <h2 class="game-prompt">{{ state.question.prompt }}</h2>
+
+      <div class="room-stage">
+        <div class="room-count" *ngIf="state.phase === 'round' && !playing"><b>{{ countdown }}</b><span>Prépare-toi</span></div>
+        <div class="game-clue" [ngClass]="'clue-' + state.question.type" [class.veiled]="state.phase === 'round' && !playing">
+          <img *ngIf="state.question.type === 'scene'" [src]="state.question.images![0]" alt="" [style.filter]="state.phase === 'reveal' ? 'none' : 'blur(' + blur + 'px)'">
+          <ng-container *ngIf="state.question.type === 'actors'">
+            <figure *ngFor="let src of state.question.images; let i = index">
+              <img [src]="src" alt="">
+              <figcaption *ngIf="state.phase === 'reveal' || elapsed > 10">{{ state.question.captions![i] }}</figcaption>
+            </figure>
+          </ng-container>
+          <p *ngIf="state.question.type === 'synopsis' && state.question.text" class="game-text">{{ state.question.text }}</p>
+        </div>
+      </div>
+
+      <ul class="game-hints" *ngIf="state.phase === 'round' && playing && hints.length">
+        <li *ngFor="let hint of hints">{{ hint }}</li>
+      </ul>
+
+      <ng-container *ngIf="state.phase === 'round' && playing">
+        <form *ngIf="!mine.solved" class="game-form" (ngSubmit)="submit()" [class.wrong]="wrong">
+          <input #field name="guess" [(ngModel)]="guess" placeholder="Tape le titre du film" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="120">
+          <button type="submit" class="game-primary">Valider</button>
+          <p class="game-nope" *ngIf="wrong" role="status">Pas celui-là.</p>
+        </form>
+        <p class="room-found" *ngIf="mine.solved">Trouvé{{ mine.gained ? ' : +' + mine.gained + ' pts' : '' }}. On attend les autres.</p>
+      </ng-container>
+
+      <div class="game-result room-reveal" *ngIf="state.phase === 'reveal'">
+        <img *ngIf="state.answer?.poster_path" [src]="poster(state.answer!.poster_path)" alt="">
+        <div class="game-result-body">
+          <h3>{{ state.answer?.title }} <small>({{ state.answer?.year }})</small></h3>
+          <ol class="room-round">
+            <li *ngFor="let p of roundRanking" [class.me]="p.id === state.me" [class.ko]="!p.gained">
+              <span>{{ p.name }}</span>
+              <span class="room-time">{{ seconds(p.solvedMs) }}</span>
+              <b>{{ p.gained ? '+' + p.gained : '0' }}</b>
+            </li>
+          </ol>
+          <a class="game-ghost" *ngIf="state.answer" [routerLink]="['/film', state.answer.filmId]" target="_blank" rel="noopener">Voir la fiche</a>
+          <p class="game-small">{{ state.preparing ? 'Manche suivante…' : state.round >= state.rounds ? 'Résultats dans un instant.' : 'La suite arrive toute seule.' }}</p>
+        </div>
+        <div class="game-auto"><span [style.transform]="'scaleX(' + nextProgress + ')'"></span></div>
+      </div>
+    </ng-container>
+
+    <div class="game-loading" *ngIf="state.phase === 'reveal' && !state.question || (state.phase === 'round' && !state.question)">
+      <span class="game-spinner"></span><p>Manche suivante…</p>
+    </div>
+
+    <!-- End -->
+    <ng-container *ngIf="state.phase === 'done'">
+      <div class="end-card">
+        <p class="eyebrow">Partie terminée</p>
+        <p class="end-winner" *ngIf="ranking[0]">{{ ranking[0].name }} gagne avec {{ ranking[0].score }} points</p>
+        <ol class="room-podium">
+          <li *ngFor="let p of ranking; let i = index" [class.me]="p.id === state.me" [class.first]="i === 0">
+            <span class="room-rank">{{ i + 1 }}</span>
+            <span class="room-name">{{ p.name }}</span>
+            <b>{{ p.score }}</b>
+          </li>
+        </ol>
+        <div class="game-actions end-actions">
+          <button type="button" class="game-primary" *ngIf="isHost" (click)="again()">Rejouer avec la salle</button>
+          <p class="game-small" *ngIf="!isHost">L'hôte peut relancer une partie.</p>
+          <button type="button" class="game-ghost" (click)="leave()">Quitter</button>
+        </div>
+      </div>
+      <ol class="end-list" *ngIf="state.history?.length">
+        <li *ngFor="let a of state.history">
+          <a [routerLink]="['/film', a.filmId]" target="_blank" rel="noopener">
+            <img *ngIf="a.poster_path" [src]="poster(a.poster_path)" alt="" loading="lazy">
+            <span class="end-film"><strong>{{ a.title }}</strong><small>{{ a.year }}</small></span>
+          </a>
+        </li>
+      </ol>
+    </ng-container>
+  </ng-container>
+</section>
