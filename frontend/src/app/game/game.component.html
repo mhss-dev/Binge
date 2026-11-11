@@ -82,7 +82,7 @@
             {{ results.length >= rounds ? 'Voir le score' : 'Manche suivante' }}
           </button>
         </div>
-        <p class="game-small">{{ held ? 'En pause. Entrée ou le bouton pour continuer.' : 'La suite arrive toute seule.' }}</p>
+        <p class="game-small" *ngIf="held">En pause. Entrée ou le bouton pour continuer.</p>
       </div>
       <div class="game-auto" *ngIf="!pinned"><span [style.transform]="'scaleX(' + resultProgress + ')'"></span></div>
     </div>

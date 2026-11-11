@@ -819,9 +819,9 @@ html body .nav-shell .nav-pill.active { background: rgba(255, 255, 255, 0.1); bo
 .room-strip b { color: var(--muted); font-variant-numeric: tabular-nums; }
 .room-strip i { color: var(--success); }
 
-.room-stage { position: relative; }
+.room-stage { position: relative; min-height: 14rem; display: grid; align-content: center; }
 .game-clue.veiled { visibility: hidden; }
-.room-count { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 0.3rem; }
+.room-count { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 0.3rem; text-align: center; }
 .room-count b { font-size: 4.5rem; line-height: 1; background: linear-gradient(135deg, var(--accent), var(--accent-soft)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .room-count span { color: var(--muted); }
 .room-found { margin: 0; padding: 0.8rem 1rem; border-radius: var(--radius-md); background: rgba(77, 213, 161, 0.12); color: var(--success); font-weight: 600; }

@@ -111,7 +111,8 @@
             </li>
           </ol>
           <a class="game-ghost" *ngIf="state.answer" [routerLink]="['/film', state.answer.filmId]" target="_blank" rel="noopener">Voir la fiche</a>
-          <p class="game-small">{{ state.preparing ? 'Manche suivante…' : state.round >= state.rounds ? 'Résultats dans un instant.' : 'La suite arrive toute seule.' }}</p>
+          <p class="game-small" *ngIf="state.preparing">Manche suivante…</p>
+          <p class="game-small" *ngIf="!state.preparing && state.round >= state.rounds">Résultats dans un instant.</p>
         </div>
         <div class="game-auto"><span [style.transform]="'scaleX(' + nextProgress + ')'"></span></div>
       </div>
