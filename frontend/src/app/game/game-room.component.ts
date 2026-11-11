@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-import { GameService, RoomIdentity, RoomPlayer, RoomState } from '../game.service';
+import { GameService, RoomGuess, RoomIdentity, RoomPlayer, RoomState } from '../game.service';
 
 const POLL_MS = 900;
 const HINT_EVERY = 6;
@@ -67,6 +67,15 @@ export class GameRoomComponent implements OnInit, OnDestroy {
 
   get roundRanking(): RoomPlayer[] {
     return [...(this.state?.players || [])].sort((a, b) => (b.gained || 0) - (a.gained || 0) || (a.solvedMs ?? 1e9) - (b.solvedMs ?? 1e9));
+  }
+
+  /** Newest first, so nothing has to scroll. */
+  get feed(): RoomGuess[] {
+    return [...(this.state?.feed || [])].reverse();
+  }
+
+  trackGuess(_: number, guess: RoomGuess): number {
+    return guess.id;
   }
 
   get shareLink(): string {

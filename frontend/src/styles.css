@@ -851,3 +851,11 @@ html body .nav-shell .nav-pill.active { background: rgba(255, 255, 255, 0.1); bo
   .game-nope { flex-basis: 100%; margin: 0; color: var(--danger); font-size: 0.85rem; }
 .game-form.wrong input, .game-mode, .game-bar span, .game-auto span, .game-spinner { animation: none; transition: none; }
 }
+.room-feed { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.25rem; max-height: 11rem; overflow: hidden; font-size: 0.9rem; }
+.room-feed li { display: flex; gap: 0.5rem; align-items: baseline; padding: 0.25rem 0.6rem; border-radius: 10px; background: rgba(5, 11, 22, 0.4); animation: feed-in 0.25s var(--ease-out); }
+.room-feed b { flex: none; color: var(--accent-soft); font-weight: 600; }
+.room-feed span { min-width: 0; overflow-wrap: anywhere; color: var(--text); }
+.room-feed li.found { background: rgba(77, 213, 161, 0.12); }
+.room-feed li.found span { color: var(--success); }
+@keyframes feed-in { from { opacity: 0; transform: translateY(-4px); } }
+@media (prefers-reduced-motion: reduce) { .room-feed li { animation: none; } }

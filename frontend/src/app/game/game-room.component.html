@@ -91,6 +91,14 @@
         <p class="room-found" *ngIf="mine.solved">Trouvé{{ mine.gained ? ' : +' + mine.gained + ' pts' : '' }}. On attend les autres.</p>
       </ng-container>
 
+      <ul class="room-feed" *ngIf="feed.length" aria-label="Ce que les autres tapent">
+        <li *ngFor="let g of feed; trackBy: trackGuess" [class.found]="g.correct">
+          <b>{{ g.name }}</b>
+          <span *ngIf="!g.correct">{{ g.text }}</span>
+          <span *ngIf="g.correct"><i class="fa-solid fa-check"></i> a trouvé !</span>
+        </li>
+      </ul>
+
       <div class="game-result room-reveal" *ngIf="state.phase === 'reveal'">
         <img *ngIf="state.answer?.poster_path" [src]="poster(state.answer!.poster_path)" alt="">
         <div class="game-result-body">

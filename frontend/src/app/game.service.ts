@@ -47,6 +47,13 @@ export interface RoomPlayer {
   solvedMs?: number | null;
 }
 
+export interface RoomGuess {
+  id: number;
+  name: string;
+  text?: string; // missing for a right answer
+  correct: boolean;
+}
+
 export interface RoomState {
   code: string;
   phase: 'lobby' | 'round' | 'reveal' | 'done';
@@ -65,6 +72,7 @@ export interface RoomState {
   question: { type: GameType; prompt: string; images?: string[]; captions?: string[]; text?: string; hints: string[] } | null;
   answer?: GameAnswer;
   history?: GameAnswer[];
+  feed: RoomGuess[];
 }
 
 // Open to everyone: no token, no account.
