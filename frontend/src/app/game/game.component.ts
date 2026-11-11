@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -6,9 +6,19 @@ import { GameAnswer, GameQuestion, GameService, GameType } from '../game.service
 
 const ROUNDS = 10;
 const BEST_KEY = 'binge:game:best';
+const MAX_ROUND_POINTS = 100; // what a round pays when answered instantly
 const HINT_EVERY = 6; // seconds between two hints
+const AUTO_NEXT = 4.5; // seconds the answer stays up before the next round starts
+const RESUME_GRACE = 2; // seconds left once the mouse leaves the answer
 
 type Phase = 'menu' | 'loading' | 'round' | 'result' | 'done';
+type Outcome = 'ok' | 'timeout' | 'skip';
+
+interface RoundResult {
+  answer: GameAnswer;
+  outcome: Outcome;
+  points: number;
+}
 
 @Component({
   selector: 'app-game',
@@ -19,30 +29,40 @@ type Phase = 'menu' | 'loading' | 'round' | 'result' | 'done';
 })
 export class GameComponent implements OnDestroy {
   readonly rounds = ROUNDS;
-  readonly modes: { type: GameType | null; label: string; icon: string }[] = [
-    { type: null, label: 'Tout mélangé', icon: 'fa-shuffle' },
-    { type: 'scene', label: 'Scènes', icon: 'fa-image' },
-    { type: 'actors', label: 'Acteurs', icon: 'fa-user-group' },
-    { type: 'synopsis', label: 'Synopsis', icon: 'fa-align-left' },
+  readonly maxScore = ROUNDS * MAX_ROUND_POINTS;
+  readonly roundNumbers = Array.from({ length: ROUNDS }, (_, i) => i);
+  readonly modes: { type: GameType | null; label: string; hint: string; icon: string }[] = [
+    { type: null, label: 'Tout mélangé', hint: 'Un peu de chaque', icon: 'fa-shuffle' },
+    { type: 'scene', label: 'Scènes', hint: 'Une image floue qui se précise', icon: 'fa-image' },
+    { type: 'actors', label: 'Acteurs', hint: 'Trois visages, un film', icon: 'fa-user-group' },
+    { type: 'synopsis', label: 'Synopsis', hint: 'Le résumé, titre caché', icon: 'fa-align-left' },
   ];
 
   phase: Phase = 'menu';
   mode: GameType | null = null;
   question: GameQuestion | null = null;
-  answer: GameAnswer | null = null;
+  current: RoundResult | null = null;
+  results: RoundResult[] = [];
   round = 0;
   score = 0;
-  correctCount = 0;
-  gained = 0;
   guess = '';
   wrong = false;
   error = '';
   elapsed = 0;
   best = 0;
+  newRecord = false;
+
+  // The answer stays up for a few seconds, then the next round starts by itself.
+  // Hovering it, or clicking it, holds it there so the film page can be opened.
+  resultElapsed = 0;
+  hovering = false;
+  pinned = false;
 
   private seen: number[] = [];
   private startedAt = 0;
+  private resultStartedAt = 0;
   private ticker: ReturnType<typeof setInterval> | null = null;
+  private resultTicker: ReturnType<typeof setInterval> | null = null;
   private sending = false;
 
   @ViewChild('field') field?: ElementRef<HTMLInputElement>;
@@ -54,7 +74,7 @@ export class GameComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.stopTimer();
+    this.stopTimers();
   }
 
   get remaining(): number {
@@ -65,9 +85,25 @@ export class GameComponent implements OnDestroy {
     return this.question ? this.remaining / this.question.duration : 0;
   }
 
+  get resultProgress(): number {
+    return Math.max(0, 1 - this.resultElapsed / AUTO_NEXT);
+  }
+
+  get held(): boolean {
+    return this.hovering || this.pinned;
+  }
+
   get visibleHints(): string[] {
     if (!this.question) return [];
     return this.question.hints.slice(0, Math.min(this.question.hints.length, Math.floor(this.elapsed / HINT_EVERY)));
+  }
+
+  get correctCount(): number {
+    return this.results.filter((r) => r.outcome === 'ok').length;
+  }
+
+  get bestRound(): number {
+    return Math.max(0, ...this.results.map((r) => r.points));
   }
 
   /** Scenes start blurred and sharpen as the time runs out. */
@@ -75,17 +111,25 @@ export class GameComponent implements OnDestroy {
     return Math.round(this.progress * 22);
   }
 
+  dot(index: number): string {
+    const result = this.results[index];
+    if (result) return result.outcome === 'ok' ? 'ok' : 'ko';
+    return index === this.round - 1 ? 'now' : '';
+  }
+
   start(mode: GameType | null): void {
     this.mode = mode;
     this.round = 0;
     this.score = 0;
-    this.correctCount = 0;
+    this.results = [];
     this.seen = [];
+    this.newRecord = false;
     this.next();
   }
 
   next(): void {
-    if (this.round >= ROUNDS) return this.finish();
+    this.stopTimers();
+    if (this.results.length >= ROUNDS) return this.finish();
     this.phase = 'loading';
     this.error = '';
     this.game.question(this.mode, this.seen).subscribe({
@@ -107,12 +151,10 @@ export class GameComponent implements OnDestroy {
       this.round++;
       this.guess = '';
       this.wrong = false;
-      this.answer = null;
-      this.gained = 0;
+      this.current = null;
       this.elapsed = 0;
       this.phase = 'round';
       this.startedAt = Date.now();
-      this.stopTimer();
       this.ticker = setInterval(() => this.tick(), 100);
       setTimeout(() => this.field?.nativeElement.focus());
     };
@@ -128,7 +170,7 @@ export class GameComponent implements OnDestroy {
   private tick(): void {
     if (!this.question) return;
     this.elapsed = (Date.now() - this.startedAt) / 1000;
-    if (this.elapsed >= this.question.duration) this.giveUp();
+    if (this.elapsed >= this.question.duration) this.giveUp('timeout');
   }
 
   submit(): void {
@@ -139,37 +181,63 @@ export class GameComponent implements OnDestroy {
       next: (result) => {
         this.sending = false;
         if (result.correct && result.answer) {
-          this.gained = result.points || 0;
-          this.score += this.gained;
-          this.correctCount++;
-          this.showResult(result.answer);
+          this.score += result.points || 0;
+          this.showResult({ answer: result.answer, outcome: 'ok', points: result.points || 0 });
         } else {
           this.wrong = true;
           this.guess = '';
-          setTimeout(() => (this.wrong = false), 500);
+          setTimeout(() => (this.wrong = false), 900);
         }
       },
       error: () => (this.sending = false),
     });
   }
 
-  giveUp(): void {
+  giveUp(outcome: 'timeout' | 'skip' = 'skip'): void {
     if (!this.question || this.phase !== 'round') return;
-    this.stopTimer();
+    this.stopTimers();
+    const filmId = this.question.filmId;
     this.game.reveal(this.question.id).subscribe({
-      next: ({ answer }) => this.showResult(answer),
-      error: () => this.showResult({ title: '?', year: '', poster_path: null, filmId: this.question!.filmId }),
+      next: ({ answer }) => this.showResult({ answer, outcome, points: 0 }),
+      error: () => this.showResult({ answer: { title: '?', year: '', poster_path: null, filmId }, outcome, points: 0 }),
     });
   }
 
-  private showResult(answer: GameAnswer): void {
-    this.stopTimer();
-    this.answer = answer;
+  private showResult(result: RoundResult): void {
+    this.stopTimers();
+    this.current = result;
+    this.results.push(result);
     this.phase = 'result';
+    this.resultElapsed = 0;
+    this.hovering = false;
+    this.pinned = false;
+    this.resultStartedAt = Date.now();
+    this.resultTicker = setInterval(() => {
+      if (this.held) return;
+      this.resultElapsed += 0.1;
+      if (this.resultElapsed >= AUTO_NEXT) this.next();
+    }, 100);
+  }
+
+  hold(on: boolean): void {
+    this.hovering = on;
+    // Leaving the card gives a moment to move on, not a fresh countdown.
+    if (!on) this.resultElapsed = Math.min(this.resultElapsed, AUTO_NEXT - RESUME_GRACE);
+  }
+
+  pin(): void {
+    this.pinned = true;
+  }
+
+  @HostListener('document:keydown.enter', ['$event'])
+  onEnter(event: Event): void {
+    // A held key would skip rounds: only a press that starts well after the answer appeared counts.
+    if (this.phase === 'result' && !(event as KeyboardEvent).repeat && Date.now() - this.resultStartedAt > 500) this.next();
   }
 
   private finish(): void {
     if (this.score > this.best) {
+      this.newRecord = this.best > 0;
       this.best = this.score;
       try {
         localStorage.setItem(BEST_KEY, String(this.best));
@@ -179,13 +247,14 @@ export class GameComponent implements OnDestroy {
   }
 
   backToMenu(): void {
-    this.stopTimer();
+    this.stopTimers();
     this.phase = 'menu';
   }
 
-  private stopTimer(): void {
+  private stopTimers(): void {
     if (this.ticker) clearInterval(this.ticker);
-    this.ticker = null;
+    if (this.resultTicker) clearInterval(this.resultTicker);
+    this.ticker = this.resultTicker = null;
   }
 
   poster(path: string | null): string {
