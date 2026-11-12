@@ -10,11 +10,11 @@
     <div class="dv-hero-shade"></div>
     <div class="dv-hero-inner">
       <div class="dv-hero-copy" *ngFor="let film of [featured]; trackBy: trackByMovieId">
-        <p class="eyebrow">À la une{{ nickname ? " · pour " + nickname : "" }}</p>
         <h1>{{ film.title }}</h1>
+        <p class="meta-line" *ngIf="nickname">Pour {{ nickname }}</p>
         <p class="dv-hero-meta">
           <span *ngIf="film.release_date">{{ film.release_date | date : "yyyy" }}</span>
-          <span *ngIf="film.vote_average" class="dv-score">★ {{ film.vote_average | number : "1.0-1" }}</span>
+          <span *ngIf="film.vote_average" class="dv-score"><i class="fa-solid fa-star" aria-hidden="true"></i> {{ film.vote_average | number : "1.0-1" }}</span>
         </p>
         <p class="dv-hero-text">{{ film.overview }}</p>
         <div class="dv-hero-actions">
@@ -85,7 +85,7 @@
           <strong *ngIf="!movie?.poster_path">{{ movie?.title || "Titre inconnu" }}</strong>
           <span>
             <ng-container *ngIf="movie?.release_date">{{ movie?.release_date | date : "yyyy" }}</ng-container>
-            <ng-container *ngIf="movie?.vote_average"> · ★ {{ movie?.vote_average | number : "1.0-1" }}</ng-container>
+            <ng-container *ngIf="movie?.vote_average"> · <i class="fa-solid fa-star" aria-hidden="true"></i> {{ movie?.vote_average | number : "1.0-1" }}</ng-container>
           </span>
         </div>
       </a>

@@ -21,7 +21,7 @@
         <p class="fc-tagline" *ngIf="serie?.tagline">{{ serie?.tagline }}</p>
 
         <div class="fc-facts">
-          <span class="dv-score" *ngIf="serie?.vote_average">★ {{ serie?.vote_average | number : "1.0-1" }}</span>
+          <span class="dv-score" *ngIf="serie?.vote_average"><i class="fa-solid fa-star" aria-hidden="true"></i> {{ serie?.vote_average | number : "1.0-1" }}</span>
           <span *ngIf="serie?.vote_count">{{ serie?.vote_count | number : "1.0-0" }} avis</span>
           <span>{{ getYears() }}</span>
           <span>{{ getSeasonsLabel() }}</span>
@@ -113,7 +113,7 @@
           <span class="sd-episode-meta">
             <ng-container *ngIf="episode.air_date">{{ episode.air_date | date : "dd/MM/yyyy" }}</ng-container>
             <ng-container *ngIf="episode.runtime"> · {{ formatRuntime(episode.runtime) }}</ng-container>
-            <ng-container *ngIf="episode.vote_average"> · ★ {{ episode.vote_average | number : "1.0-1" }}</ng-container>
+            <ng-container *ngIf="episode.vote_average"> · <i class="fa-solid fa-star" aria-hidden="true"></i> {{ episode.vote_average | number : "1.0-1" }}</ng-container>
           </span>
           <p *ngIf="episode.overview">{{ episode.overview }}</p>
         </div>
@@ -155,7 +155,7 @@
               <strong *ngIf="!similar.poster_path">{{ similar.name || "Titre inconnu" }}</strong>
               <span>
                 <ng-container *ngIf="similar.first_air_date">{{ similar.first_air_date | date : "yyyy" }}</ng-container>
-                <ng-container *ngIf="similar.vote_average"> · ★ {{ similar.vote_average | number : "1.0-1" }}</ng-container>
+                <ng-container *ngIf="similar.vote_average"> · <i class="fa-solid fa-star" aria-hidden="true"></i> {{ similar.vote_average | number : "1.0-1" }}</ng-container>
               </span>
             </div>
           </a>

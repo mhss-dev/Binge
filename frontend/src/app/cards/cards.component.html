@@ -1,7 +1,6 @@
 <section id="aucinema" class="hm-section app-shell text-white">
   <div class="hm-head">
     <div>
-      <p class="eyebrow">Explorer maintenant</p>
       <h2>{{ title }}</h2>
       <p class="hm-caption" *ngIf="minDate && maxDate && currentTab !== 'toprated'">
         Du {{ minDate | date : "dd/MM" }} au {{ maxDate | date : "dd/MM/yyyy" }}
@@ -29,7 +28,7 @@
           <strong *ngIf="!movie?.poster_path">{{ movie?.title || "Titre inconnu" }}</strong>
           <span>
             <ng-container *ngIf="movie?.release_date || movie?.first_air_date">{{ (movie?.release_date || movie?.first_air_date) | date : "yyyy" }}</ng-container>
-            <ng-container *ngIf="movie?.vote_average"> · ★ {{ movie?.vote_average | number : "1.0-1" }}</ng-container>
+            <ng-container *ngIf="movie?.vote_average"> · <i class="fa-solid fa-star" aria-hidden="true"></i> {{ movie?.vote_average | number : "1.0-1" }}</ng-container>
           </span>
         </div>
       </a>

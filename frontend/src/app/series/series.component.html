@@ -10,11 +10,10 @@
     <div class="dv-hero-shade"></div>
     <div class="dv-hero-inner">
       <div class="dv-hero-copy" *ngFor="let serie of [featured]; trackBy: trackBySerieId">
-        <p class="eyebrow">Séries à la une</p>
         <h1>{{ serie.name }}</h1>
         <p class="dv-hero-meta">
           <span *ngIf="serie.first_air_date">{{ serie.first_air_date | date : "yyyy" }}</span>
-          <span *ngIf="serie.vote_average" class="dv-score">★ {{ serie.vote_average | number : "1.0-1" }}</span>
+          <span *ngIf="serie.vote_average" class="dv-score"><i class="fa-solid fa-star" aria-hidden="true"></i> {{ serie.vote_average | number : "1.0-1" }}</span>
         </p>
         <p class="dv-hero-text">{{ serie.overview }}</p>
         <div class="dv-hero-actions">
@@ -83,7 +82,7 @@
           <strong *ngIf="!serie?.poster_path">{{ serie?.name || "Titre inconnu" }}</strong>
           <span>
             <ng-container *ngIf="serie?.first_air_date">{{ serie?.first_air_date | date : "yyyy" }}</ng-container>
-            <ng-container *ngIf="serie?.vote_average"> · ★ {{ serie?.vote_average | number : "1.0-1" }}</ng-container>
+            <ng-container *ngIf="serie?.vote_average"> · <i class="fa-solid fa-star" aria-hidden="true"></i> {{ serie?.vote_average | number : "1.0-1" }}</ng-container>
           </span>
         </div>
       </a>

@@ -1,6 +1,5 @@
 <section class="game-page app-shell text-white">
   <ng-container *ngIf="phase === 'menu'">
-    <p class="eyebrow">Quiz</p>
     <h1>Devine le film</h1>
     <p class="game-lead">{{ rounds }} manches de 25 secondes. Plus tu réponds vite, plus tu marques. Pas de compte à créer.</p>
     <div class="game-switch" role="tablist" aria-label="Mode de jeu">
@@ -90,7 +89,6 @@
 
   <ng-container *ngIf="phase === 'done'">
     <div class="end-card">
-      <p class="eyebrow">Partie terminée</p>
       <p class="end-score"><b>{{ score }}</b><span>sur {{ maxScore }}</span></p>
       <div class="end-meter"><span [style.width.%]="(score / maxScore) * 100"></span></div>
       <p class="end-record" *ngIf="newRecord">Nouveau record !</p>

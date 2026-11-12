@@ -1,7 +1,6 @@
 <section class="game-page app-shell text-white">
   <!-- Not in the room yet (or kicked out): pick a name -->
   <ng-container *ngIf="!who">
-    <p class="eyebrow">Quiz à plusieurs</p>
     <h1>{{ lost && !error ? 'Tu as été retiré de la salle' : 'Rejoindre la partie' }}</h1>
     <p class="game-error" *ngIf="error">{{ error }}</p>
     <form class="game-form" (ngSubmit)="join()" *ngIf="!gone">
@@ -20,8 +19,8 @@
 
     <!-- Lobby -->
     <ng-container *ngIf="state.phase === 'lobby'">
-      <p class="eyebrow">Salle · {{ modeLabel }}</p>
       <h1>On attend les autres</h1>
+      <p class="meta-line">Salle · {{ modeLabel }}</p>
       <div class="room-share">
         <input readonly [value]="shareLink" aria-label="Lien de la salle" (focus)="$any($event.target).select()">
         <button type="button" class="game-ghost" (click)="copy()">{{ copied ? 'Copié' : 'Copier le lien' }}</button>
@@ -125,7 +124,6 @@
     <!-- End -->
     <ng-container *ngIf="state.phase === 'done'">
       <div class="end-card">
-        <p class="eyebrow">Partie terminée</p>
         <p class="end-winner" *ngIf="ranking[0]">{{ ranking[0].name }} gagne avec {{ ranking[0].score }} points</p>
         <ol class="room-podium">
           <li *ngFor="let p of ranking; let i = index" [class.me]="p.id === state.me" [class.first]="i === 0">

@@ -11,8 +11,8 @@
     />
 
     <div class="person-copy">
-      <p class="eyebrow" *ngIf="roleLabel()">{{ roleLabel() }}</p>
       <h1>{{ actor.name || "Inconnu" }}</h1>
+      <p class="meta-line" *ngIf="roleLabel()">{{ roleLabel() }}</p>
 
       <p class="person-facts" *ngIf="lifeFacts().length">
         <span *ngFor="let fact of lifeFacts()">{{ fact }}</span>
@@ -44,7 +44,6 @@
   <section class="filmography-section" *ngIf="credits.length">
     <div class="section-heading filmography-heading">
       <div>
-        <p class="eyebrow">À parcourir</p>
         <h2>Filmographie</h2>
       </div>
       <div class="dv-seg" role="group" aria-label="Afficher" *ngIf="hasBothKinds()">

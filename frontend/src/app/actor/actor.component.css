@@ -1,5 +1,5 @@
 .person-page {
-  padding: 2.9rem 0 6rem;
+  padding: var(--space-12) 0 6rem;
 }
 
 .person-hero {
@@ -7,11 +7,11 @@
   overflow: hidden;
   display: grid;
   grid-template-columns: 220px minmax(0, 1fr);
-  gap: 2rem;
+  gap: var(--space-8);
   align-items: start;
-  padding: 1.75rem;
+  padding: var(--space-6);
   border-radius: var(--radius-xl);
-  margin-bottom: 2.6rem;
+  margin-bottom: var(--space-10);
   background:
     radial-gradient(circle at top right, rgba(255, 122, 24, 0.12), transparent 40%),
     var(--surface);
@@ -22,24 +22,24 @@
   aspect-ratio: 2 / 3;
   object-fit: cover;
   border-radius: var(--radius-lg);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-md), 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
 .person-copy {
   display: grid;
-  gap: 0.9rem;
+  gap: var(--space-4);
   justify-items: start;
   min-width: 0;
-  padding-top: 0.4rem;
+  padding-top: var(--space-2);
 }
 
-.person-copy .eyebrow {
+.person-copy .meta-line {
   margin: 0;
 }
 
 .person-copy h1 {
   margin: 0;
-  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-size: var(--fs-h1);
   line-height: 0.95;
   letter-spacing: -0.03em;
   text-wrap: balance;
@@ -48,34 +48,34 @@
 .person-facts {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem 0;
+  gap: var(--space-1) 0;
   margin: 0;
   color: var(--muted);
 }
 
 .person-facts span + span::before {
   content: "·";
-  margin: 0 0.6rem;
+  margin: 0 var(--space-2);
   color: rgba(159, 176, 201, 0.5);
 }
 
 .person-stats {
   display: flex;
-  gap: 2rem;
+  gap: var(--space-8);
   justify-self: stretch;
-  margin: 0.3rem 0 0.2rem;
-  padding: 0.9rem 0;
+  margin: var(--space-1) 0 var(--space-1);
+  padding: var(--space-4) 0;
   border-block: 1px solid var(--border);
 }
 
 .person-stats div {
   display: flex;
   align-items: baseline;
-  gap: 0.45rem;
+  gap: var(--space-2);
 }
 
 .person-stats dt {
-  font-size: 1.9rem;
+  font-size: var(--fs-2xl);
   font-weight: 700;
   line-height: 1;
   font-variant-numeric: tabular-nums;
@@ -109,7 +109,7 @@
 
 .filmography-section {
   position: relative;
-  padding-top: 0.85rem;
+  padding-top: var(--space-3);
 }
 
 .filmography-section::before {
@@ -123,11 +123,11 @@
 }
 
 .filmography-heading {
-  margin-bottom: 1.3rem;
+  margin-bottom: var(--space-5);
 }
 
 .filmography-heading h2 {
-  font-size: clamp(1.35rem, 1.1rem + 1vw, 2rem);
+  font-size: var(--fs-h2);
 }
 
 .results-caption {
@@ -137,7 +137,7 @@
 .filmography-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
 .filmography-card {
@@ -145,7 +145,7 @@
 }
 
 .poster-overlay p {
-  margin-top: 0.35rem;
+  margin-top: var(--space-1);
 }
 
 @media (max-width: 1100px) {
@@ -157,7 +157,7 @@
 @media (max-width: 900px) {
   .person-hero {
     grid-template-columns: 1fr;
-    gap: 1.4rem;
+    gap: var(--space-6);
   }
 
   .person-portrait {
@@ -171,15 +171,15 @@
 
 @media (max-width: 640px) {
   .person-page {
-    padding-top: 1.6rem;
+    padding-top: var(--space-6);
   }
 
   .person-hero {
-    padding: 1.1rem;
+    padding: var(--space-4);
   }
 
   .person-stats {
-    gap: 1.5rem;
+    gap: var(--space-6);
   }
 
   .filmography-grid {

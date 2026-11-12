@@ -19,7 +19,7 @@
         <p class="fc-tagline" *ngIf="movie?.tagline">{{ movie?.tagline }}</p>
 
         <div class="fc-facts">
-          <span class="dv-score">★ {{ movie?.vote_average | number : "1.0-1" }}</span>
+          <span class="dv-score"><i class="fa-solid fa-star" aria-hidden="true"></i> {{ movie?.vote_average | number : "1.0-1" }}</span>
           <span>{{ movie?.vote_count | number : "1.0-0" }} avis</span>
           <span>{{ getReleaseYear() }}</span>
           <span>{{ formatRuntime(movie?.runtime) }}</span>
@@ -116,7 +116,7 @@
               <strong *ngIf="!similarMovie.poster_path">{{ similarMovie.title || "Titre inconnu" }}</strong>
               <span>
                 <ng-container *ngIf="similarMovie.release_date">{{ similarMovie.release_date | date : "yyyy" }}</ng-container>
-                <ng-container *ngIf="similarMovie.vote_average"> · ★ {{ similarMovie.vote_average | number : "1.0-1" }}</ng-container>
+                <ng-container *ngIf="similarMovie.vote_average"> · <i class="fa-solid fa-star" aria-hidden="true"></i> {{ similarMovie.vote_average | number : "1.0-1" }}</ng-container>
               </span>
             </div>
           </a>

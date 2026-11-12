@@ -10,7 +10,6 @@
       </div>
 
       <div class="pf-copy">
-        <p class="eyebrow">{{ isOwn ? 'Mon profil' : 'Profil' }}</p>
         <h1>{{ nickname }}</h1>
         <p class="pf-bio" *ngIf="bio">{{ bio }}</p>
         <p class="pf-bio pf-bio-empty" *ngIf="!bio && isOwn">Ajoutez une bio courte</p>

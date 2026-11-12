@@ -16,7 +16,6 @@
   </div>
 
   <div *ngIf="phase === 'join' && info" class="match-panel glass-panel match-center narrow">
-    <p class="eyebrow">Invitation</p>
     <h1>{{ info.session.title || 'Match de films' }}</h1>
     <p *ngIf="info.participants.length > 0">
       Déjà là :
@@ -50,7 +49,6 @@
     <div class="room">
       <div class="room-head">
         <div class="room-title">
-          <p class="eyebrow">{{ solo ? 'Quoi regarder ce soir ?' : 'Match' }}</p>
           <h1>{{ solo ? 'Ma soirée' : state?.session?.title || info?.session?.title || 'Match de films' }}</h1>
         </div>
         <ng-template #who let-p>
@@ -135,7 +133,7 @@
                 <strong *ngIf="!card.poster_path">{{ card.title }}</strong>
                 <div class="meta">
                   <span>{{ year(card.release_date) }}</span>
-                  <span *ngIf="card.vote_average" class="tag star">★ {{ card.vote_average }}</span>
+                  <span *ngIf="card.vote_average" class="tag star"><i class="fa-solid fa-star" aria-hidden="true"></i> {{ card.vote_average }}</span>
                   <span *ngFor="let id of card.genre_ids.slice(0, 3)" class="tag">{{ genreLabel(id) }}</span>
                 </div>
                 <p *ngIf="showDetails">{{ card.overview || 'Pas de résumé disponible.' }}</p>
@@ -145,8 +143,8 @@
         </div>
 
         <div *ngIf="topCard" class="swipe-buttons">
-          <button type="button" class="round pass" aria-label="Passer" (click)="swipe(false)">✕</button>
-          <button type="button" class="round like" aria-label="J'aime" (click)="swipe(true)">♥</button>
+          <button type="button" class="round pass" aria-label="Passer" (click)="swipe(false)"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+          <button type="button" class="round like" aria-label="J'aime" (click)="swipe(true)"><i class="fa-solid fa-heart" aria-hidden="true"></i></button>
         </div>
         <p *ngIf="topCard" class="hint">Touche l'affiche pour le résumé · glisse ou utilise les flèches ← →</p>
       </div>
@@ -154,12 +152,12 @@
       <div *ngIf="solo && soloList.length > 0" id="matches" class="matches">
         <div class="solo-pick">
           <h2 class="mt-title">Ma sélection ({{ soloList.length }})</h2>
-          <button type="button" class="match-primary small" (click)="pickForMe()">🎲 Choisis pour moi</button>
+          <button type="button" class="match-primary small" (click)="pickForMe()"><i class="fa-solid fa-dice" aria-hidden="true"></i> Choisis pour moi</button>
         </div>
         <div class="mt-rail">
           <div *ngFor="let movie of soloList" class="mt-tile" [attr.title]="movie.title">
             <a [routerLink]="['/film', movie.id]"><img referrerpolicy="no-referrer" [src]="poster(movie.poster_path, 'w342')" [alt]="movie.title" loading="lazy" /></a>
-            <button type="button" class="mt-x" aria-label="Retirer" (click)="removeSolo(movie.id)">✕</button>
+            <button type="button" class="mt-x" aria-label="Retirer" (click)="removeSolo(movie.id)"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
           </div>
         </div>
       </div>
@@ -190,7 +188,7 @@
         <div class="mt-pair" *ngIf="!soloPick">
           <ng-container *ngFor="let p of pairPeople; let last = last">
             <img class="mt-av" [src]="avatar(p)" [alt]="p.name" />
-            <span *ngIf="!last" class="mt-heart">♥</span>
+            <span *ngIf="!last" class="mt-heart"><i class="fa-solid fa-heart" aria-hidden="true"></i></span>
           </ng-container>
         </div>
         <div class="mt-big">{{ soloPick ? 'Ce soir, c\'est…' : 'C\'est un match !' }}</div>

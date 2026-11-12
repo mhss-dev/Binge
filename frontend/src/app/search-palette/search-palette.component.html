@@ -26,7 +26,7 @@
           <strong>{{ movie.title }}</strong>
           <small>
             {{ year(movie.release_date) || "Date inconnue" }}
-            <ng-container *ngIf="movie.vote_average"> · ★ {{ movie.vote_average | number : "1.1-1" }}</ng-container>
+            <ng-container *ngIf="movie.vote_average"> · <i class="fa-solid fa-star" aria-hidden="true"></i> {{ movie.vote_average | number : "1.1-1" }}</ng-container>
           </small>
         </span>
         <i class="fa-solid fa-arrow-right sp-go"></i>

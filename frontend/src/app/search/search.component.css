@@ -1,16 +1,16 @@
 .search-page {
-  padding: 1.5rem 0 6rem;
+  padding: var(--space-6) 0 6rem;
 }
 
 .search-hero,
 .empty-state {
-  padding: 1.5rem;
+  padding: var(--space-6);
   border-radius: var(--radius-xl);
 }
 
 .search-hero h1 {
-  margin: 0.35rem 0;
-  font-size: clamp(2rem, 4vw, 3rem);
+  margin: var(--space-1) 0;
+  font-size: var(--fs-h1);
 }
 
 .search-hero p,
@@ -20,7 +20,7 @@
 }
 
 .search-grid {
-  margin-top: 1.5rem;
+  margin-top: var(--space-6);
 }
 
 .search-card-link {
@@ -33,7 +33,7 @@
 .search-overlay {
   position: absolute;
   inset: auto 0 0 0;
-  padding: 1rem;
+  padding: var(--space-4);
   background: linear-gradient(180deg, transparent, rgba(5, 11, 20, 0.95));
 }
 
@@ -43,11 +43,11 @@
 }
 
 .search-overlay p {
-  margin-top: 0.35rem;
+  margin-top: var(--space-1);
   color: rgba(245, 247, 251, 0.72);
 }
 
 .empty-state {
-  margin-top: 1.5rem;
+  margin-top: var(--space-6);
   text-align: center;
 }
